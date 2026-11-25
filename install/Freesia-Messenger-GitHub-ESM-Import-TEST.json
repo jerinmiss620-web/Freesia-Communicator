@@ -3,8 +3,8 @@
   "enabled": true,
   "name": "Freesia Messenger · 通讯侠（GitHub 本体直连 TEST）",
   "id": "6ba49b66-ace8-4db4-acbd-292b6dde4ced",
-  "content": "import 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger.js'",
-  "info": "# Freesia Messenger · 通讯侠\n\n**GitHub 本体直连测试包。** 本脚本只通过 ES Module `import` 引入 GitHub 上的完整通讯侠本体；不内置功能代码，不使用 Bootstrap / Remote Loader / IndexedDB。\n\n- 本体：`jerinmiss620-web/Freesia-Communicator/core/current/Freesia-Messenger.js`\n- 更新：后续只更新 GitHub 的 `core/current/Freesia-Messenger.js`，不需要再次导入完整脚本。\n- 生效：刷新酒馆后重新加载远程模块。\n- 兼容：保留原通讯侠脚本 ID；不改动通讯记录、动态、订阅、社区、预设等业务数据键。\n\n**替换时：** 用本包替换原来的独立通讯侠脚本，并停用旧的 Permanent Bootstrap，避免两条加载链同时启动。",
+  "content": "import 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@test-direct-esm-import/core/current/Freesia-Messenger.js'",
+  "info": "# Freesia Messenger · 通讯侠\n\n**GitHub 本体直连测试包。** 本脚本只通过 ES Module `import` 引入 GitHub 测试分支上的完整通讯侠本体；不内置功能代码，不使用 Bootstrap / Remote Loader / IndexedDB。\n\n- 测试本体：`jerinmiss620-web/Freesia-Communicator/core/current/Freesia-Messenger.js`（v0.3.31）\n- 更新：测试阶段只更新测试分支上的本体；通过验证后再合并正式分支。\n- 样式边界：手机窗口使用 Shadow DOM 独立样式；酒馆扩展折叠面板的复选框、选择框继承酒馆主题，不由通讯侠设置控件外观。\n- 生效：刷新酒馆后重新加载远程模块。\n- 兼容：保留原通讯侠脚本 ID；不改动通讯记录、动态、订阅、社区、预设等业务数据键。\n\n**替换时：** 用本包替换原来的独立通讯侠脚本，并停用旧的 Permanent Bootstrap，避免两条加载链同时启动。",
   "button": {
     "enabled": false,
     "buttons": []
