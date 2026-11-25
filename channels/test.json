@@ -13,7 +13,7 @@
     "sha256": "97e27cfa42d0702b977a4ed17d5fc2feab8c544252deb3d25ff9f22ceefecd3e",
     "size_bytes": 379503
   },
-  "status": "Internal Test only. v0.3.28 adds first-time Loader adoption controls. Requires Remote Loader v0.1.4 and Permanent Bootstrap v1.0.3. Runtime verification in ST/TT is required before Stable promotion.",
+  "status": "Internal Test only. v0.3.29 adds the missing-Last-Known-Good adoption UI fix. Requires Remote Loader v0.1.5 and Permanent Bootstrap v1.0.4. Repository validation is not device validation; test in ST, TT and iPhone Safari before Stable promotion.",
   "notes": "Test Core v0.3.29 fixes the adoption entry state when automatic restore authorization exists but the verified Last Known Good cache is missing. Requires Remote Loader 0.1.5. Existing Core releases v0.3.22–v0.3.28 remain listed for safe adoption.",
   "adoptable_releases": [
     {
