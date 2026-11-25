@@ -259,7 +259,7 @@
   }
 
   async function fetchText(url, timeoutMs = 20000, validate = null) {
-    const isManifest = /\/main\/(?:loader\/latest\.json|latest\.json|channels\/test\.json)(?:\?|$)/.test(url);
+    const isManifest = /\/(?:main|test-bootstrap-rebuild)\/(?:loader\/latest\.json|latest\.json|channels\/test\.json)(?:\?|$)/.test(url);
     const routes = downloadRoutes(url, isManifest);
     const stage = isManifest
       ? (url.includes('/channels/test.json') ? 'Test Core 清单' : 'Stable Core 清单')
