@@ -9,7 +9,7 @@ SillyTavern / Tavern Helper 的独立通讯面板。
 - 酒馆助手 JSON 只保留一条静态 `import`，不内嵌通讯侠本体。
 - 完整功能代码保存在 GitHub：`core/current/Freesia-Messenger-ESM.js`。
 - 首次安装导入 [GitHub ESM Import JSON](install/Freesia-Messenger-GitHub-ESM-Import-v0.3.37.json) 一次。
-- 后续只更新 GitHub 本体；GitHub Actions 自动刷新 CDN 并验证实际返回内容，用户刷新酒馆即可更新，不需要反复导入 JSON。
+- 后续只更新 GitHub 本体；GitHub Actions 自动刷新 CDN 并验证实际返回内容；若 CDN 清缓存接口触发限流，定时任务会继续检查并重试。用户无需反复导入 JSON。
 
 正式导入语句：
 
