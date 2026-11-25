@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  // Freesia Messenger · 通讯侠 · v0.3.30
+  // Freesia Messenger · 通讯侠 · v0.3.31
   // Independent floating phone shell for JS-Slash-Runner.
 
   const SCRIPT_WIN = window;
@@ -362,7 +362,6 @@
     const applied = state.appearanceMode === 'auto' ? state.detectedTheme : state.appearanceMode;
     if (state.root && state.root.getAttribute('data-fm-theme') !== applied) state.root.setAttribute('data-fm-theme', applied);
     if (state.chatEntry && state.chatEntry.getAttribute('data-fm-theme') !== applied) state.chatEntry.setAttribute('data-fm-theme', applied);
-    if (state.extensionEntry && state.extensionEntry.getAttribute('data-fm-theme') !== applied) state.extensionEntry.setAttribute('data-fm-theme', applied);
     const hint = state.root?.querySelector('[data-fm-appearance-hint]');
     if (hint) hint.textContent = `检测到酒馆当前使用${state.detectedTheme === 'dark' ? '浅色文字，倾向夜间主题' : '深色文字，倾向日间主题'}。`;
   }
@@ -4182,7 +4181,7 @@
     const ctx = snap.info.context;
     const win = state.windowController;
     return [
-      '通讯侠 v0.3.30 运行诊断',
+      '通讯侠 v0.3.31 运行诊断',
       '时间：' + new Date().toLocaleString(),
       '环境：' + HOST_WIN.navigator.userAgent,
       '窗口控制器：' + (win ? '已创建' : '未创建'),
@@ -4256,13 +4255,12 @@
     HOST_DOC.getElementById(EXTENSION_ID)?.remove();
     const entry = node('div');
     entry.id = EXTENSION_ID;
-    entry.setAttribute('data-fm-theme', state.appearanceMode === 'auto' ? detectHostAppearance() : state.appearanceMode);
     const button = (action, label, icon) => '<button type="button" class="menu_button" data-fm-ext-action="' + action + '"><i class="fa-solid ' + icon + '" aria-hidden="true"></i><span ' + (action === 'toggle-enabled' || action === 'api' ? 'data-fm-ext-status="' + action + '"' : '') + '>' + label + '</span></button>';
     const check = (key, label) => '<label class="fm-ext-check"><input type="checkbox" data-fm-ext-field="' + key + '"><span>' + label + '</span></label>';
     const select = (key, label) => '<label class="fm-ext-row"><span>' + label + '</span><select class="text_pole" data-fm-ext-field="' + key + '">' + proactiveFieldOptions[key].map(v => '<option value="' + v + '">' + (v === 0 ? '不限' : v + (key === 'limit' ? ' 轮' : ' 分钟')) + '</option>').join('') + '</select></label>';
     const status = (key, label) => '<div class="fm-ext-row"><span>' + label + '</span><span data-fm-ext-status="' + key + '">—</span></div>';
     entry.innerHTML = '<div class="inline-drawer"><div class="inline-drawer-toggle inline-drawer-header"><b>通讯侠 · Freesia Messenger</b><div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div></div><div class="inline-drawer-content"><div class="fm-extension-content">' +
-      '<div class="fm-ext-row"><small>v0.3.30 · 控制中心</small><small data-fm-ext-status="enabled-label">已启用</small></div>' +
+      '<div class="fm-ext-row"><small>v0.3.31 · 控制中心</small><small data-fm-ext-status="enabled-label">已启用</small></div>' +
       '<div class="fm-ext-primary">' + button('toggle-enabled', state.enabled ? '关闭通讯侠' : '启用通讯侠', state.enabled ? 'fa-power-off' : 'fa-play') + '</div>' +
       '<b>快捷设置</b><div class="fm-ext-checks">' + check('time', '真实时间感知') + check('active', 'Char 主动联络') + check('sync', '通讯记录同步正文') + '</div>' +
       '<div class="fm-ext-section" data-fm-ext-active-fields>' + select('interval', '检测间隔') + select('cooldown', '发信冷却') + select('limit', '每日联络上限') + check('notify', '主动消息通知') + '</div>' +
@@ -4400,36 +4398,8 @@
         -webkit-font-smoothing: antialiased;
       }
       #${ROOT_ID}[data-fm-theme="dark"] { color-scheme: dark; }
-      #${EXTENSION_ID} {
-        color-scheme: light;
-        --fm-line: light-dark(#eae3e5, #625360);
-        --fm-field: light-dark(#fff9fb, #413947);
-        --fm-card: light-dark(#ffffff, #403947);
-        --fm-text-strong: light-dark(#514650, #f0e5ef);
-        --fm-text-muted: light-dark(#928692, #bcaebc);
-        --fm-accent: light-dark(#9b7d97, #c9a0bd);
-        --fm-accent-soft: light-dark(#eae7f3, #524456);
-        --fm-accent-deep: light-dark(#806f88, #765b78);
-        --fm-control-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
-        --fm-control-font-size: 12px;
-        --fm-control-font-weight: 500;
-        --fm-control-line-height: 1.45;
-        --fm-control-padding: 5px 8px;
-        --fm-control-radius: 8px;
-        --fm-control-color: var(--fm-text-strong);
-        --fm-control-bg: var(--fm-field);
-        --fm-control-border: var(--fm-line);
-        --fm-control-placeholder: var(--fm-text-muted);
-        --fm-control-caret: var(--fm-accent);
-        --fm-control-focus-border: var(--fm-accent);
-        --fm-control-focus-shadow: 0 0 0 2px light-dark(rgb(155 125 151 / 15%), rgb(201 160 189 / 20%));
-        --fm-control-shadow: none;
-        --fm-control-accent: var(--fm-accent-deep);
-      }
-      #${EXTENSION_ID}[data-fm-theme="dark"] { color-scheme: dark; }
       /* Messenger owns its form-control visuals; host theme selectors must not restyle them. */
-      #${ROOT_ID} :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]), textarea, select),
-      #${EXTENSION_ID} :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]), textarea, select) {
+      #${ROOT_ID} :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]), textarea, select) {
         box-sizing: border-box !important;
         appearance: auto !important;
         -webkit-appearance: auto !important;
@@ -4467,14 +4437,12 @@
         padding: var(--fm-control-padding) !important;
         background-clip: padding-box !important;
       }
-      #${ROOT_ID} :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]), textarea, select):is(:focus, :focus-visible),
-      #${EXTENSION_ID} :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]), textarea, select):is(:focus, :focus-visible) {
+      #${ROOT_ID} :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]), textarea, select):is(:focus, :focus-visible) {
         border-color: var(--fm-control-focus-border) !important;
         box-shadow: var(--fm-control-focus-shadow) !important;
         outline: none !important;
       }
-      #${ROOT_ID} :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]), textarea, select)::placeholder,
-      #${EXTENSION_ID} :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]), textarea, select)::placeholder {
+      #${ROOT_ID} :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]), textarea, select)::placeholder {
         color: var(--fm-control-placeholder) !important;
         -webkit-text-fill-color: var(--fm-control-placeholder) !important;
         opacity: 1 !important;
@@ -4485,24 +4453,22 @@
         line-height: var(--fm-control-line-height) !important;
         letter-spacing: normal !important;
       }
-      #${ROOT_ID} :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]), textarea):-webkit-autofill,
-      #${EXTENSION_ID} :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]), textarea):-webkit-autofill {
+      #${ROOT_ID} :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]), textarea):-webkit-autofill {
         -webkit-text-fill-color: var(--fm-control-color) !important;
         -webkit-box-shadow: 0 0 0 1000px var(--fm-control-bg) inset !important;
         caret-color: var(--fm-control-caret) !important;
       }
-      #${ROOT_ID} :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]), textarea)::selection,
-      #${EXTENSION_ID} :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]), textarea)::selection {
+      #${ROOT_ID} :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]), textarea)::selection {
         color: var(--fm-text-strong) !important;
         background: var(--fm-accent-soft) !important;
       }
-      #${ROOT_ID} select option, #${EXTENSION_ID} select option {
+      #${ROOT_ID} select option {
         color: var(--fm-control-color) !important;
         background-color: var(--fm-control-bg) !important;
         font-family: var(--fm-control-font-family) !important;
         font-size: var(--fm-control-font-size) !important;
       }
-      #${ROOT_ID} input:is([type="checkbox"], [type="radio"]), #${EXTENSION_ID} input:is([type="checkbox"], [type="radio"]) {
+      #${ROOT_ID} input:is([type="checkbox"], [type="radio"]) {
         appearance: auto !important;
         -webkit-appearance: auto !important;
         accent-color: var(--fm-control-accent) !important;
@@ -4512,8 +4478,7 @@
         box-shadow: none !important;
         color-scheme: inherit !important;
       }
-      #${ROOT_ID} input:disabled, #${ROOT_ID} textarea:disabled, #${ROOT_ID} select:disabled,
-      #${EXTENSION_ID} input:disabled, #${EXTENSION_ID} textarea:disabled, #${EXTENSION_ID} select:disabled {
+      #${ROOT_ID} input:disabled, #${ROOT_ID} textarea:disabled, #${ROOT_ID} select:disabled {
         opacity: .62 !important;
         cursor: not-allowed !important;
       }
@@ -5033,7 +4998,7 @@
       #${EXTENSION_ID} .fm-ext-section { display: flex; flex-direction: column; gap: 6px; padding-block: 7px; border-block-start: 1px solid var(--SmartThemeBorderColor, currentColor); }
       #${EXTENSION_ID} .fm-ext-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; font-size: .9em; }
       #${EXTENSION_ID} .fm-ext-row > :last-child { min-width: 0; text-align: end; overflow-wrap: anywhere; }
-      #${EXTENSION_ID} .fm-ext-row select { --fm-control-padding: 5px 7px; --fm-control-radius: 8px; --fm-control-font-size: 12px; --fm-control-line-height: 1.4; width: auto; max-width: 55%; margin: 0; }
+      #${EXTENSION_ID} .fm-ext-row select { width: auto; max-width: 55%; margin: 0; }
       #${EXTENSION_ID} .fm-ext-check { display: flex; align-items: center; gap: 5px; min-width: 0; font-size: .9em; }
       #${EXTENSION_ID} .fm-ext-check input { flex-shrink: 0; }
       #${EXTENSION_ID} .fm-ext-credit { text-align: end; }
@@ -5202,7 +5167,7 @@
   }
 
   const api = {
-    version: '0.3.30',
+    version: '0.3.31',
     open: () => openWindow(true),
     close: closeWindow,
     destroy,
@@ -5276,5 +5241,5 @@
   window.addEventListener(FRAME_EXIT_EVENT, handleFrameExit, { once: true });
   window.addEventListener('beforeunload', handleFrameExit, { once: true });
 
-  console.info('[Freesia Messenger] 通讯侠 v0.3.30 已启动。');
+  console.info('[Freesia Messenger] 通讯侠 v0.3.31 已启动。');
 })();
