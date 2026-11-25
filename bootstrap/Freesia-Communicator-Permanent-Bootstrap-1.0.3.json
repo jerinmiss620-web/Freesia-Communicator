@@ -1,0 +1,8 @@
+{
+  "type": "script",
+  "id": "4f6c8f70-8e7d-4a2f-9b8e-1c4a6d2f9b30",
+  "enabled": false,
+  "name": "Freesia Messenger Permanent Bootstrap 1.0.3",
+  "info": "Package is being finalized.",
+  "content": "(() => {})();"
+}
