@@ -2,7 +2,7 @@ name: Validate Messenger Bootstrap rebuild
 
 on:
   push:
-    branches: [test-bootstrap-rebuild]
+    branches: [test-bootstrap-rebuild, test-bootstrap-rebuild-verify]
   pull_request:
     branches: [main, test-bootstrap-rebuild]
 
