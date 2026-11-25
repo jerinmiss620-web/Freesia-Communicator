@@ -7,7 +7,7 @@
 | Current Core | **v0.3.36** |
 | Release branch | `main` |
 | Immutable source | `core/v0.3.36/Freesia-Messenger.js` |
-| Current alias | `core/current/Freesia-Messenger.js` |
+| Current alias | `core/current/Freesia-Messenger-ESM.js` |
 | Tavern Helper entry | `install/Freesia-Messenger-GitHub-ESM-Import-v0.3.36.json` |
 | Original script ID | `6ba49b66-ace8-4db4-acbd-292b6dde4ced` |
 | Immutable source commit | `4b1fa89a5e14dc926d7b0e1d6cb16a97663d2498` |
@@ -16,12 +16,14 @@
 
 ## Repository-side validation
 
-- The current alias is byte-for-byte identical to the immutable v0.3.36 source.
+- The `core/current/Freesia-Messenger-ESM.js` alias is byte-for-byte identical to the immutable v0.3.36 source.
 - The release manifest pins the immutable source commit, raw URL, SHA-256 and exact UTF-8 byte length.
 - Core API version, visible version labels and startup log match v0.3.36.
-- The Tavern Helper JSON preserves the original script ID and contains exactly one static ES Module import statement pointing to GitHub `main/core/current`.
+- The Tavern Helper JSON preserves the original script ID and contains exactly one static ES Module import statement pointing to the fresh `main/core/current/Freesia-Messenger-ESM.js` alias.
 - The complete Core remains on GitHub; the import JSON contains no Core implementation, dynamic import wrapper, Bootstrap, Remote Loader or IndexedDB loader.
 - JavaScript syntax is checked with Node's `vm.Script`.
+- Stable GitHub Actions purges the jsDelivr cache and verifies that the actual `testingcf.jsdelivr.net` import URL returns the expected Core version before the CDN check passes.
+- The previous `Freesia-Messenger.js` CDN alias was observed returning v0.3.30 despite the GitHub `main` source being v0.3.36; the new alias is used to avoid that stale cache.
 - Phone CSS is inserted only into the phone Shadow DOM; the non-Shadow-DOM fallback keeps the style inside the isolated root host.
 - The document-level stylesheet is separately scoped to `#freesia-messenger-extension` and contains no checkbox/input appearance rules.
 - The phone's internal checkbox/radio rule remains inside its private stylesheet.
