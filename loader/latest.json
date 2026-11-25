@@ -2,16 +2,16 @@
   "schema_version": 1,
   "project": "Freesia Messenger",
   "channel": "stable-loader",
-  "latest_version": "0.1.0",
+  "latest_version": "0.1.1",
   "minimum_bootstrap_version": "1.0.0",
   "release": {
-    "version": "0.1.0",
-    "source_path": "loader/runtime/v0.1.0/Freesia-Messenger-Remote-Loader.js",
-    "source_commit": "3cae9254de18fbb09a07ce8164f16b7edfed78ca",
-    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/3cae9254de18fbb09a07ce8164f16b7edfed78ca/loader/runtime/v0.1.0/Freesia-Messenger-Remote-Loader.js",
-    "changelog_path": "loader/runtime/v0.1.0/CHANGELOG.md",
-    "sha256": "c83eb118e005a926ed97b53380b120bcc642797fa95810f1889cfb6aa26e94d4",
-    "size_bytes": 55292
+    "version": "0.1.1",
+    "source_path": "loader/runtime/v0.1.1/Freesia-Messenger-Remote-Loader.js",
+    "source_commit": "14e436979d6d743d751523cb0e3fc95776465782",
+    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/14e436979d6d743d751523cb0e3fc95776465782/loader/runtime/v0.1.1/Freesia-Messenger-Remote-Loader.js",
+    "changelog_path": "loader/runtime/v0.1.1/CHANGELOG.md",
+    "sha256": "0377c8930b8a5c7e22f6a5b701ce449f58888a288005b16645a5d9b4629e22f2",
+    "size_bytes": 56470
   },
-  "notes": "Headless runtime adapted from the user's proven TLE Remote Loader architecture. Stable/Test Core manifests, SHA-256 and UTF-8 byte-length verification, IndexedDB LKG/Previous cache, Blob fallback, and rollback."
+  "notes": "Four transport routes (GitHub Raw, jsDelivr, Fastly, TestingCF). Mutable manifests prefer GitHub Raw; each route is validated before fallback advances. Candidate, IndexedDB LKG/Previous and rollback are preserved."
 }
