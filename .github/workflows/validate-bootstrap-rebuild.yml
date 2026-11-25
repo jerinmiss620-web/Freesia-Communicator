@@ -4,7 +4,7 @@ on:
   push:
     branches: [test-bootstrap-rebuild]
   pull_request:
-    branches: [test-bootstrap-rebuild]
+    branches: [main, test-bootstrap-rebuild]
 
 jobs:
   verify:
@@ -19,6 +19,11 @@ jobs:
           node --check bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.6-TEST.js
           node --check loader/runtime/v0.1.8/Freesia-Messenger-Remote-Loader.js
           node --check core/v0.3.37/Freesia-Messenger.js
+          node --check scripts/test-messenger-update-chain.mjs
+      - name: Install replay-test dependencies
+        run: npm install --no-save --no-package-lock jsdom@31.0.1 fake-indexeddb@6.2.8
+      - name: Full-source update-chain replay
+        run: node scripts/test-messenger-update-chain.mjs
       - name: Existing Core release checks
         run: node scripts/verify-release.mjs
       - name: Bootstrap / Loader / Core consistency
