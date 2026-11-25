@@ -23,7 +23,7 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: bash
         run: |
-          CHANGED_PATHS="$(git diff --name-only HEAD^ HEAD)"
+          CHANGED_PATHS="$(jq -r '.head_commit.modified[]?, .head_commit.added[]?, .head_commit.removed[]?' "$GITHUB_EVENT_PATH")"
           if ! grep -Fxq "core/current/Freesia-Messenger-ESM.js" <<<"$CHANGED_PATHS"; then
             echo "No Core source change in this commit; skip CDN purge."
             exit 0
