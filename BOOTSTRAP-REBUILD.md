@@ -67,8 +67,25 @@ This branch's Stable manifest now points to the verified immutable Core v0.3.37 
 - TLE Loader: `jerinmiss620-web/Tavern-Layout-Engine/loader/runtime/v0.3.6/TLE-Remote-Loader.js`
 - TLE full-chain test: `jerinmiss620-web/Tavern-Layout-Engine/tests/tle-update-chain.test.mjs`
 
-## CI follow-up
+## CI results
 
-- The first replay run confirmed that all three JavaScript sources parse and that the replay dependencies install.
-- The first harness assertion incorrectly expected the Core style element in the host document; the Core intentionally mounts its visual stylesheet inside the Messenger Shadow DOM. The assertion now checks the Shadow DOM, matching the actual Core architecture.
-- The replay suite is being rerun against the corrected assertion. A separate legacy workflow still asserts the old Loader v0.1.6 manifest and is not the new rebuild verifier; it must be reconciled before any Stable merge.
+All three GitHub Actions workflows pass on the current validation head:
+
+- `Validate Messenger Bootstrap rebuild`: syntax, full-source replay, existing Core release checks, and Bootstrap / Loader / Core manifest consistency.
+- `Validate Remote Bootstrap and Loader`: legacy release integrity and migration contracts.
+- `Validate Freesia Messenger releases`: Core source hash, byte length, and ESM import package integrity.
+
+The full-source replay now explicitly passes:
+- first install and transient manifest retry;
+- unattended Core and Loader updates without re-importing the permanent entry;
+- failed Loader upgrade rollback and failed Core initialization rollback;
+- auto-update off/on behavior;
+- offline restoration from IndexedDB;
+- corrupt source rejection and stale-version downgrade prevention;
+- durable LKG write failure;
+- pending-request destruction without resurrection;
+- v1.0.5 Bootstrap / v0.1.6 Loader cache migration, including choosing a newer verified localStorage LKG over a stale IndexedDB record;
+- IndexedDB lost-connection invalidation, reopen, and one retry;
+- Test / Stable channel isolation and switching back.
+
+These are repository-level automated results, not iPhone, TT, or ST real-device acceptance. The test importer remains disabled by default and has not been promoted to Stable.
