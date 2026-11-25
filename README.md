@@ -7,13 +7,14 @@ SillyTavern / Tavern Helper 的独立通讯面板。项目采用 GitHub Remote L
 | 层级 | 当前版本 | 职责 |
 |---|---:|---|
 | Permanent Bootstrap | 1.0.1 | 本地固定引导脚本，负责加载/更新 Loader |
-| Remote Loader Runtime | 0.1.1 | 读取版本清单、验证源码、缓存、安装、健康检查与回滚 |
+| Remote Loader Runtime | 0.1.2 | 读取版本清单、验证源码、缓存、安装、健康检查、请求诊断与回滚 |
 | Communicator Core | Stable 0.3.22 / Test 0.3.24 | 通讯侠实际功能 |
 
 - Stable 清单：[latest.json](latest.json)
 - Test 清单：[channels/test.json](channels/test.json)
 - Test 更新记录：[Core v0.3.24](core/v0.3.24/CHANGELOG.md)
 - Loader 清单：[loader/latest.json](loader/latest.json)
+- Loader 更新记录：[Runtime v0.1.2](loader/runtime/v0.1.2/CHANGELOG.md)
 - 一次性安装包：[Bootstrap 1.0.1 JSON](bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.1.json)
 
 > **当前状态：内部 Test，不是社区正式升级。** Test 通道现为 Core v0.3.24，已实现移动悬浮入口修复、821px 以下全屏、通讯侠/窗口/悬浮球分离控制、内部输入控件主题隔离，以及正则侠式逐层宿主定位与共享 Shadow DOM 窗口壳。Stable 仍保持 v0.3.22；PC、Android、iPhone/TavernTogether 实机验证完成前，社区用户暂时不需要迁移。
@@ -51,6 +52,8 @@ window.__FREESIA_MESSENGER_REMOTE_LOADER_V1__?.setChannel('stable')
 window.__FREESIA_MESSENGER_REMOTE_LOADER_V1__?.checkRemote()
 window.__FREESIA_MESSENGER_REMOTE_LOADER_V1__?.rollback()
 ```
+
+`getInfo()` 会显示当前通道、运行版本、可用版本、自动更新与回滚状态，以及最近一次清单/源码请求的线路、耗时、HTTP 状态和失败原因。
 
 切换通道会要求确认；若目标通道版本较旧，只有明确切换通道后才允许回退。普通用户不需要运行这些命令，后续可把通道与更新状态入口整合进通讯侠控制中心。
 
