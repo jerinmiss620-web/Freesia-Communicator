@@ -1,0 +1,17 @@
+{
+  "type": "script",
+  "enabled": true,
+  "name": "Freesia Messenger · 通讯侠 v0.3.36（GitHub 本体直连 TEST）",
+  "id": "6ba49b66-ace8-4db4-acbd-292b6dde4ced",
+  "content": "import 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@test-direct-esm-import/core/current/Freesia-Messenger.js'",
+  "info": "# Freesia Messenger · 通讯侠 v0.3.36\n\n**GitHub 本体直连测试入口。** 本 JSON 只保留一条静态 ES Module `import`，完整通讯侠本体位于 GitHub 测试分支，不内嵌功能代码。\n\n- **测试分支：** `test-direct-esm-import`\n- **测试本体：** `core/current/Freesia-Messenger.js`\n- **首次测试：** 导入本 JSON 一次；已安装此 TEST 入口的用户无需重复导入。\n- **后续测试更新：** 只更新 GitHub 测试分支的本体，刷新酒馆即可加载更新。\n- **样式隔离：** 手机样式只进入 Shadow DOM；扩展折叠面板使用独立的容器级样式，复选框外观由酒馆主题管理。\n- **全屏尺寸：** 移除基础 max-width 对视口的额外裁切；PC 窗口仍由 JS 控制 420–520px 的竖向尺寸，手机端继续使用 Visual Viewport 尺寸。\n- **兼容：** 保留原通讯侠脚本 ID、业务数据键、聊天记录及预设。\n\n此包仅供测试分支验证。正式版仍由 `main` 分支入口提供。",
+  "button": {
+    "enabled": false,
+    "buttons": []
+  },
+  "data": {},
+  "export_with": {
+    "data": true,
+    "button": true
+  }
+}
