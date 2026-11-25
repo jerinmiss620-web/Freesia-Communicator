@@ -11,7 +11,6 @@ GitHub Actions runs `node scripts/verify-release.mjs` on pushes and pull request
 - Loader concurrent-check deduplication and per-route diagnostic fields.
 - Bootstrap import JSON validity and exact equality between its embedded script and the standalone Bootstrap source.
 - Direct-parent host contract and Shadow DOM root detection for Core, Loader and Bootstrap.
-- Loader and Bootstrap Shadow DOM root detection against a simulated open Shadow DOM.
 - Bootstrap success criteria verify the Loader runtime and wait for its startup promise before Core adoption.
 
 ## Current baseline
@@ -36,7 +35,7 @@ The repository-side checks do not prove successful execution inside Tavern Helpe
 - iPhone Safari opening the PC-hosted SillyTavern.
 - iPhone / TavernTogether.
 - Replace Bootstrap 1.0.3 with 1.0.4; confirm Bootstrap and Loader write/read back verified localStorage cache records, while old IndexedDB databases remain untouched.
-- Test Core v0.3.26 installation and actual runtime version after Shadow DOM health check.
+- Test Core v0.3.29 installation and actual runtime version after Shadow DOM health check.
 - Refresh and offline restore from localStorage cache; confirm IndexedDB connection loss no longer blocks startup.
 - A Test Core upgrade followed by an explicit rollback to Stable.
 - Existing chat messages, moments, comments, subscriptions and settings after migration.
