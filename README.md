@@ -1,81 +1,41 @@
 # Freesia Messenger · 通讯侠
 
-SillyTavern / Tavern Helper 的独立通讯面板。项目采用 GitHub Remote Loader，后续 Core 更新不再要求使用者反复下载、导入完整 JSON。
+SillyTavern / Tavern Helper 的独立通讯面板。
 
-## 当前发布结构
+## 当前加载方式：GitHub 本体直连
 
-| 层级 | 当前版本 | 职责 |
-|---|---:|---|
-| Permanent Bootstrap | 1.0.5 | 固定启动器；旧 Loader 迁移回滚、启动 Promise 错误隔离与完整性校验 |
-| Remote Loader Runtime | 0.1.6 | localStorage Candidate/LKG/Previous、旧缓存兼容读取、安装、健康检查与回滚 |
-| Communicator Core | Stable 0.3.22 / Test 0.3.29 | 通讯侠实际功能 |
+当前版本采用最简单的两部分结构：
 
-- Stable 清单：[latest.json](latest.json)
-- Test 清单：[channels/test.json](channels/test.json)
-- Test 更新记录：[Core v0.3.29](core/v0.3.29/CHANGELOG.md)
-- Loader 清单：[loader/latest.json](loader/latest.json)
-- Loader 更新记录：[Runtime v0.1.6](loader/runtime/v0.1.6/CHANGELOG.md)
-- Bootstrap 更新记录：[Bootstrap v1.0.5](bootstrap/CHANGELOG-1.0.5.md)
-- 一次性安装包：[Bootstrap 1.0.5 JSON](bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.5.json)
+1. **酒馆助手导入包**只保留一段动态 `import()`，负责从 GitHub CDN 加载通讯侠本体。
+2. **GitHub 本体**保存完整功能代码。日常更新只修改本体，不需要重新导入大型 JSON。
 
-> **当前状态：内部 Test，不是社区正式升级。** Stable 仍保持 v0.3.22；Test 为 v0.3.29。Bootstrap / Loader / Core 的首次接管与自动更新链仍需在 ST、TT 实机验证后才可提升 Stable。
+| 项目 | 路径 | 职责 |
+|---|---|---|
+| 酒馆助手导入包 | [GitHub Direct JSON](install/Freesia-Messenger-GitHub-Direct-v0.3.30.json) | 小型入口；动态导入本体并报告加载结果 |
+| 当前本体入口 | [core/current/Freesia-Messenger.js](core/current/Freesia-Messenger.js) | 始终指向当前准备发布的源码 |
+| v0.3.30 版本快照 | [core/v0.3.30/Freesia-Messenger.js](core/v0.3.30/Freesia-Messenger.js) | 可追溯的版本文件 |
+| 更新记录 | [v0.3.30 CHANGELOG](core/v0.3.30/CHANGELOG.md) | 本次直连迁移记录 |
 
-## 首次接管与启动器升级
+导入包使用 `testingcf.jsdelivr.net` 加载 `core/current`，并附加时间戳查询参数。每次重新执行导入脚本时都会请求当前入口，避免旧的 ES Module 缓存阻止获取新版本。
 
-1. 保留原先单独导入的通讯侠 Core JSON，作为救援副本；不要清除站点数据。
-2. 在酒馆助手中用 Bootstrap 1.0.5 替换 1.0.3 / 1.0.4 并启用。
-3. Bootstrap 会先为现有 Loader v0.1.2–v0.1.5 建立固定 Commit 回滚副本，再将 Remote Loader 更新到 0.1.6。若发现当前通讯侠仍由独立脚本运行、尚未建立回滚授权，会提示「接管当前通讯侠」。
-4. 确认接管后，Loader 会按当前 Core 版本，从 Test 清单的固定 Git Commit 下载对应历史源码，验证 SHA-256 与 UTF-8 字节长度，并写入、读回校验 Last Known Good。此步骤不会替换当前运行实例。
-5. 看到接管成功后，在酒馆助手中停用原来单独导入的通讯侠 Core 脚本，再完整刷新酒馆。
-6. Bootstrap / Loader 会从 Last Known Good 恢复当前版本，再检查并安装 Test v0.3.29。自动更新关闭时，可在通讯侠扩展折叠栏的「远程更新」区域手动检查和安装。
+## 安装 / 替换
 
-**不要在接管成功前停用原 Core，也不要删除旧 JSON。不要清除 localStorage、IndexedDB 或聊天数据。** 新版本的 Bootstrap 与 Loader 使用 localStorage 保存完整源码回滚记录；旧 IndexedDB 数据库保留为兼容数据，不会清除或成为启动前置条件。
+1. 在酒馆助手中导入 GitHub Direct JSON。导入包保留了原通讯侠脚本 ID，可替换原来的独立 Core 脚本。
+2. 停用旧的 **Permanent Bootstrap** 脚本，避免旧更新链再次加载另一份 Core。
+3. 刷新酒馆。导入包会从 GitHub 加载当前通讯侠本体。
+4. 后续更新只需更新 `core/current/Freesia-Messenger.js`；无需重新导入 JSON，也不再需要 Bootstrap 或 Remote Loader。
 
-## 本次修复内容
+## 当前版本
 
-- Bootstrap 1.0.5 保留 TLE 的直接父窗口宿主契约；旧 Loader 缺少新 Bootstrap 缓存时，先下载并验证固定 Commit 回滚副本，再执行升级。
-- Loader 0.1.6 将 Candidate、Last Known Good 与 Previous 全部改为 localStorage 读回校验；IndexedDB 仅保留旧缓存的可选只读兼容路径。
-- Bootstrap 1.0.5 修复 ready Promise 失败后重复等待的问题；Loader 0.1.6 修复 0.1.5 中遗留的未定义 writeIndexedRecord 调用。
-- Test 清单包含 v0.3.22–v0.3.28 的固定 Commit / SHA-256 / 字节长度，供 Loader 安全建立当前版本的回滚副本。
-- Core v0.3.29 在现有扩展折叠栏加入「接管当前版本」入口；需要接管时禁用安装按钮，避免跳过回滚保护。
+- Communicator Core：**v0.3.30**
+- 加载方式：GitHub CDN 动态导入
+- IndexedDB：不参与通讯侠本体加载
+- 业务数据：沿用既有 localStorage 键和当前聊天元数据结构
 
-## 数据兼容原则
+## 救援方式
 
-本次只增加 Loader 接管与更新控制，不更改通讯业务数据结构或现有存储键：
+建议保留此前可用的本地通讯侠 JSON 备份。若 GitHub/CDN 暂时不可用，可停用直连导入包并启用本地救援副本。不要为了排查加载问题清除酒馆站点数据。
 
-- localStorage：窗口位置、悬浮入口位置、AI 预设、外观、入口显示、主动联络、现实时间感知、正文同步、隐私遮罩、社区模式等。
-- 当前聊天元数据：通讯消息、动态、订阅、社区记录。
-- 正文同步仍使用原有固定 Prompt ID。
-- Loader 使用独立的 Freesia Messenger Remote Loader localStorage 键，不占用通讯侠业务数据键；旧 IndexedDB 数据只作兼容读取。
+## 旧更新链
 
-## 更新通道与接口
-
-Stable 是默认通道，目前为 v0.3.22。Test 通道为 v0.3.29；测试通过后，再将同一份已验证源码提升到 Stable。
-
-Loader API 位于酒馆宿主窗口：
-
-```js
-window.__FREESIA_MESSENGER_REMOTE_LOADER_V1__?.getInfo()
-window.__FREESIA_MESSENGER_REMOTE_LOADER_V1__?.setChannel('test')
-window.__FREESIA_MESSENGER_REMOTE_LOADER_V1__?.setChannel('stable')
-window.__FREESIA_MESSENGER_REMOTE_LOADER_V1__?.checkRemote()
-window.__FREESIA_MESSENGER_REMOTE_LOADER_V1__?.adoptCurrent()
-window.__FREESIA_MESSENGER_REMOTE_LOADER_V1__?.rollback()
-```
-
-`getInfo()` 会显示当前通道、运行版本、可用版本、自动更新与回滚状态，以及最近一次清单/源码请求的线路、耗时、HTTP 状态和失败原因。
-
-## 完整性与回滚
-
-- Manifest 固定到 Git Commit 与版本目录。
-- Core / Loader 均验证 SHA-256 和 UTF-8 字节长度。
-- GitHub Raw、jsDelivr、Fastly、TestingCF 四线路下载；任何线路返回内容都必须先通过 JSON / 版本 / 路径 / 字节长度 / SHA-256 校验。
-- localStorage 保存完整 Candidate、Last Known Good 与 Previous 源码记录；写入后读回并验证 SHA-256 与 UTF-8 字节长度。
-- 先验证候选源码，再加载；健康检查失败时恢复上一份已验证版本。
-- 远程 script + SRI 失败时，可回退到已校验源码的 Blob Script。
-- Bootstrap、Loader 与 Core 使用一致的 Tavern Helper 直接父窗口宿主契约。
-- SHA-256 与固定 Commit 提供完整性验证，不等同于发行者数字签名；信任根仍是本 GitHub 仓库。
-
-## 开发与发布
-
-参见 [RELEASING.md](RELEASING.md)、[Loader 说明](loader/README.md) 与 [验证记录](VALIDATION.md)。
+`bootstrap/` 与 `loader/` 下的 Bootstrap / Remote Loader 文件仅保留为历史开发记录，不属于 v0.3.30 的安装和启动流程。
