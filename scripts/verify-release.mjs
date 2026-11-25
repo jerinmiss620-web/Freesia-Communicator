@@ -54,7 +54,7 @@ assert(test.minimum_loader_version === '0.1.4', 'Test Core must require Remote L
 assert(Array.isArray(test.adoptable_releases) && test.adoptable_releases.length >= 6, 'Test manifest must include historical Core adoption records');
 const adoptedVersions = new Set();
 for (const record of test.adoptable_releases) {
-  assert(/^\\d+\\.\\d+\\.\\d+$/.test(record.version || ''), 'Adoption record version invalid');
+  assert(record.version.split('.').length === 3 && record.version.split('.').every(part => /^[0-9]+$/.test(part)), 'Adoption record version invalid');
   assert(compareVersions(record.version, test.release.version) < 0, 'Adoption records must be older than the Test release');
   assert(!adoptedVersions.has(record.version), 'Duplicate adoption record: ' + record.version);
   adoptedVersions.add(record.version);
