@@ -151,10 +151,10 @@
     if (String(title || '') !== 'Freesia Messenger Loader') return false;
     const text = String(message || '');
     if (/正在切换下一备用线路/.test(text)) return true;
-    if (/远程源码校验通过：v[\\d.]+。当前运行版本已经是最新版本，无需重新加载/.test(text)) return true;
-    if (/自动恢复成功：实际运行 通讯侠 v[\\d.]+。正在检查远程更新/.test(text)) return true;
-    if (/正在读取 .*通道版本清单|已找到远程版本 v[\\d.]+，正在下载并校验源码/.test(text)) return true;
-    if (method === 'success' && /^(?:GitHub Loader v[\\d.]+ 已通过校验|Headless Loader v[\\d.]+ 已启动)/.test(text)) return true;
+    if (/远程源码校验通过：v[\d.]+。当前运行版本已经是最新版本，无需重新加载/.test(text)) return true;
+    if (/自动恢复成功：实际运行 通讯侠 v[\d.]+。正在检查远程更新/.test(text)) return true;
+    if (/正在读取 .*通道版本清单|已找到远程版本 v[\d.]+，正在下载并校验源码/.test(text)) return true;
+    if (method === 'success' && /^(?:GitHub Loader v[\d.]+ 已通过校验|Headless Loader v[\d.]+ 已启动)/.test(text)) return true;
     return false;
   }
 
