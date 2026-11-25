@@ -14,7 +14,7 @@ SillyTavern / Tavern Helper 的独立通讯面板。
 | 酒馆助手导入包 | [GitHub Direct JSON](install/Freesia-Messenger-GitHub-Direct-v0.3.35.json) | 小型入口；动态导入本体并报告加载结果 |
 | 当前本体入口 | [core/current/Freesia-Messenger.js](core/current/Freesia-Messenger.js) | 始终指向当前准备发布的源码 |
 | v0.3.35 版本快照 | [core/v0.3.35/Freesia-Messenger.js](core/v0.3.35/Freesia-Messenger.js) | 可追溯的版本文件 |
-| 更新记录 | [v0.3.35 CHANGELOG](core/v0.3.35/CHANGELOG.md) | 本次直连迁移记录 |
+| 更新记录 | [v0.3.35 CHANGELOG](core/v0.3.35/CHANGELOG.md) | 本次功能与修复记录 |
 | 发布清单 | [v0.3.35 release.json](core/v0.3.35/release.json) | 固定源码提交、SHA-256 与 UTF-8 字节长度 |
 
 导入包使用 `testingcf.jsdelivr.net` 加载 `core/current`，并附加时间戳查询参数。每次重新执行导入脚本时都会请求当前入口，避免旧的 ES Module 缓存阻止获取新版本。
