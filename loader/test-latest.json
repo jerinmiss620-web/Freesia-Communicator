@@ -7,8 +7,8 @@
   "release": {
     "version": "0.1.8",
     "source_path": "loader/runtime/v0.1.8/Freesia-Messenger-Remote-Loader.js",
-    "source_commit": "1b6ec6dc5dbaf19fed64c7e91e0bed47e0971933",
-    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/1b6ec6dc5dbaf19fed64c7e91e0bed47e0971933/loader/runtime/v0.1.8/Freesia-Messenger-Remote-Loader.js",
+    "source_commit": "8694e192b997ae4e9b0aac5e88b2f1f04234f675",
+    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/8694e192b997ae4e9b0aac5e88b2f1f04234f675/loader/runtime/v0.1.8/Freesia-Messenger-Remote-Loader.js",
     "changelog_path": "loader/runtime/v0.1.8/CHANGELOG.md",
     "sha256": "f1120d5ae63d4049462973fea927bfee3ec52b4cb54828a59c7ae1c2a16b57cd",
     "size_bytes": 66006
