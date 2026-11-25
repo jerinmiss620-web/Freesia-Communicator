@@ -46,6 +46,7 @@ jobs:
           const fs = require('node:fs');
           const crypto = require('node:crypto');
           const assert = require('node:assert/strict');
+          const { Script } = require('node:vm');
 
           const loaderPath = 'loader/runtime/v0.1.6/Freesia-Messenger-Remote-Loader.js';
           const bootstrapPath = 'bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.5.js';
