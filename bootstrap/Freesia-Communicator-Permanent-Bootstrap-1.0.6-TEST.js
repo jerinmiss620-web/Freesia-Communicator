@@ -2,7 +2,7 @@
   'use strict';
   // 简介：通讯侠 永久远程更新链。使用方式：仅导入并启用 Bootstrap，由它管理 Loader 与 Core。
   // 注意事项：首次迁移禁用旧独立脚本；首次安装需要联网，自动更新可在原有折叠区域关闭。作者：小松鼠 & ChatGPT（小松7）。
-  // Freesia Messenger · Permanent Remote Bootstrap 1.0.5
+  // Freesia Messenger · Permanent Remote Bootstrap 1.0.6 (TEST)
   // Installed once in Tavern Helper. Updates the Loader runtime from GitHub.
   // The Loader runtime in turn maintains 通讯侠 Core. No second floating UI.
   const SCRIPT_WIN = window;
