@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "project": "Freesia Messenger",
+  "channel": "test",
+  "version": "0.3.38",
+  "source_path": "core/v0.3.38/Freesia-Messenger.js",
+  "source_commit": "9126109ceffc557b2923e254dd091ad5887c06b9",
+  "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/9126109ceffc557b2923e254dd091ad5887c06b9/core/v0.3.38/Freesia-Messenger.js",
+  "changelog_path": "core/v0.3.38/CHANGELOG.md",
+  "sha256": "5baf91681107b2a1f189345e9b7b647dcaaae26f8ccb2728caa2970b17690071",
+  "size_bytes": 374286
+}
