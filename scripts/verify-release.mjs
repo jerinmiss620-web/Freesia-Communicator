@@ -7,7 +7,7 @@ const EXPECTED_ID = '6ba49b66-ace8-4db4-acbd-292b6dde4ced';
 const EXPECTED_VERSION = '0.3.36';
 const EXPECTED_SHA256 = '557fa079b326d8720bc7831faaa16d765ed9e02d422dc4e147606a260a087f92';
 const EXPECTED_SIZE_BYTES = 371989;
-const EXPECTED_IMPORT_URL = 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger.js';
+const EXPECTED_IMPORT_URL = 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger-ESM.js';
 const EXPECTED_IMPORT = "import '" + EXPECTED_IMPORT_URL + "'";
 
 async function readText(path) {
@@ -18,7 +18,7 @@ function assert(condition, message) {
 }
 
 const sourcePath = 'core/v0.3.36/Freesia-Messenger.js';
-const currentPath = 'core/current/Freesia-Messenger.js';
+const currentPath = 'core/current/Freesia-Messenger-ESM.js';
 const packagePath = 'install/Freesia-Messenger-GitHub-ESM-Import-v0.3.36.json';
 const previousPath = 'core/v0.3.35/Freesia-Messenger.js';
 const manifestPath = 'core/v0.3.36/release.json';
