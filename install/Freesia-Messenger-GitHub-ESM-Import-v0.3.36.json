@@ -3,8 +3,8 @@
   "enabled": true,
   "name": "Freesia Messenger · 通讯侠 v0.3.36（GitHub 本体引入）",
   "id": "6ba49b66-ace8-4db4-acbd-292b6dde4ced",
-  "content": "import 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger.js'",
-  "info": "# Freesia Messenger · 通讯侠 v0.3.36\n\n**GitHub 正式本体引入入口。** 本脚本只保留一条静态 ES Module `import`；通讯侠完整功能代码保存在 GitHub，不内嵌在此 JSON 中。\n\n- **正式分支：** `main`\n- **当前本体：** `core/current/Freesia-Messenger.js`\n- **首次安装：** 在酒馆助手中导入本 JSON 一次。\n- **后续更新：** 只更新 GitHub 的 `core/current/Freesia-Messenger.js`；已安装此入口的用户刷新酒馆即可加载更新，不需要再次下载或导入 JSON。\n- **兼容：** 保留原通讯侠脚本 ID、业务存储键、聊天元数据、预设及通讯记录。\n- **加载链：** 不依赖 Permanent Bootstrap、Remote Loader、动态 import 或 IndexedDB。\n\n**从 v0.3.35 升级：** 如果已经使用旧版 GitHub ESM Import 入口，无需重复导入此 JSON；停用旧 Bootstrap（如果仍启用），刷新酒馆即可。",
+  "content": "import 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger-ESM.js'",
+  "info": "# Freesia Messenger · 通讯侠 v0.3.36\n\n**GitHub 正式本体引入入口。** 本脚本只保留一条静态 ES Module `import`；通讯侠完整功能代码保存在 GitHub，不内嵌在此 JSON 中。\n\n- **正式分支：** `main`\n- **当前本体：** `core/current/Freesia-Messenger-ESM.js`\n- **本次迁移：** 旧的 `core/current/Freesia-Messenger.js` CDN 地址曾持续返回 v0.3.30。请用本入口替换旧导入入口一次，切换到新的 ESM 地址。\n- **后续更新：** 只更新 GitHub 的 `core/current/Freesia-Messenger-ESM.js`；完成 CDN 缓存刷新后，已安装用户刷新酒馆即可获取新本体，不需要再次下载或导入 JSON。\n- **兼容：** 保留原通讯侠脚本 ID、业务存储键、聊天元数据、预设及通讯记录。\n- **加载链：** 不依赖 Permanent Bootstrap、Remote Loader、动态 import 或 IndexedDB。\n\n**替换方式：** 将现有通讯侠 GitHub 导入入口的 content 替换为本 JSON 的单行 import，或用本 JSON 覆盖旧入口。不要同时启用两个通讯侠实例。若旧 Permanent Bootstrap 仍启用，也请停用。",
   "button": {
     "enabled": false,
     "buttons": []
