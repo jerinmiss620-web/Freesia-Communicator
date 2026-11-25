@@ -3,6 +3,7 @@
 ## Window controller rebuild
 
 - Replaced the legacy window visibility and floating-entry event flow with a dedicated `WindowController`, following the interaction model used by Freesia Regex Manager v1.3.6.
+- Fixed the critical host-mount order: the Shadow DOM host is attached to the Tavern document before the controller is created, so its `isConnected` guard no longer blocks every open attempt.
 - The draggable floating bubble is now the single window entry. It appears while Messenger is enabled and its window is closed or minimized; clicking it opens or restores the window.
 - PC window: centered responsive workspace, title-bar dragging, bottom-right resizing, maximize/restore, and remembered geometry.
 - Mobile viewport at 821px and below: full-screen window. Layout follows `visualViewport` resize and scroll changes and retains the existing safe-area handling.
