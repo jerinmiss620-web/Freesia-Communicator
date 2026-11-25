@@ -14,7 +14,7 @@ const L = '__FREESIA_MESSENGER_REMOTE_LOADER_V1__';
 const C = '__FREESIA_MESSENGER_V1__';
 const AUTO = 'freesia_messenger_remote_auto_update_v1';
 const rootURL = 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/';
-const branch = 'test-bootstrap-rebuild';
+const branch = 'test-bootstrap-rebuild-verify';
 const sources = new Map();
 let loaderManifest, coreManifest, testManifest = JSON.parse(read('channels/test.json')), offline = false, corrupt = false;
 let db = new IDBFactory();
