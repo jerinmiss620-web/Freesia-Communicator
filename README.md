@@ -33,8 +33,17 @@ import 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@
 
 - 已使用 `core/current/Freesia-Messenger-ESM.js` 地址的用户：刷新酒馆即可，无需重新导入。
 - 仍使用旧的 `core/current/Freesia-Messenger.js` 地址的用户：需要一次性替换入口，以后不再需要反复导入。
-- 若此前启用旧的 Permanent Bootstrap，请停用，避免重复启动。
+- GitHub ESM Import 与 Permanent Bootstrap 是两种安装方式，不应同时启用；切换方式时停用旧入口即可，不需要清除数据。
 - 不要为更新通讯侠而清除酒馆站点数据。
+
+## Permanent Bootstrap 1.0.6 · TEST
+
+另有一条单入口 Bootstrap 更新链正在进行测试：Bootstrap 1.0.6 管理 Remote Loader 0.1.8，再由 Loader 管理 Core。用户只启用 Bootstrap，不需要单独启用 Loader。
+
+首次迁移时，Bootstrap 可能从自己的缓存恢复旧 Loader，再替换为新版；这是同一入口内部的迁移步骤，不代表多份脚本同时运行。该 TEST 包尚未替换 Stable 安装方式。
+
+- [Bootstrap 1.0.6 测试导入包](install/Freesia-Messenger-Permanent-Bootstrap-1.0.6-TEST.json)
+- [Bootstrap 1.0.6 更新说明](bootstrap/CHANGELOG-1.0.6.md)
 
 ## 验证规则
 
