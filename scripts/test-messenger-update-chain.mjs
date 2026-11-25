@@ -124,6 +124,26 @@ async function readLoaderCache() {
   database.close();
   return records;
 }
+async function writeCache(name, slot, value) {
+  const request = db.open(name, 1);
+  request.onupgradeneeded = () => {
+    if (!request.result.objectStoreNames.contains('records')) {
+      request.result.createObjectStore('records', { keyPath: 'slot' });
+    }
+  };
+  const database = await new Promise((resolve, reject) => {
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+  const tx = database.transaction('records', 'readwrite');
+  tx.objectStore('records').put({ slot, schema_version: 1, ...value });
+  await new Promise((resolve, reject) => {
+    tx.oncomplete = resolve;
+    tx.onerror = () => reject(tx.error);
+    tx.onabort = () => reject(tx.error || new Error('cache seed transaction aborted'));
+  });
+  database.close();
+}
 async function boot({ empty = false, transientFailure = null } = {}) {
   errors = [];
   timers = new Map();
@@ -328,6 +348,61 @@ try {
   assert.equal(host[C], undefined);
   assert.equal(timers.size, 0);
   console.log('PASS: destruction during pending network work cannot resurrect the runtime');
+  close();
+
+  // Migration regression: Bootstrap v1.0.5 kept its Loader source in localStorage;
+  // Loader v0.1.6 kept Core LKG there, while an older IndexedDB record may still exist.
+  // The new Bootstrap must migrate its localStorage cache, and Loader 0.1.8 must choose
+  // the newer verified localStorage LKG over a stale-but-valid IndexedDB record.
+  db = new IDBFactory();
+  offline = true;
+  const bootManifest = publish('loader', '0.1.8');
+  const coreManifestForMigration = publish('core', '0.3.37');
+  const bootRecord = {
+    schema_version: 2, slot: 'last', version: '0.1.8',
+    source: loaderSource, size_bytes: bytes(loaderSource), sha256: hash(loaderSource),
+    source_url: bootManifest.release.source_url,
+    source_commit: bootManifest.release.source_commit,
+    saved_at: new Date().toISOString()
+  };
+  const newestCoreRecord = {
+    schema_version: 1, version: '0.3.37',
+    source: coreSource, size_bytes: bytes(coreSource), sha256: hash(coreSource),
+    source_url: coreManifestForMigration.release.source_url,
+    source_commit: coreManifestForMigration.release.source_commit,
+    saved_at: new Date().toISOString()
+  };
+  const staleCoreSource = coreSource.replaceAll(plan.core, '0.3.36');
+  const staleCommit = createHash('sha1').update(staleCoreSource).digest('hex');
+  const staleCoreRecord = {
+    version: '0.3.36', source: staleCoreSource,
+    size_bytes: bytes(staleCoreSource), sha256: hash(staleCoreSource),
+    source_commit: staleCommit,
+    source_url: rootURL + staleCommit + '/core/v0.3.36/Freesia-Messenger.js'
+  };
+  await writeCache('Freesia_Messenger_Remote_Loader_Cache', 'lkg', staleCoreRecord);
+  storage = new Map([
+    ['freesia_messenger_bootstrap_cache_v2_last', JSON.stringify(bootRecord)],
+    ['freesia.messenger.loader.lastKnownGood.v1', JSON.stringify(newestCoreRecord)],
+    ['freesia.messenger.loader.autoRestore.v1', 'true'],
+    ['freesia_messenger_appearance_v1', 'dark']
+  ]);
+  await boot();
+  await versions('0.3.37', '0.1.8');
+  const migratedBootstrap = await readBootstrapCache();
+  const migratedCore = await readLoaderCache();
+  assert.ok(migratedBootstrap.some(record => record.slot === 'last' && record.version === '0.1.8'));
+  assert.ok(migratedCore.some(record => record.slot === 'lkg' && record.version === '0.3.37'));
+  const corePointer = JSON.parse(host.localStorage.getItem('freesia.messenger.loader.lastKnownGood.v1'));
+  assert.equal(corePointer.backend, 'indexedDB');
+  assert.equal(corePointer.version, '0.3.37');
+  assert.ok(host.localStorage.getItem('freesia_messenger_bootstrap_cache_v2_last'),
+    'legacy Bootstrap cache remains as a compatibility copy');
+  assert.equal(host.localStorage.getItem('freesia_messenger_appearance_v1'), 'dark',
+    'user appearance preference is preserved');
+  console.log('PASS: v1.0.5 Bootstrap cache and v0.1.6 Loader LKG migrate safely; newer verified LKG wins over stale IndexedDB');
+  close();
+  offline = false;
 
   console.log('Messenger Bootstrap → Loader → Core update-chain tests passed.');
 } finally {
