@@ -22,7 +22,7 @@
 - The Tavern Helper JSON preserves the original script ID and contains exactly one static ES Module import statement pointing to the fresh `main/core/current/Freesia-Messenger-ESM.js` alias.
 - The complete Core remains on GitHub; the import JSON contains no Core implementation, dynamic import wrapper, Bootstrap, Remote Loader or IndexedDB loader.
 - JavaScript syntax is checked with Node's `vm.Script`.
-- Stable GitHub Actions purges the jsDelivr cache and verifies that the actual `testingcf.jsdelivr.net` import URL returns the expected Core version before the CDN check passes.
+- Stable GitHub Actions purges the jsDelivr cache and verifies that the actual `testingcf.jsdelivr.net` import URL returns the expected Core version **and** the retry-dismiss markup, handler and persisted dismissal flag before the CDN check passes.
 - The previous `Freesia-Messenger.js` CDN alias was observed returning v0.3.30 despite the GitHub `main` source being v0.3.36; the new alias is used to avoid that stale cache.
 - Phone CSS is inserted only into the phone Shadow DOM; the non-Shadow-DOM fallback keeps the style inside the isolated root host.
 - The document-level stylesheet is separately scoped to `#freesia-messenger-extension` and contains no checkbox/input appearance rules.
