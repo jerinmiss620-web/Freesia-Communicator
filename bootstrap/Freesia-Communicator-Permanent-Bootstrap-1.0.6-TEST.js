@@ -142,6 +142,50 @@
       try { HOST_WIN.toastr?.error?.(String(message).slice(0, 160), 'Freesia Messenger Loader'); } catch {}
     }
   }
+
+  // Legacy cached Loaders run once during migration. Their old startup routine
+  // emits success toasts for "already latest" and warning toasts for each
+  // intermediate CDN failover. Those are internal migration steps, not outcomes.
+  // Keep terminal errors, cache warnings and the final "更新成功" notification.
+  function isLegacyStartupToast(method, message, title) {
+    if (String(title || '') !== 'Freesia Messenger Loader') return false;
+    const text = String(message || '');
+    if (/正在切换下一备用线路/.test(text)) return true;
+    if (/远程源码校验通过：v[\\d.]+。当前运行版本已经是最新版本，无需重新加载/.test(text)) return true;
+    if (/自动恢复成功：实际运行 通讯侠 v[\\d.]+。正在检查远程更新/.test(text)) return true;
+    if (/正在读取 .*通道版本清单|已找到远程版本 v[\\d.]+，正在下载并校验源码/.test(text)) return true;
+    if (method === 'success' && /^(?:GitHub Loader v[\\d.]+ 已通过校验|Headless Loader v[\\d.]+ 已启动)/.test(text)) return true;
+    return false;
+  }
+
+  function suppressLegacyStartupToasts() {
+    const toastr = HOST_WIN.toastr;
+    if (!toastr || (typeof toastr !== 'object' && typeof toastr !== 'function')) return () => {};
+    const restorations = [];
+    for (const method of ['info', 'success', 'warning', 'error']) {
+      const original = toastr[method];
+      if (typeof original !== 'function') continue;
+      const wrapped = function(message, title, ...args) {
+        if (isLegacyStartupToast(method, message, title)) {
+          try { HOST_WIN.console?.info?.('[Freesia Messenger Bootstrap] 已合并旧 Loader 启动提示：' + String(message)); } catch {}
+          return;
+        }
+        return original.call(this, message, title, ...args);
+      };
+      try {
+        toastr[method] = wrapped;
+        if (toastr[method] === wrapped) restorations.push({ method, original, wrapped });
+      } catch {}
+    }
+    let restored = false;
+    return () => {
+      if (restored) return;
+      restored = true;
+      for (const item of restorations) {
+        try { if (toastr[item.method] === item.wrapped) toastr[item.method] = item.original; } catch {}
+      }
+    };
+  }
   function getInfo() {
     const runtime = currentRuntime();
     return {
@@ -999,7 +1043,18 @@
       if (closed || (!manual && running && !isAutoUpdateEnabled())) return false;
       if (running?.getInfo?.()?.busy) return false;
       running?.destroy?.();
-      const method = await evaluate(record);
+      // v0.1.2–v0.1.7 cached runtimes announce every internal startup step.
+      // Filter only those known non-actionable notices while their ready promise
+      // is running; the new Loader's final Core update success remains visible.
+      const restoreLegacyToasts = compareVersions(record.version, '0.1.8') < 0
+        ? suppressLegacyStartupToasts()
+        : null;
+      let method;
+      try {
+        method = await evaluate(record);
+      } finally {
+        restoreLegacyToasts?.();
+      }
       if (!healthy(record)) throw new Error('Loader 自检失败');
       cached = await writeSlot('last', record);
       setStatus('Loader v' + currentRuntime().version + ' 已实际运行（' + method + '），持久缓存已读回校验。', 'success');
