@@ -13,6 +13,6 @@
     "sha256": "0fa1e9ad634ce39bbd65811099ed31221b2b656fb1b3a0890d5e3d285fae7a90",
     "size_bytes": 372094
   },
-  "status": "Internal Test only. v0.3.25 replaces the legacy popup and floating-entry logic with a Regex-style window controller; real-device verification is required before Stable promotion.",
+  "status": "Internal Test only. v0.3.26 corrects the accidental wide PC window defaults; real-device verification is required before Stable promotion.",
   "notes": "Restores the compact phone-shaped PC floating window (default 420×780px, resizable 360–520px wide) instead of the accidental 920–1120px desktop-wide panel. PC maximize preserves the portrait width and only expands height. Desktop workspace geometry key moves to v8 so old wide saved geometry is not reused. The <=821px full-screen mobile layout and the v0.3.25 WindowController, single draggable bubble, enable/disable control, Shadow DOM host mount and all business data remain unchanged. Internal Test only; real-device verification still required."
 }
