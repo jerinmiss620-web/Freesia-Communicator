@@ -7,12 +7,12 @@
   "release": {
     "version": "0.3.25",
     "source_path": "core/v0.3.25/Freesia-Messenger.js",
-    "source_commit": "67a408fcf4007fa5a31a4ae085492acb2aa9c1af",
-    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/67a408fcf4007fa5a31a4ae085492acb2aa9c1af/core/v0.3.25/Freesia-Messenger.js",
+    "source_commit": "fb00c089766a9b9bf589c36a6942d1dc2ccaedf8",
+    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/fb00c089766a9b9bf589c36a6942d1dc2ccaedf8/core/v0.3.25/Freesia-Messenger.js",
     "changelog_path": "core/v0.3.25/CHANGELOG.md",
-    "sha256": "53425d066e9d5dcf81dc739c6d41b40cf69390fff31677047e32b246ce67633f",
-    "size_bytes": 371638
+    "sha256": "f21c8f70c91c6d4962ab9108b504ff481b9ae360c9cc2f86718ecd0b311d3ceb",
+    "size_bytes": 371713
   },
   "status": "Internal Test only. v0.3.25 replaces the legacy popup and floating-entry logic with a Regex-style window controller; real-device verification is required before Stable promotion.",
-  "notes": "The Test release uses one draggable floating bubble as the only window entry and one extension-drawer enable/disable control. PC windows support drag, resize, maximize and saved geometry; viewports at 821px and below use full-screen layout. AI preset management remains inside Messenger Settings."
+  "notes": "The Test release uses one draggable floating bubble as the only window entry and one extension-drawer enable/disable control. PC windows support drag, resize, maximize and saved geometry; viewports at 821px and below use full-screen layout. The document-level Shadow DOM host is mounted before the controller and bubble are created. AI preset management remains inside Messenger Settings."
 }
