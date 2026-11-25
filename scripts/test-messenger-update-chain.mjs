@@ -16,7 +16,7 @@ const AUTO = 'freesia_messenger_remote_auto_update_v1';
 const rootURL = 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/';
 const branch = 'test-bootstrap-rebuild';
 const sources = new Map();
-let loaderManifest, coreManifest, offline = false, corrupt = false;
+let loaderManifest, coreManifest, testManifest = JSON.parse(read('channels/test.json')), offline = false, corrupt = false;
 let db = new IDBFactory();
 let storage = new Map([['freesia_messenger_appearance_v1', 'dark']]);
 let dom, host, frame, timers = new Map(), errors = [], blobs = new Map(), blobID = 0;
@@ -64,6 +64,22 @@ function publish(kind, version, suffix = '') {
   if (kind === 'loader') loaderManifest = manifest;
   else coreManifest = manifest;
   return manifest;
+}
+function publishTestCore(version) {
+  const source = coreSource.replaceAll(plan.core, version);
+  const source_path = `core/v${version}/Freesia-Messenger.js`;
+  const source_commit = createHash('sha1').update(source).digest('hex');
+  const source_url = rootURL + source_commit + '/' + source_path;
+  sources.set(source_url, source);
+  testManifest = {
+    schema_version: 1, project: 'Freesia Messenger', channel: 'test',
+    latest_version: version, minimum_loader_version: '0.1.6',
+    release: {
+      version, source_path, source_commit, source_url,
+      sha256: hash(source), size_bytes: bytes(source)
+    }
+  };
+  return testManifest;
 }
 
 async function waitFor(predicate, label) {
@@ -207,7 +223,7 @@ async function boot({ empty = false, transientFailure = null } = {}) {
     if (offline) throw new TypeError('simulated offline');
     if (isManifest) {
       const manifest = path.endsWith('/loader/test-latest.json') ? loaderManifest :
-        path.endsWith('/channels/test.json') ? JSON.parse(read('channels/test.json')) : coreManifest;
+        path.endsWith('/channels/test.json') ? testManifest : coreManifest;
       return { ok: true, status: 200, text: async () => JSON.stringify(manifest) };
     }
     const source = sources.get(String(path));
@@ -403,6 +419,53 @@ try {
   console.log('PASS: v1.0.5 Bootstrap cache and v0.1.6 Loader LKG migrate safely; newer verified LKG wins over stale IndexedDB');
   close();
   offline = false;
+
+  // Exercise the TLE IndexedDB disconnect recovery: invalidate the stale DB handle,
+  // reopen once, retry the same transaction, and continue with the verified update.
+  db = new IDBFactory();
+  storage = new Map();
+  publish('core', '0.3.37');
+  publish('loader', '0.1.8');
+  await boot();
+  await versions('0.3.37', '0.1.8');
+  const dbRequest = db.open('Freesia_Messenger_Remote_Loader_Cache', 1);
+  const dbHandle = await new Promise((resolve, reject) => {
+    dbRequest.onsuccess = () => resolve(dbRequest.result);
+    dbRequest.onerror = () => reject(dbRequest.error);
+  });
+  const dbPrototype = Object.getPrototypeOf(dbHandle);
+  dbHandle.close();
+  const originalTransaction = dbPrototype.transaction;
+  let disconnectInjected = true;
+  dbPrototype.transaction = function(...args) {
+    if (disconnectInjected) {
+      disconnectInjected = false;
+      throw new Error('connection to indexed database server lost');
+    }
+    return originalTransaction.apply(this, args);
+  };
+  try {
+    publish('core', '0.3.38');
+    await tick();
+    await versions('0.3.38', '0.1.8');
+    assert.equal(disconnectInjected, false, 'the simulated lost connection must be encountered');
+    console.log('PASS: IndexedDB lost-connection recovery reopens and retries once without losing the Core update');
+  } finally {
+    dbPrototype.transaction = originalTransaction;
+  }
+
+  // Switching to Test must use the Test manifest; switching back to Stable must
+  // restore the Stable manifest without conflating the two release channels.
+  publishTestCore('0.3.29');
+  assert.equal(host[L].setChannel('test'), true);
+  await versions('0.3.29', '0.1.8');
+  assert.equal(host[L].getInfo().channel, 'test');
+  console.log('PASS: Test channel resolves its own manifest and Core release');
+  assert.equal(host[L].setChannel('stable'), true);
+  await versions('0.3.38', '0.1.8');
+  assert.equal(host[L].getInfo().channel, 'stable');
+  console.log('PASS: switching back to Stable restores the Stable manifest and Core release');
+  close();
 
   console.log('Messenger Bootstrap → Loader → Core update-chain tests passed.');
 } finally {
