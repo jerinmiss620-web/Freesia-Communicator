@@ -2,16 +2,17 @@
   "schema_version": 1,
   "project": "Freesia Messenger",
   "channel": "test",
-  "latest_version": "0.3.24",
+  "latest_version": "0.3.25",
   "minimum_loader_version": "0.1.0",
   "release": {
-    "version": "0.3.24",
-    "source_path": "core/v0.3.24/Freesia-Messenger.js",
-    "source_commit": "8dd4e2ab278abcc0003a47cf17660b13f4e7d24d",
-    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/8dd4e2ab278abcc0003a47cf17660b13f4e7d24d/core/v0.3.24/Freesia-Messenger.js",
-    "changelog_path": "core/v0.3.24/CHANGELOG.md",
-    "sha256": "667ed4f4e5ee84c1399686be7f405bd7cf8fde152fdb3b65f87391573b924003",
-    "size_bytes": 365247
+    "version": "0.3.25",
+    "source_path": "core/v0.3.25/Freesia-Messenger.js",
+    "source_commit": "67a408fcf4007fa5a31a4ae085492acb2aa9c1af",
+    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/67a408fcf4007fa5a31a4ae085492acb2aa9c1af/core/v0.3.25/Freesia-Messenger.js",
+    "changelog_path": "core/v0.3.25/CHANGELOG.md",
+    "sha256": "53425d066e9d5dcf81dc739c6d41b40cf69390fff31677047e32b246ce67633f",
+    "size_bytes": 371638
   },
-  "status": "Internal Test only. Rebuilds the Messenger window shell on a shared Shadow DOM with Regex Manager-style ancestor host discovery. The draggable launcher and phone window now share the isolated root. Preserves the <=821px full-screen layout, existing storage keys and business data. Stable remains v0.3.22 pending real-device verification."
+  "status": "Internal Test only. v0.3.25 replaces the legacy popup and floating-entry logic with a Regex-style window controller; real-device verification is required before Stable promotion.",
+  "notes": "The Test release uses one draggable floating bubble as the only window entry and one extension-drawer enable/disable control. PC windows support drag, resize, maximize and saved geometry; viewports at 821px and below use full-screen layout. AI preset management remains inside Messenger Settings."
 }
