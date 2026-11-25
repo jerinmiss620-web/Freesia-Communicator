@@ -664,7 +664,8 @@
   async function readCached(slot) {
     const value = await readSlot(slot);
     if (!value) return null;
-    if (!/^\\d+\\.\\d+\\.\\d+$/.test(value.version)) {
+    const versionParts = String(value.version || '').split('.');
+    if (versionParts.length !== 3 || versionParts.some(part => !/^[0-9]+$/.test(part))) {
       throw new Error('Loader 缓存版本号异常');
     }
     return value;
