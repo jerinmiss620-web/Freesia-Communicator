@@ -1,12 +1,12 @@
 # Freesia Messenger Remote Loader
 
-Loader Runtime 是无独立面板的 headless 管理层，由 Permanent Bootstrap 持有。它不另建一套通讯 UI，也不改变通讯侠业务数据。
+Loader Runtime v0.1.1 是无独立面板的 headless 管理层，由 Permanent Bootstrap v1.0.1 持有。它不另建一套通讯 UI，也不改变通讯侠业务数据。
 
 ## 职责
 
 - 读取 Stable 或 Test Core Manifest。
 - 校验项目、通道、版本、固定 Commit、源码路径、SHA-256 与 UTF-8 字节数。
-- 使用经典 script + SRI 加载；网络/CORS/SRI 不可用时回退到已校验的 Blob Script。
+- GitHub Raw、jsDelivr、Fastly、TestingCF 四线路顺序回退；可变 Manifest 优先官方源，固定 Commit 源码优先 CDN。\n- 每条线路均在接受响应前执行 JSON/清单或源码校验；HTTP 200 但内容错误、版本/路径不匹配、字节长度或 SHA-256 不匹配，也会尝试下一线路。\n- 使用经典 script + SRI 加载；网络/CORS/SRI 不可用时回退到已校验的 Blob Script。
 - 使用独立 IndexedDB 保存 Candidate、Last Known Good 与 Previous，并读回验证。
 - 在 Core 健康检查失败时尝试恢复上一份已验证版本。
 - 自动恢复已授权缓存、周期检查远程版本、网络恢复后重试。
