@@ -1,32 +1,32 @@
 # Validation
 
-## Active GitHub Direct Import Core
+## Active GitHub ESM Import Core
 
 | Item | Value |
 |---|---|
 | Current Core | **v0.3.35** |
 | Immutable source | `core/v0.3.35/Freesia-Messenger.js` |
 | Current alias | `core/current/Freesia-Messenger.js` |
-| Import package | `install/Freesia-Messenger-GitHub-Direct-v0.3.35.json` |
+| Tavern Helper entry | `install/Freesia-Messenger-GitHub-ESM-Import-v0.3.35.json` |
 | Original script ID | `6ba49b66-ace8-4db4-acbd-292b6dde4ced` |
 | Source SHA-256 | `e1f0957b21808fe4bfa8b10aa40be078e9c052ff84b5e0f2ad9060d25ffc554b` |
 | UTF-8 byte length | `371619` |
 
-The direct-import release validator checks:
+The ESM-import release validator checks:
 
 - The current alias is byte-for-byte identical to the immutable versioned source.
-- The release manifest points to the source commit and immutable raw URL.
-- SHA-256 and exact UTF-8 byte length match the source bytes.
+- The release manifest pins the source commit, immutable raw URL, SHA-256 and exact UTF-8 byte length.
 - Core API version, visible version labels and startup log match the release version.
-- The installer JSON preserves the original script ID and dynamically imports the GitHub `core/current` entry.
-- JavaScript syntax and the direct-parent Tavern host contract.
+- The Tavern Helper JSON preserves the original script ID and contains only the static ES Module import statement pointing to GitHub `core/current`.
+- The importer does not embed Core code, a dynamic import wrapper, Bootstrap, Remote Loader or IndexedDB loader.
+- Core JavaScript syntax and the direct-parent Tavern host contract.
 - Mobile keyboard safe-area handling, mobile `max-width` reset and dismissible retry notice are present.
 - Extension-menu controls are not styled by the phone window's private control rules.
-- Existing business storage keys match the previous direct-import Core release.
+- Existing business storage keys match the previous Core release.
 
 ## Legacy Remote Loader records
 
-`latest.json` and `channels/test.json` remain historical manifests for the retired Remote Loader route. The current GitHub Direct installer does not consult them. Permanent Bootstrap and Remote Loader are not required by the active direct-import path.
+`latest.json` and `channels/test.json` remain historical manifests for the retired Remote Loader route. The active GitHub ESM import entry does not consult them. Permanent Bootstrap and Remote Loader are not required by the active loading path.
 
 ## Device validation status
 
