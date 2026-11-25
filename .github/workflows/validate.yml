@@ -36,7 +36,9 @@ jobs:
             if [[ "$BODY" == *"Freesia Messenger · 通讯侠 · $EXPECTED_VERSION"* ]] \
               && [[ "$BODY" == *'data-fm-action="messages-retry-dismiss"'* ]] \
               && [[ "$BODY" == *"function dismissMessageRetryNotice(messageId)"* ]] \
-              && [[ "$BODY" == *"message.retryNoticeDismissed = true"* ]]; then
+              && [[ "$BODY" == *"message.retryNoticeDismissed = true"* ]] \
+              && [[ "$BODY" == *"fm-message-retry-dismiss svg { display: block;"* ]] \
+              && [[ "$BODY" == *"stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none;"* ]]; then
               echo "jsDelivr now serves $EXPECTED_VERSION"
               exit 0
             fi
