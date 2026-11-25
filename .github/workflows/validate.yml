@@ -18,3 +18,29 @@ jobs:
           node-version: 20
       - name: Verify manifests, hashes, lengths and syntax
         run: node scripts/verify-release.mjs
+
+      - name: Purge and verify jsDelivr Stable Core
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          EXPECTED_VERSION="$(grep -m1 -oE 'v[0-9]+\\.[0-9]+\\.[0-9]+' core/current/Freesia-Messenger.js)"
+          test -n "$EXPECTED_VERSION"
+          PURGE_URL="https://purge.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger.js"
+          CDN_URL="https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger.js"
+
+          echo "Purging: $PURGE_URL"
+          curl -fsSL --retry 3 --retry-all-errors --retry-delay 2 "$PURGE_URL"
+
+          for attempt in $(seq 1 12); do
+            BODY="$(curl -fsSL --retry 2 --retry-all-errors "$CDN_URL" || true)"
+            if printf '%s' "$BODY" | grep -Fq "Freesia Messenger · 通讯侠 · $EXPECTED_VERSION"; then
+              echo "jsDelivr now serves $EXPECTED_VERSION"
+              exit 0
+            fi
+            echo "Waiting for jsDelivr to serve $EXPECTED_VERSION (attempt $attempt/12)"
+            sleep 5
+          done
+
+          echo "ERROR: jsDelivr did not serve the expected Stable Core version $EXPECTED_VERSION." >&2
+          printf '%s\\n' "$BODY" | head -n 8 >&2
+          exit 1
