@@ -5,6 +5,8 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    - cron: '0 * * * *'
 
 jobs:
   validate:
@@ -20,38 +22,51 @@ jobs:
         run: node scripts/verify-release.mjs
 
       - name: Purge and verify jsDelivr Stable Core
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule' }}
         shell: bash
         run: |
-          CHANGED_PATHS="$(jq -r '.head_commit.modified[]?, .head_commit.added[]?, .head_commit.removed[]?' "$GITHUB_EVENT_PATH")"
-          if ! grep -Fxq "core/current/Freesia-Messenger-ESM.js" <<<"$CHANGED_PATHS"; then
-            echo "No Core source change in this commit; skip CDN purge."
-            exit 0
+          if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+            CHANGED_PATHS="$(jq -r '.head_commit.modified[]?, .head_commit.added[]?, .head_commit.removed[]?' "$GITHUB_EVENT_PATH")"
+            if ! grep -Fxq "core/current/Freesia-Messenger-ESM.js" <<<"$CHANGED_PATHS"; then
+              echo "No Core source change in this commit; skip CDN purge."
+              exit 0
+            fi
           fi
 
           EXPECTED_VERSION="$(grep -m1 -oE 'v[0-9]+[.][0-9]+[.][0-9]+' core/current/Freesia-Messenger-ESM.js)"
           test -n "$EXPECTED_VERSION"
-          PURGE_URL="https://purge.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger-ESM.js"
           CDN_URL="https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger-ESM.js"
+          PURGE_URL="https://purge.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger-ESM.js"
 
-          echo "Purging: $PURGE_URL"
-          curl -fsSL --connect-timeout 5 --max-time 15 --retry 3 --retry-all-errors --retry-delay 2 "$PURGE_URL"
-
-          for attempt in $(seq 1 12); do
-            BODY="$(curl -fsSL --connect-timeout 5 --max-time 15 --retry 2 --retry-all-errors "$CDN_URL" || true)"
-            if [[ "$BODY" == *"Freesia Messenger · 通讯侠 · $EXPECTED_VERSION"* ]] \
+          body_matches_release() {
+            [[ "$BODY" == *"Freesia Messenger · 通讯侠 · $EXPECTED_VERSION"* ]] \
               && [[ "$BODY" == *'data-fm-action="messages-retry-dismiss"'* ]] \
               && [[ "$BODY" == *"function dismissMessageRetryNotice(messageId)"* ]] \
               && [[ "$BODY" == *"message.retryNoticeDismissed = true"* ]] \
               && [[ "$BODY" == *"fm-message-retry-dismiss svg { display: block;"* ]] \
-              && [[ "$BODY" == *"stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none;"* ]]; then
-              echo "jsDelivr now serves $EXPECTED_VERSION"
+              && [[ "$BODY" == *"stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none;"* ]]
+          }
+
+          BODY="$(curl -fsSL --connect-timeout 5 --max-time 15 "$CDN_URL" || true)"
+          if body_matches_release; then
+            echo "CDN already serves $EXPECTED_VERSION with the retry-dismiss control."
+            exit 0
+          fi
+
+          echo "Purging: $PURGE_URL"
+          PURGE_RESULT="$(curl -fsSL --connect-timeout 5 --max-time 15 --retry 2 --retry-all-errors --retry-delay 2 "$PURGE_URL" || true)"
+          echo "$PURGE_RESULT"
+
+          for attempt in $(seq 1 12); do
+            BODY="$(curl -fsSL --connect-timeout 5 --max-time 15 --retry 2 --retry-all-errors "$CDN_URL" || true)"
+            if body_matches_release; then
+              echo "jsDelivr now serves $EXPECTED_VERSION with the retry-dismiss control."
               exit 0
             fi
             echo "Waiting for jsDelivr to serve $EXPECTED_VERSION (attempt $attempt/12)"
             sleep 5
           done
 
-          echo "ERROR: jsDelivr did not serve the expected Stable Core version $EXPECTED_VERSION." >&2
+          echo "CDN delivery is still pending; the scheduled workflow will retry." >&2
           head -n 8 <<<"$BODY" >&2
           exit 1
