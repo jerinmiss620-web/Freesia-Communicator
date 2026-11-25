@@ -1,6 +1,6 @@
 # Freesia Messenger Bootstrap rebuild — isolated test branch
 
-Branch: `test-bootstrap-rebuild-verify` (PR #6 validation head)
+Branch: `test-bootstrap-toast-cleanup` (PR #6 validation head)
 
 ## Scope
 
@@ -89,3 +89,10 @@ The full-source replay now explicitly passes:
 - Test / Stable channel isolation and switching back.
 
 These are repository-level automated results, not iPhone, TT, or ST real-device acceptance. The test importer remains disabled by default and has not been promoted to Stable.
+
+## Toast cleanup follow-up
+
+- Successful mirror fallback is now diagnostic-only: failed intermediate CDN routes update Loader diagnostics and the console, but do not emit a warning toast.
+- A final failed check still reports its terminal error; real faults are not hidden.
+- The replay harness captures host toasts and asserts that a transient manifest-route failure followed by a successful fallback produces zero warning toasts.
+- This is a test-branch UX correction; it does not change cache, version, rollback, or source-verification semantics.
