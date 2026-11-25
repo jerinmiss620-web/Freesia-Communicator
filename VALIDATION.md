@@ -1,43 +1,41 @@
 # Validation
 
-## Repository-side checks
+## Active GitHub Direct Import Core
 
-GitHub Actions runs `node scripts/verify-release.mjs` on pushes and pull requests. It checks:
+| Item | Value |
+|---|---|
+| Current Core | **v0.3.35** |
+| Immutable source | `core/v0.3.35/Freesia-Messenger.js` |
+| Current alias | `core/current/Freesia-Messenger.js` |
+| Import package | `install/Freesia-Messenger-GitHub-Direct-v0.3.35.json` |
+| Original script ID | `6ba49b66-ace8-4db4-acbd-292b6dde4ced` |
+| Source SHA-256 | `e1f0957b21808fe4bfa8b10aa40be078e9c052ff84b5e0f2ad9060d25ffc554b` |
+| UTF-8 byte length | `371619` |
 
-- Stable, Test and Loader manifest schemas and project/channel identities.
-- Fixed Commit URL, version path and manifest source path consistency.
-- SHA-256 and UTF-8 byte-length equality for each published source.
-- JavaScript syntax for Core, Loader Runtime and Bootstrap packages; four-route fallback and in-route integrity validation.
-- Loader concurrent-check deduplication and per-route diagnostic fields.
-- Bootstrap import JSON validity and exact equality between its embedded script and the standalone Bootstrap source.
-- Direct-parent host contract and Shadow DOM root detection for Core, Loader and Bootstrap.
-- Bootstrap success criteria verify the Loader runtime and wait for its startup promise before Core adoption.
+The direct-import release validator checks:
 
-## Current baseline
+- The current alias is byte-for-byte identical to the immutable versioned source.
+- The release manifest points to the source commit and immutable raw URL.
+- SHA-256 and exact UTF-8 byte length match the source bytes.
+- Core API version, visible version labels and startup log match the release version.
+- The installer JSON preserves the original script ID and dynamically imports the GitHub `core/current` entry.
+- JavaScript syntax and the direct-parent Tavern host contract.
+- Mobile keyboard safe-area handling, mobile `max-width` reset and dismissible retry notice are present.
+- Extension-menu controls are not styled by the phone window's private control rules.
+- Existing business storage keys match the previous direct-import Core release.
 
-The v0.3.22 release remains the Stable baseline. Core v0.3.29 is on the Test channel. Repository checks do not replace real PC, Android and iPhone/TavernTogether testing; do not promote to Stable before those tests pass.
+## Legacy Remote Loader records
 
-| Component | Version | Repository validation |
-|---|---:|---|
-| Core Stable | 0.3.22 | Unchanged |
-| Core Test | 0.3.29 | Manifest + SHA-256 + UTF-8 length; PC portrait geometry and mobile full-screen assertions |
-| Loader Runtime | 0.1.5 | Manifest + SHA-256 + UTF-8 length; localStorage-first rollback cache and legacy IndexedDB fallback-read checks |
-| Bootstrap | 1.0.4 | Import package + standalone source; localStorage-only cache and missing-LKG adoption checks |
+`latest.json` and `channels/test.json` remain historical manifests for the retired Remote Loader route. The current GitHub Direct installer does not consult them. Permanent Bootstrap and Remote Loader are not required by the active direct-import path.
 
-## Not yet validated on devices
+## Device validation status
 
-The repository-side checks do not prove successful execution inside Tavern Helper. Before announcing a public Stable migration, test:
+Repository validation is not a substitute for real device testing. The v0.3.35 source has passed source-level syntax and structural checks, but the final iPhone behavior still needs confirmation in the actual Tavern environment, especially:
 
-- PC desktop viewport: default window approximately 420×780px, remains portrait-shaped, and does not expand to a 920–1120px wide panel.
-- PC manual resize and maximize remain capped at 520px wide.
-- PC browser with a narrow/mobile viewport.
-- Android browser / SillyTavern.
-- iPhone Safari opening the PC-hosted SillyTavern.
+- iPhone Safari opening PC-hosted SillyTavern: full-screen edge-to-edge geometry.
+- iPhone software keyboard: bottom gap closes while the keyboard is open and the normal Home Indicator safe area returns after it closes.
 - iPhone / TavernTogether.
-- Replace Bootstrap 1.0.3 with 1.0.4; confirm Bootstrap and Loader write/read back verified localStorage cache records, while old IndexedDB databases remain untouched.
-- Test Core v0.3.29 installation and actual runtime version after Shadow DOM health check.
-- Refresh and offline restore from localStorage cache; confirm IndexedDB connection loss no longer blocks startup.
-- A Test Core upgrade followed by an explicit rollback to Stable.
-- Existing chat messages, moments, comments, subscriptions and settings after migration.
+- PC desktop portrait window, manual resize and maximize.
+- Android browser / SillyTavern.
 
-Do not describe these device tests as passed until they have been performed.
+Do not describe these device checks as passed until they have been performed.
