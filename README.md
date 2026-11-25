@@ -6,28 +6,31 @@ SillyTavern / Tavern Helper 的独立通讯面板。项目采用 GitHub Remote L
 
 | 层级 | 当前版本 | 职责 |
 |---|---:|---|
-| Permanent Bootstrap | 1.0.1 | 本地固定引导脚本，负责加载/更新 Loader |
-| Remote Loader Runtime | 0.1.2 | 读取版本清单、验证源码、缓存、安装、健康检查、请求诊断与回滚 |
+| Permanent Bootstrap | 1.0.2 | 固定启动器；与 Core 共用逐层宿主定位及 Shadow DOM 健康检查 |
+| Remote Loader Runtime | 0.1.3 | 读取版本清单、验证源码、缓存、安装、健康检查、请求诊断与回滚 |
 | Communicator Core | Stable 0.3.22 / Test 0.3.24 | 通讯侠实际功能 |
 
 - Stable 清单：[latest.json](latest.json)
 - Test 清单：[channels/test.json](channels/test.json)
 - Test 更新记录：[Core v0.3.24](core/v0.3.24/CHANGELOG.md)
 - Loader 清单：[loader/latest.json](loader/latest.json)
-- Loader 更新记录：[Runtime v0.1.2](loader/runtime/v0.1.2/CHANGELOG.md)
-- 一次性安装包：[Bootstrap 1.0.1 JSON](bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.1.json)
+- Loader 更新记录：[Runtime v0.1.3](loader/runtime/v0.1.3/CHANGELOG.md)
+- Bootstrap 更新记录：[Bootstrap v1.0.2](bootstrap/CHANGELOG-1.0.2.md)
+- 一次性安装包：[Bootstrap 1.0.2 JSON](bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.2.json)
 
-> **当前状态：内部 Test，不是社区正式升级。** Test 通道现为 Core v0.3.24，已实现移动悬浮入口修复、821px 以下全屏、通讯侠/窗口/悬浮球分离控制、内部输入控件主题隔离，以及正则侠式逐层宿主定位与共享 Shadow DOM 窗口壳。Stable 仍保持 v0.3.22；PC、Android、iPhone/TavernTogether 实机验证完成前，社区用户暂时不需要迁移。
+> **当前状态：内部 Test，不是社区正式升级。** Test 通道现为 Core v0.3.24，包含移动端窗口重构、821px 以下全屏、输入控件主题隔离、逐层宿主定位与共享 Shadow DOM 窗口壳。Stable 仍保持 v0.3.22；PC、Android、iPhone/TavernTogether 实机验证完成前，社区用户暂时不需要迁移。
 
-## 首次迁移
+## 首次迁移与本次启动器升级
 
-1. 在酒馆助手中**停用**旧的完整通讯侠 v0.3.22 脚本，暂时保留它作为救援副本，不要删除。
-2. 下载并导入 [Permanent Bootstrap 1.0.1](bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.1.json)。已有 v1.0.0 用户需要重新导入一次；Bootstrap 本身是本地固定入口，不会被旧版本自动替换。
-3. 启用新导入的 Bootstrap。
-4. 刷新酒馆宿主页面。Bootstrap 会加载 Loader，Loader 再下载并验证 Core。
-5. 确认通讯侠入口、聊天记录、动态、订阅和设置均正常后，再决定是否长期保留旧脚本副本。
+1. 在酒馆助手中停用旧的完整通讯侠脚本，保留原 JSON 作为救援副本，不要删除。
+2. **如果目前使用 Bootstrap 1.0.1，请停用它，并导入 Bootstrap 1.0.2。** 本次必须更新固定启动器：Core v0.3.24 已改为逐层宿主定位和 Shadow DOM 根节点，旧 Bootstrap/Loader 的宿主定位与健康检查仍按旧 DOM 结构工作。
+3. 启用 Bootstrap 1.0.2 并刷新酒馆宿主页面。
+4. Bootstrap 会复用原有缓存，升级 Loader 至 0.1.3；Loader 再下载并验证 Core。
+5. 确认实际运行版本、通讯入口、聊天记录、动态、订阅和设置正常后，再决定是否长期保留旧脚本副本。
 
-如果首次安装失败，停用 Bootstrap、重新启用旧版完整通讯侠并刷新即可。**不要清除站点数据或聊天数据来处理安装问题。**
+**本次无需清除站点数据、IndexedDB、localStorage 或聊天数据。** Bootstrap 与 Loader 保留原数据库名称、缓存槽位和业务存储键。之后普通 Loader/Core 更新不再要求重新导入 Bootstrap；只有启动协议再次变化时才需要。
+
+如果迁移失败，保留 Bootstrap 1.0.2 和旧版完整通讯侠 JSON，不要清空缓存；先复制 Bootstrap/Loader 诊断再处理。
 
 ## 数据兼容原则
 
@@ -37,7 +40,7 @@ v0.3.24 Core 基于 v0.3.23，保留原通讯侠的存储键与数据结构，�
 - 当前聊天元数据：通讯消息、动态、订阅、社区记录。
 - 正文同步仍使用原有固定 Prompt ID。
 
-Loader 自身使用独立的全新命名空间与 IndexedDB 数据库，不占用通讯侠业务数据键。
+Loader 自身使用独立的 Freesia Messenger Remote Loader 命名空间与 IndexedDB 数据库，不占用通讯侠业务数据键。
 
 ## 更新通道
 
@@ -55,16 +58,15 @@ window.__FREESIA_MESSENGER_REMOTE_LOADER_V1__?.rollback()
 
 `getInfo()` 会显示当前通道、运行版本、可用版本、自动更新与回滚状态，以及最近一次清单/源码请求的线路、耗时、HTTP 状态和失败原因。
 
-切换通道会要求确认；若目标通道版本较旧，只有明确切换通道后才允许回退。普通用户不需要运行这些命令，后续可把通道与更新状态入口整合进通讯侠控制中心。
-
 ## 完整性与回滚
 
 - Manifest 固定到 Git Commit 与版本目录。
 - Core/Loader 均验证 SHA-256 和 UTF-8 字节长度。
-- GitHub Raw、jsDelivr、Fastly、TestingCF 四线路下载；可变 Manifest 优先读取 GitHub Raw，固定 Commit 源码优先使用 CDN。任何线路返回内容都必须先通过 JSON/版本/路径/字节长度/SHA-256 校验，失败才切换下一线路；镜像只负责传输，不改变 Manifest 中的可信来源和固定 Commit。
+- GitHub Raw、jsDelivr、Fastly、TestingCF 四线路下载；可变 Manifest 优先读取 GitHub Raw，固定 Commit 源码优先使用 CDN。任何线路返回内容都必须先通过 JSON/版本/路径/字节长度/SHA-256 校验，失败才切换下一线路。
 - IndexedDB 保存 Candidate、Last Known Good 与 Previous；写入后读回校验。
 - 先验证候选源码，再加载；健康检查失败时恢复上一份已验证版本。
 - 远程 script + SRI 失败时，可回退到已校验源码的 Blob Script。
+- Bootstrap、Loader、Core 使用同一套逐层宿主定位；Loader 与 Bootstrap 同时识别旧 DOM 根节点和 v0.3.24 的 Shadow DOM 根节点。
 - SHA-256 与固定 Commit 提供完整性验证，不等同于发行者数字签名；信任根仍是本 GitHub 仓库。
 
 ## 开发与发布
