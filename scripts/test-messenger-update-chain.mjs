@@ -303,6 +303,13 @@ try {
   await versions('0.3.38', '0.1.9');
   console.log('PASS: Loader updates unattended and keeps the same Core instance/data namespace');
 
+  publish('loader', '0.1.10',
+    `\nwindow.parent.${L}?.destroy?.(); throw Error('intentional Loader initialization failure');`);
+  await tick();
+  await versions('0.3.38', '0.1.9');
+  assert.equal(host[L].diagnostics.destroyed, false);
+  console.log('PASS: failed Loader upgrade restores the previous verified Loader and keeps Core running');
+
   host[L].setAutoUpdateEnabled(false);
   publish('core', '0.3.39');
   publish('loader', '0.1.10');
