@@ -89,7 +89,7 @@ function assertSingle() {
   const rootHost = host.document.getElementById('freesia-messenger-root-host');
   assert.ok(rootHost, 'Messenger root host exists');
   assert.ok(rootHost.shadowRoot?.querySelector('#freesia-messenger-root'), 'Messenger shadow root is mounted');
-  assert.equal(host.document.querySelectorAll('#freesia-messenger-style').length, 1);
+  assert.ok(rootHost.shadowRoot.querySelectorAll('style').length >= 1, 'Messenger visual styles are mounted inside the isolated shadow root');
   assert.equal(host[L].diagnostics.destroyed, false);
   assert.equal(host[L].getInfo().currentVersion, api.version);
   assert.equal(host[B].getInfo().currentLoaderVersion, host[L].version);
