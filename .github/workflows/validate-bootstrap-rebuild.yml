@@ -1,0 +1,25 @@
+name: Validate Messenger Bootstrap rebuild
+
+on:
+  push:
+    branches: [test-bootstrap-rebuild]
+  pull_request:
+    branches: [test-bootstrap-rebuild]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: JavaScript syntax
+        run: |
+          node --check bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.6-TEST.js
+          node --check loader/runtime/v0.1.7/Freesia-Messenger-Remote-Loader.js
+          node --check core/v0.3.37/Freesia-Messenger.js
+      - name: Existing Core release checks
+        run: node scripts/verify-release.mjs
+      - name: Bootstrap / Loader / Core consistency
+        run: node scripts/verify-bootstrap-rebuild.mjs
