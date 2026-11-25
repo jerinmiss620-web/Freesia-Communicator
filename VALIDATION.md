@@ -27,6 +27,13 @@
 - Phone and extension styles remain isolated; existing storage keys are compared with v0.3.36.
 - Stable GitHub Actions checks the actual CDN response and purges only when needed. An hourly scheduled retry recovers from jsDelivr purge throttling without requiring another importer change.
 
+## CDN delivery status
+
+- v0.3.37 repository-side validation passed.
+- The first v0.3.37 jsDelivr purge request was rate-limited (`throttled: true`), so that attempt did not establish CDN delivery.
+- A scheduled check now runs every 30 minutes. It first checks whether the CDN already serves v0.3.37 and the visible retry-dismiss SVG rule; if not, it retries the purge and verification.
+- Do not treat v0.3.37 as delivered through the CDN until an Actions run confirms the actual response.
+
 ## Device validation status
 
 Repository and CDN checks are not a substitute for device testing. The following must still be confirmed in the actual Tavern environment:
