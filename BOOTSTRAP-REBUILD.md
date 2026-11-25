@@ -49,8 +49,8 @@ This branch's Stable manifest now points to the verified immutable Core v0.3.37 
 - Import package (disabled by default): `install/Freesia-Messenger-Permanent-Bootstrap-1.0.6-TEST.json`
 - Bootstrap source: `bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.6-TEST.js`
 - Loader source: `loader/runtime/v0.1.8/Freesia-Messenger-Remote-Loader.js`
-- Stable Core manifest: `latest.json` (v0.3.37)
-- Loader manifest: `loader/latest.json` (v0.1.8)
+- Stable Core manifest: `latest.json` (v0.3.37; minimum Loader 0.1.6 retained for legacy CI)
+- Loader manifest: `loader/test-latest.json` (v0.1.8; isolated test pointer)
 - Static validation: `scripts/verify-bootstrap-rebuild.mjs`
 - Workflow: `.github/workflows/validate-bootstrap-rebuild.yml`
 
