@@ -11,7 +11,8 @@ SillyTavern / Tavern Helper 的独立通讯面板。项目采用 GitHub Remote L
 | Communicator Core | Stable 0.3.22 / Test 0.3.24 | 通讯侠实际功能 |
 
 - Stable 清单：[latest.json](latest.json)
-- Test 清单：[channels/test.json](channels/test.json)\n- Test 更新记录：[Core v0.3.24](core/v0.3.24/CHANGELOG.md)
+- Test 清单：[channels/test.json](channels/test.json)
+- Test 更新记录：[Core v0.3.24](core/v0.3.24/CHANGELOG.md)
 - Loader 清单：[loader/latest.json](loader/latest.json)
 - 一次性安装包：[Bootstrap 1.0.1 JSON](bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.1.json)
 
