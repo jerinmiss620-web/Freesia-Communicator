@@ -11,10 +11,11 @@ SillyTavern / Tavern Helper 的独立通讯面板。
 
 | 项目 | 路径 | 职责 |
 |---|---|---|
-| 酒馆助手导入包 | [GitHub Direct JSON](install/Freesia-Messenger-GitHub-Direct-v0.3.30.json) | 小型入口；动态导入本体并报告加载结果 |
+| 酒馆助手导入包 | [GitHub Direct JSON](install/Freesia-Messenger-GitHub-Direct-v0.3.35.json) | 小型入口；动态导入本体并报告加载结果 |
 | 当前本体入口 | [core/current/Freesia-Messenger.js](core/current/Freesia-Messenger.js) | 始终指向当前准备发布的源码 |
-| v0.3.30 版本快照 | [core/v0.3.30/Freesia-Messenger.js](core/v0.3.30/Freesia-Messenger.js) | 可追溯的版本文件 |
-| 更新记录 | [v0.3.30 CHANGELOG](core/v0.3.30/CHANGELOG.md) | 本次直连迁移记录 |
+| v0.3.35 版本快照 | [core/v0.3.35/Freesia-Messenger.js](core/v0.3.35/Freesia-Messenger.js) | 可追溯的版本文件 |
+| 更新记录 | [v0.3.35 CHANGELOG](core/v0.3.35/CHANGELOG.md) | 本次功能与修复记录 |
+| 发布清单 | [v0.3.35 release.json](core/v0.3.35/release.json) | 固定源码提交、SHA-256 与 UTF-8 字节长度 |
 
 导入包使用 `testingcf.jsdelivr.net` 加载 `core/current`，并附加时间戳查询参数。每次重新执行导入脚本时都会请求当前入口，避免旧的 ES Module 缓存阻止获取新版本。
 
@@ -23,11 +24,11 @@ SillyTavern / Tavern Helper 的独立通讯面板。
 1. 在酒馆助手中导入 GitHub Direct JSON。导入包保留了原通讯侠脚本 ID，可替换原来的独立 Core 脚本。
 2. 停用旧的 **Permanent Bootstrap** 脚本，避免旧更新链再次加载另一份 Core。
 3. 刷新酒馆。导入包会从 GitHub 加载当前通讯侠本体。
-4. 后续更新只需更新 `core/current/Freesia-Messenger.js`；无需重新导入 JSON，也不再需要 Bootstrap 或 Remote Loader。
+4. 已安装的直连入口保留原脚本 ID；后续更新只需更新 `core/current/Freesia-Messenger.js`，用户刷新酒馆即可获取新本体，无需反复导入 JSON，也不再需要 Bootstrap 或 Remote Loader。
 
 ## 当前版本
 
-- Communicator Core：**v0.3.30**
+- Communicator Core：**v0.3.35**
 - 加载方式：GitHub CDN 动态导入
 - IndexedDB：不参与通讯侠本体加载
 - 业务数据：沿用既有 localStorage 键和当前聊天元数据结构
@@ -38,4 +39,4 @@ SillyTavern / Tavern Helper 的独立通讯面板。
 
 ## 旧更新链
 
-`bootstrap/` 与 `loader/` 下的 Bootstrap / Remote Loader 文件仅保留为历史开发记录，不属于 v0.3.30 的安装和启动流程。
+`bootstrap/` 与 `loader/` 下的 Bootstrap / Remote Loader 文件仅保留为历史开发记录，不属于 v0.3.35 的安装和启动流程。

@@ -1,0 +1,17 @@
+{
+  "type": "script",
+  "enabled": true,
+  "name": "Freesia Messenger · 通讯侠 v0.3.35（GitHub直连）",
+  "id": "6ba49b66-ace8-4db4-acbd-292b6dde4ced",
+  "content": "(() => {\n  'use strict';\n\n  const host = window.parent || window;\n  const source = 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger.js?t=' + Date.now();\n\n  import(source).then(() => {\n    const instance = host.__FREESIA_MESSENGER_V1__;\n    if (!instance?.version || instance.hostWindow !== host) {\n      throw new Error('远程源码已下载，但通讯侠实例没有成功注册。');\n    }\n    console.info('[Freesia Messenger] GitHub 直连加载成功，当前版本 v' + instance.version);\n  }).catch(error => {\n    const message = String(error?.message || error);\n    console.error('[Freesia Messenger] GitHub 直连加载失败：', error);\n    try { host.toastr?.error?.('GitHub 直连加载失败：' + message.slice(0, 180), '通讯侠'); } catch {}\n  });\n})();",
+  "info": "# Freesia Messenger · 通讯侠 v0.3.35\n\n**GitHub 直连版。** 本脚本只负责从 GitHub CDN 动态导入通讯侠本体，不再使用 Permanent Bootstrap、Remote Loader、IndexedDB 更新缓存或多层更新链。\n\n- **加载地址：** `core/current/Freesia-Messenger.js`\n- **更新方式：** 已安装的导入入口无需重新导入；刷新酒馆或重新执行入口即可获取 GitHub 当前本体。导入地址附带时间戳，避免浏览器重复使用旧的 ES Module 缓存。\n- **兼容：** 保留原通讯侠实例 ID、localStorage 业务键、聊天元数据结构、预设和通讯记录。\n- **失败提示：** 网络或模块导入失败会输出控制台错误，并尝试通过酒馆 toastr 显示原因。\n\n**注意：** 请停用旧的通讯侠 Permanent Bootstrap。不要清除酒馆站点数据或通讯侠业务数据。",
+  "button": {
+    "enabled": false,
+    "buttons": []
+  },
+  "data": {},
+  "export_with": {
+    "data": true,
+    "button": true
+  }
+}
