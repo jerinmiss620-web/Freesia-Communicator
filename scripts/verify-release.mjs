@@ -37,6 +37,7 @@ assert(source === current, 'core/current must exactly match the versioned releas
 assert(manifest.version === EXPECTED_VERSION, 'Release manifest version must match Core');
 assert(manifest.channel === 'stable-esm-import', 'Release manifest must identify the Stable ESM-import channel');
 assert(manifest.source_path === sourcePath, 'Release manifest source path must match');
+assert(manifest.current_path === currentPath, 'Release manifest current alias path must match');
 assert(manifest.source_commit === '4b1fa89a5e14dc926d7b0e1d6cb16a97663d2498', 'Release manifest must pin the immutable source commit');
 assert(manifest.source_url === 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/4b1fa89a5e14dc926d7b0e1d6cb16a97663d2498/core/v0.3.36/Freesia-Messenger.js', 'Release manifest must use the immutable raw source URL');
 assert(manifest.sha256 === EXPECTED_SHA256, 'Release manifest SHA-256 must match');
