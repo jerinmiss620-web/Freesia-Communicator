@@ -18,7 +18,7 @@
   const VERSION = '1.0.6';
   const BOOT_KEY = '__FREESIA_MESSENGER_REMOTE_BOOTSTRAP_V1__';
   const LOADER_KEY = '__FREESIA_MESSENGER_REMOTE_LOADER_V1__';
-  const MANIFEST_URL = 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/test-bootstrap-rebuild/loader/test-latest.json';
+  const MANIFEST_URL = 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/test-bootstrap-rebuild-verify/loader/test-latest.json';
   const AUTO_UPDATE_KEY = 'freesia_messenger_remote_auto_update_v1';
   const PROJECT = 'Freesia Messenger';
   const MAX_BYTES = 512 * 1024;
@@ -582,7 +582,7 @@
   function downloadRoutes(originalUrl, authoritativeFirst = false) {
     const root = 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/';
     if (!originalUrl.startsWith(root)) throw new Error('下载地址不属于受信任的仓库');
-    const target = /^(main|test-bootstrap-rebuild|[a-f0-9]{40})\/(loader\/latest\.json|loader\/test-latest\.json|latest\.json|channels\/test\.json|loader\/runtime\/v\d+\.\d+\.\d+\/Freesia-Messenger-Remote-Loader\.js|core\/v\d+\.\d+\.\d+\/Freesia-Messenger\.js)(\?.*)?$/.exec(originalUrl.slice(root.length));
+    const target = /^(main|test-bootstrap-rebuild-verify|[a-f0-9]{40})\/(loader\/latest\.json|loader\/test-latest\.json|latest\.json|channels\/test\.json|loader\/runtime\/v\d+\.\d+\.\d+\/Freesia-Messenger-Remote-Loader\.js|core\/v\d+\.\d+\.\d+\/Freesia-Messenger\.js)(\?.*)?$/.exec(originalUrl.slice(root.length));
     if (!target) throw new Error('下载路径或固定 Commit 不符合校验规范');
     const cdnPath = 'jerinmiss620-web/Freesia-Communicator@' + target[1] + '/' + target[2] + (target[3] || '');
     const official = { url: originalUrl, label: 'GitHub Raw', timeout: 20000 };
