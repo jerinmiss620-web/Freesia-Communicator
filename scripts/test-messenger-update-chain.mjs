@@ -355,7 +355,6 @@ try {
     'the user receives exactly one final Core update success toast');
   console.log('PASS: one Bootstrap migrates cached Loader 0.1.6 to 0.1.8 without legacy startup toast spam');
   console.log('PASS: final Core update success is preserved exactly once');
-  close();
 
   publish('core', '0.3.38');
   await tick();
