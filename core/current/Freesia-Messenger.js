@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  // Freesia Messenger · 通讯侠 · v0.3.35
+  // Freesia Messenger · 通讯侠 · v0.3.36
   // Independent floating phone shell for JS-Slash-Runner.
 
   const SCRIPT_WIN = window;
@@ -13,6 +13,7 @@
   }
   const INSTANCE_KEY = '__FREESIA_MESSENGER_V1__';
   const STYLE_ID = 'freesia-messenger-style';
+  const EXTENSION_STYLE_ID = 'freesia-messenger-extension-style';
   const ROOT_ID = 'freesia-messenger-root';
   const ROOT_HOST_ID = 'freesia-messenger-root-host';
   const ENTRY_ID = 'freesia-messenger-chat-entry';
@@ -418,7 +419,7 @@
               <div class="fm-home-note">
                 <span class="fm-note-icon">${ICONS.sparkle}</span>
                 <span class="fm-note-copy"><strong>让故事在消息之外继续发生</strong><small>YOUR STORY, BEYOND THE CHAT</small></span>
-                <span class="fm-note-version">MESSENGER 0.3.35</span>
+                <span class="fm-note-version">MESSENGER 0.3.36</span>
               </div>
             </section>
             <section class="fm-app-view" data-fm-view="app" hidden>
@@ -451,6 +452,9 @@
 
     if (!shadow) {
       state.shadowRoot = null;
+      const scopedStyle = node('style');
+      scopedStyle.textContent = style.textContent || '';
+      host.appendChild(scopedStyle);
       const root = createWindowMarkup();
       host.appendChild(root);
       return root;
@@ -4221,7 +4225,7 @@
     const ctx = snap.info.context;
     const win = state.windowController;
     return [
-      '通讯侠 v0.3.35 运行诊断',
+      '通讯侠 v0.3.36 运行诊断',
       '时间：' + new Date().toLocaleString(),
       '环境：' + HOST_WIN.navigator.userAgent,
       '窗口控制器：' + (win ? '已创建' : '未创建'),
@@ -4300,7 +4304,7 @@
     const select = (key, label) => '<label class="fm-ext-row"><span>' + label + '</span><select class="text_pole" data-fm-ext-field="' + key + '">' + proactiveFieldOptions[key].map(v => '<option value="' + v + '">' + (v === 0 ? '不限' : v + (key === 'limit' ? ' 轮' : ' 分钟')) + '</option>').join('') + '</select></label>';
     const status = (key, label) => '<div class="fm-ext-row"><span>' + label + '</span><span data-fm-ext-status="' + key + '">—</span></div>';
     entry.innerHTML = '<div class="inline-drawer"><div class="inline-drawer-toggle inline-drawer-header"><b>通讯侠 · Freesia Messenger</b><div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div></div><div class="inline-drawer-content"><div class="fm-extension-content">' +
-      '<div class="fm-ext-row"><small>v0.3.35 · 控制中心</small><small data-fm-ext-status="enabled-label">已启用</small></div>' +
+      '<div class="fm-ext-row"><small>v0.3.36 · 控制中心</small><small data-fm-ext-status="enabled-label">已启用</small></div>' +
       '<div class="fm-ext-primary">' + button('toggle-enabled', state.enabled ? '关闭通讯侠' : '启用通讯侠', state.enabled ? 'fa-power-off' : 'fa-play') + '</div>' +
       '<b>快捷设置</b><div class="fm-ext-checks">' + check('time', '真实时间感知') + check('active', 'Char 主动联络') + check('sync', '通讯记录同步正文') + '</div>' +
       '<div class="fm-ext-section" data-fm-ext-active-fields>' + select('interval', '检测间隔') + select('cooldown', '发信冷却') + select('limit', '每日联络上限') + check('notify', '主动消息通知') + '</div>' +
@@ -4371,7 +4375,6 @@
 
   function buildStyle() {
     const style = node('style');
-    style.id = STYLE_ID;
     style.textContent = `
       #${ROOT_ID} {
         color-scheme: light;
@@ -4538,7 +4541,6 @@
         width: min(420px, calc(100vw - 32px));
         height: min(780px, calc(100dvh - 32px));
         min-height: min(520px, calc(100dvh - 32px));
-        max-width: min(520px, calc(100vw - 16px));
         overflow: hidden;
         border: 1px solid light-dark(rgb(226 216 220 / 92%), var(--fm-line));
         border-radius: 27px;
@@ -5033,24 +5035,11 @@
       #${ROOT_ID} .fm-presets-primary { background: light-dark(#9b7d97, var(--fm-accent-dark)); color: light-dark(#fff, var(--fm-on-accent)); margin-left: auto; }
       #${ROOT_ID} .fm-presets-status { font-size: 11px; line-height: 1.5; color: light-dark(#8e7d88, var(--fm-text)); overflow-wrap: anywhere; }
       #${ROOT_ID} .fm-presets-preview { margin: 0; padding: 12px; border: 1px solid light-dark(#eadfe9, var(--fm-line)); border-radius: 11px; background: light-dark(#f6f1f5, var(--fm-card)); color: light-dark(#584a58, var(--fm-text-strong)); white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.6 "Microsoft YaHei", sans-serif; }
-      #${EXTENSION_ID} .fm-extension-content { display: flex; flex-direction: column; gap: 8px; padding: 8px 0 2px; min-width: 0; }
-      #${EXTENSION_ID} .fm-ext-primary { display: flex; width: 100%; min-width: 0; }
-      #${EXTENSION_ID} .fm-ext-primary > .menu_button { width: 100%; min-width: 0; }
-      #${EXTENSION_ID} .fm-extension-content p { margin: 0; font-size: .85em; line-height: 1.5; opacity: .8; overflow-wrap: anywhere; }
-      #${EXTENSION_ID} .fm-ext-buttons, #${EXTENSION_ID} .fm-ext-checks { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; }
-      #${EXTENSION_ID} .fm-extension-content .menu_button { width: 100%; min-width: 0; margin: 0; font-size: .9em; white-space: normal; overflow-wrap: anywhere; gap: 4px; }
-      #${EXTENSION_ID} .fm-ext-section { display: flex; flex-direction: column; gap: 6px; padding-block: 7px; border-block-start: 1px solid var(--SmartThemeBorderColor, currentColor); }
-      #${EXTENSION_ID} .fm-ext-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; font-size: .9em; }
-      #${EXTENSION_ID} .fm-ext-row > :last-child { min-width: 0; text-align: end; overflow-wrap: anywhere; }
-      #${EXTENSION_ID} .fm-ext-row select { width: auto; max-width: 55%; margin: 0; }
-      #${EXTENSION_ID} .fm-ext-check { display: flex; align-items: center; gap: 5px; min-width: 0; font-size: .9em; }
-      #${EXTENSION_ID} .fm-ext-check input { flex-shrink: 0; }
-      #${EXTENSION_ID} .fm-ext-credit { text-align: end; }
-      #${EXTENSION_ID} [hidden], #${ENTRY_ID}[hidden] { display: none !important; }
+      #${ENTRY_ID}[hidden] { display: none !important; }
       @media (max-width: 821px) {
         #${ROOT_ID} { padding: 0; --fm-safe-bottom: env(safe-area-inset-bottom, 0px); }
         #${ROOT_ID}.fm-keyboard-open { --fm-safe-bottom: 0px; }
-        #${ROOT_ID} .fm-frame { position: absolute; inset: 0; width: auto; height: auto; min-height: 0; max-width: none; max-height: none; border: 0; border-radius: 0; box-shadow: none; transform: none; }
+        #${ROOT_ID} .fm-frame { position: absolute; inset: 0; width: auto; height: auto; min-height: 0; max-height: none; border: 0; border-radius: 0; box-shadow: none; transform: none; }
         #${ROOT_ID} .fm-resize-grip, #${ROOT_ID} .fm-window-maximize { display: none !important; }
         #${ROOT_ID} .fm-titlebar { flex-basis: calc(53px + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) 12px 0 14px; cursor: default; touch-action: auto; }
         #${ROOT_ID} .fm-phone-footer { flex-basis: calc(21px + var(--fm-safe-bottom)); padding-bottom: var(--fm-safe-bottom); }
@@ -5142,6 +5131,27 @@
     return style;
   }
 
+  function buildExtensionStyle() {
+    const style = node('style');
+    style.id = EXTENSION_STYLE_ID;
+    style.textContent = `
+      #${EXTENSION_ID} .fm-extension-content { display: flex; flex-direction: column; gap: 8px; padding: 8px 0 2px; min-width: 0; }
+      #${EXTENSION_ID} .fm-ext-primary { display: flex; width: 100%; min-width: 0; }
+      #${EXTENSION_ID} .fm-ext-primary > .menu_button { width: 100%; min-width: 0; }
+      #${EXTENSION_ID} .fm-extension-content p { margin: 0; font-size: .85em; line-height: 1.5; opacity: .8; overflow-wrap: anywhere; }
+      #${EXTENSION_ID} .fm-ext-buttons, #${EXTENSION_ID} .fm-ext-checks { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; }
+      #${EXTENSION_ID} .fm-extension-content .menu_button { width: 100%; min-width: 0; margin: 0; font-size: .9em; white-space: normal; overflow-wrap: anywhere; gap: 4px; }
+      #${EXTENSION_ID} .fm-ext-section { display: flex; flex-direction: column; gap: 6px; padding-block: 7px; border-block-start: 1px solid var(--SmartThemeBorderColor, currentColor); }
+      #${EXTENSION_ID} .fm-ext-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; font-size: .9em; }
+      #${EXTENSION_ID} .fm-ext-row > :last-child { min-width: 0; text-align: end; overflow-wrap: anywhere; }
+      #${EXTENSION_ID} .fm-ext-row select { width: auto; max-width: 55%; margin: 0; }
+      #${EXTENSION_ID} .fm-ext-check { display: flex; align-items: center; gap: 5px; min-width: 0; font-size: .9em; }
+      #${EXTENSION_ID} .fm-ext-credit { text-align: end; }
+      #${EXTENSION_ID} [hidden] { display: none !important; }
+    `;
+    return style;
+  }
+
   function destroy() {
     if (state.destroyed) return;
     HOST_WIN.clearInterval(state.proactiveTimer);
@@ -5199,6 +5209,7 @@
     state.extensionEntry?.remove();
     state.extensionEntry = null;
     HOST_DOC.getElementById(STYLE_ID)?.remove();
+    HOST_DOC.getElementById(EXTENSION_STYLE_ID)?.remove();
     HOST_DOC.getElementById(ENTRY_ID)?.remove();
     HOST_DOC.getElementById(EXTENSION_ID)?.remove();
     HOST_DOC.getElementById(ROOT_HOST_ID)?.remove();
@@ -5212,7 +5223,7 @@
   }
 
   const api = {
-    version: '0.3.35',
+    version: '0.3.36',
     open: () => openWindow(true),
     close: closeWindow,
     destroy,
@@ -5227,6 +5238,7 @@
   HOST_DOC.getElementById(ROOT_HOST_ID)?.remove();
   HOST_DOC.getElementById(LEGACY_MINI_ID)?.remove();
   HOST_DOC.getElementById(STYLE_ID)?.remove();
+  HOST_DOC.getElementById(EXTENSION_STYLE_ID)?.remove();
 
   try {
     const storedMode = HOST_WIN.localStorage.getItem(APPEARANCE_KEY);
@@ -5252,9 +5264,8 @@
   state.presetDraft = loadPresets();
   state.presetSaved = { ...state.presetDraft };
   const style = buildStyle();
-  HOST_DOC.head.appendChild(style);
-
   state.root = createWindowShell(style);
+  HOST_DOC.head.appendChild(buildExtensionStyle());
   (HOST_DOC.body || HOST_DOC.documentElement).appendChild(state.rootHost);
   state.root.setAttribute('aria-hidden', 'true');
   state.frame = state.root.querySelector('.fm-frame');
@@ -5286,5 +5297,5 @@
   window.addEventListener(FRAME_EXIT_EVENT, handleFrameExit, { once: true });
   window.addEventListener('beforeunload', handleFrameExit, { once: true });
 
-  console.info('[Freesia Messenger] 通讯侠 v0.3.35 已启动。');
+  console.info('[Freesia Messenger] 通讯侠 v0.3.36 已启动。');
 })();
