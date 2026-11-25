@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  // Freesia Messenger · 通讯侠 · v0.3.36
+  // Freesia Messenger · 通讯侠 · v0.3.37
   // Independent floating phone shell for JS-Slash-Runner.
 
   const SCRIPT_WIN = window;
@@ -419,7 +419,7 @@
               <div class="fm-home-note">
                 <span class="fm-note-icon">${ICONS.sparkle}</span>
                 <span class="fm-note-copy"><strong>让故事在消息之外继续发生</strong><small>YOUR STORY, BEYOND THE CHAT</small></span>
-                <span class="fm-note-version">MESSENGER 0.3.36</span>
+                <span class="fm-note-version">MESSENGER 0.3.37</span>
               </div>
             </section>
             <section class="fm-app-view" data-fm-view="app" hidden>
@@ -4225,7 +4225,7 @@
     const ctx = snap.info.context;
     const win = state.windowController;
     return [
-      '通讯侠 v0.3.36 运行诊断',
+      '通讯侠 v0.3.37 运行诊断',
       '时间：' + new Date().toLocaleString(),
       '环境：' + HOST_WIN.navigator.userAgent,
       '窗口控制器：' + (win ? '已创建' : '未创建'),
@@ -4304,7 +4304,7 @@
     const select = (key, label) => '<label class="fm-ext-row"><span>' + label + '</span><select class="text_pole" data-fm-ext-field="' + key + '">' + proactiveFieldOptions[key].map(v => '<option value="' + v + '">' + (v === 0 ? '不限' : v + (key === 'limit' ? ' 轮' : ' 分钟')) + '</option>').join('') + '</select></label>';
     const status = (key, label) => '<div class="fm-ext-row"><span>' + label + '</span><span data-fm-ext-status="' + key + '">—</span></div>';
     entry.innerHTML = '<div class="inline-drawer"><div class="inline-drawer-toggle inline-drawer-header"><b>通讯侠 · Freesia Messenger</b><div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div></div><div class="inline-drawer-content"><div class="fm-extension-content">' +
-      '<div class="fm-ext-row"><small>v0.3.36 · 控制中心</small><small data-fm-ext-status="enabled-label">已启用</small></div>' +
+      '<div class="fm-ext-row"><small>v0.3.37 · 控制中心</small><small data-fm-ext-status="enabled-label">已启用</small></div>' +
       '<div class="fm-ext-primary">' + button('toggle-enabled', state.enabled ? '关闭通讯侠' : '启用通讯侠', state.enabled ? 'fa-power-off' : 'fa-play') + '</div>' +
       '<b>快捷设置</b><div class="fm-ext-checks">' + check('time', '真实时间感知') + check('active', 'Char 主动联络') + check('sync', '通讯记录同步正文') + '</div>' +
       '<div class="fm-ext-section" data-fm-ext-active-fields>' + select('interval', '检测间隔') + select('cooldown', '发信冷却') + select('limit', '每日联络上限') + check('notify', '主动消息通知') + '</div>' +
@@ -4754,9 +4754,9 @@
       #${ROOT_ID} .fm-message-retry-note { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 9px 10px; border: 1px solid light-dark(#ead9dc, var(--fm-line)); border-radius: 12px; color: light-dark(#927982, var(--fm-text)); background: light-dark(rgb(255 248 248 / 72%), var(--fm-card)); font-size: max(var(--fm-font-cn-min), 12px); }
       #${ROOT_ID} .fm-message-retry-actions { display: flex; flex: 0 0 auto; align-items: center; gap: 4px; }
       #${ROOT_ID} .fm-message-retry-action { padding: 5px 8px; border: 0; border-radius: 8px; color: light-dark(#8e6274, var(--fm-rose-ink)); background: light-dark(#f1e1e7, var(--fm-rose-soft)); font-size: max(var(--fm-font-cn-min), 12px); cursor: pointer; }
-      #${ROOT_ID} .fm-message-retry-dismiss { display: grid; flex: 0 0 26px; place-items: center; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 50%; color: var(--fm-text-muted); background: transparent; cursor: pointer; }
+      #${ROOT_ID} .fm-message-retry-dismiss { display: grid; flex: 0 0 28px; place-items: center; width: 28px; height: 28px; padding: 0; border: 1px solid light-dark(#ead9dc, var(--fm-line)); border-radius: 50%; color: light-dark(#8e6274, var(--fm-muted)); background: light-dark(rgb(255 255 255 / 78%), var(--fm-card-muted)); cursor: pointer; }
       #${ROOT_ID} .fm-message-retry-dismiss:hover { color: var(--fm-text-strong); background: var(--fm-card-muted); }
-      #${ROOT_ID} .fm-message-retry-dismiss svg { width: 13px; height: 13px; }
+      #${ROOT_ID} .fm-message-retry-dismiss svg { display: block; width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
       #${ROOT_ID} .fm-message-error { padding: 9px 10px; border-radius: 11px; color: light-dark(#986d72, var(--fm-danger)); background: light-dark(#f8e9e9, var(--fm-card)); font-size: max(var(--fm-font-cn-min), 12px); line-height: 1.5; }
       #${ROOT_ID} .fm-message-composer { position: relative; display: flex; flex: 0 0 auto; align-items: flex-end; gap: 7px; padding: 7px 0 2px; border-top: 1px solid light-dark(rgb(255 255 255 / 58%), var(--fm-line)); }
       #${ROOT_ID} .fm-message-composer textarea { --fm-control-padding: 9px 12px; --fm-control-radius: 14px; --fm-control-font-size: max(var(--fm-font-cn-min), 13px); --fm-control-line-height: 1.5; --fm-control-bg: light-dark(rgb(255 255 255 / 86%), var(--fm-card)); --fm-control-border: light-dark(#e7dfe3, var(--fm-line)); --fm-control-shadow: inset 0 1px 2px light-dark(rgb(75 58 73 / 3%), var(--fm-shadow-color)); --fm-control-focus-border: light-dark(#c5a6b3, var(--fm-accent)); --fm-control-focus-shadow: 0 0 0 3px light-dark(rgb(181 139 156 / 12%), var(--fm-shadow-color)); display: block; flex: 1 1 auto; width: 0; min-width: 0; min-height: 40px; max-height: 96px; resize: none; overflow-y: auto; white-space: pre-wrap; }
@@ -5223,7 +5223,7 @@
   }
 
   const api = {
-    version: '0.3.36',
+    version: '0.3.37',
     open: () => openWindow(true),
     close: closeWindow,
     destroy,
@@ -5297,5 +5297,5 @@
   window.addEventListener(FRAME_EXIT_EVENT, handleFrameExit, { once: true });
   window.addEventListener('beforeunload', handleFrameExit, { once: true });
 
-  console.info('[Freesia Messenger] 通讯侠 v0.3.36 已启动。');
+  console.info('[Freesia Messenger] 通讯侠 v0.3.37 已启动。');
 })();
