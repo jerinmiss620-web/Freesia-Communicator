@@ -61,6 +61,13 @@
       source_url: 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/9691b83a0ff097099ac1bfbc923ab22bb3d2d958/loader/runtime/v0.1.6/Freesia-Messenger-Remote-Loader.js',
       sha256: 'd872e4767d8c593681234070b94f0b3d6e1d7c60592efa49675546c7efdbb124',
       size_bytes: 61217
+    },
+    '0.1.7': {
+      version: '0.1.7',
+      source_commit: '9fb579d1746fd6de218343822ca6bc2a31a505e4',
+      source_url: 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/9fb579d1746fd6de218343822ca6bc2a31a505e4/loader/runtime/v0.1.7/Freesia-Messenger-Remote-Loader.js',
+      sha256: 'a06d5e98ece068a20193ad3e093a473ef3f54bf5885a2839bec3b4208f9afe7e',
+      size_bytes: 61341
     }
   };
   const CHECK_INTERVAL = 6 * 60 * 60 * 1000;
