@@ -56,14 +56,29 @@ if (compareVersions(test.release.version, stable.release.version) === 0) {
   assert(stable.release.sha256 === test.release.sha256, 'Stable/Test sources must match when their versions match');
 }
 
-const bootstrapSource = await readText('bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.0.js');
-new Script(bootstrapSource, { filename: 'Permanent Bootstrap 1.0.0' });
-const bootstrapPackage = JSON.parse(await readText('bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.0.json'));
-assert(bootstrapPackage.type === 'script', 'Bootstrap import package type mismatch');
-assert(bootstrapPackage.content === bootstrapSource, 'Bootstrap JSON content differs from standalone source');
-assert(bootstrapPackage.enabled === false, 'Bootstrap import package must be disabled by default');
+const bootstrapSources = {};
+for (const version of ['1.0.0', '1.0.1']) {
+  const base = 'bootstrap/Freesia-Communicator-Permanent-Bootstrap-' + version;
+  const bootstrapSource = await readText(base + '.js');
+  new Script(bootstrapSource, { filename: 'Permanent Bootstrap ' + version });
+  const bootstrapPackage = JSON.parse(await readText(base + '.json'));
+  assert(bootstrapPackage.type === 'script', 'Bootstrap import package type mismatch: ' + version);
+  assert(bootstrapPackage.content === bootstrapSource, 'Bootstrap JSON content differs from standalone source: ' + version);
+  assert(bootstrapPackage.enabled === false, 'Bootstrap import package must be disabled by default: ' + version);
+  bootstrapSources[version] = bootstrapSource;
+}
+const activeBootstrap = bootstrapSources['1.0.1'];
+const loaderSource = await readText(loader.release.source_path);
+for (const [label, source] of [['Bootstrap 1.0.1', activeBootstrap], ['Loader ' + loader.release.version, loaderSource]]) {
+  for (const host of ['raw.githubusercontent.com', 'cdn.jsdelivr.net', 'fastly.jsdelivr.net', 'testingcf.jsdelivr.net']) {
+    assert(source.includes(host), label + ': missing fallback host ' + host);
+  }
+  assert(source.includes('await validate('), label + ': integrity validation is not inside route fallback');
+}
+assert(activeBootstrap.includes('const MAX_ATTEMPTS = 4'), 'Bootstrap must attempt all four routes');
 
 console.log('Freesia Messenger release validation passed.');
 console.log('Stable Core:', stable.release.version);
 console.log('Test Core:', test.release.version);
 console.log('Loader Runtime:', loader.release.version);
+console.log('Bootstrap Runtime: 1.0.1');
