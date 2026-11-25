@@ -2,7 +2,7 @@
 
 SillyTavern / Tavern Helper 的独立通讯面板。
 
-## 当前加载方式：GitHub 静态 ES Module import
+## 当前正式版本：GitHub 静态 ES Module import
 
 采用与「输入助手」相同的轻量引入形式：
 
@@ -11,13 +11,13 @@ SillyTavern / Tavern Helper 的独立通讯面板。
 
 | 项目 | 路径 | 职责 |
 |---|---|---|
-| 酒馆助手引入入口 | [GitHub ESM Import JSON](install/Freesia-Messenger-GitHub-ESM-Import-v0.3.35.json) | 只负责静态 import GitHub 本体 |
-| 当前本体入口 | [core/current/Freesia-Messenger.js](core/current/Freesia-Messenger.js) | 始终指向当前准备发布的源码 |
-| v0.3.35 版本快照 | [core/v0.3.35/Freesia-Messenger.js](core/v0.3.35/Freesia-Messenger.js) | 可追溯的版本文件 |
-| 更新记录 | [v0.3.35 CHANGELOG](core/v0.3.35/CHANGELOG.md) | 本次功能与修复记录 |
-| 发布清单 | [v0.3.35 release.json](core/v0.3.35/release.json) | 固定源码提交、SHA-256 与 UTF-8 字节长度 |
+| 酒馆助手引入入口 | [GitHub ESM Import JSON](install/Freesia-Messenger-GitHub-ESM-Import-v0.3.36.json) | 只负责静态 import GitHub 本体 |
+| 当前本体入口 | [core/current/Freesia-Messenger.js](core/current/Freesia-Messenger.js) | 已安装入口加载的正式源码 |
+| v0.3.36 版本快照 | [core/v0.3.36/Freesia-Messenger.js](core/v0.3.36/Freesia-Messenger.js) | 不可变、可追溯的正式版本文件 |
+| 更新记录 | [v0.3.36 CHANGELOG](core/v0.3.36/CHANGELOG.md) | 本次修复与整理内容 |
+| 发布清单 | [v0.3.36 release.json](core/v0.3.36/release.json) | 固定源码提交、SHA-256 与 UTF-8 字节长度 |
 
-引入入口使用以下形式：
+正式导入入口使用以下形式：
 
 ```js
 import 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger.js';
@@ -25,14 +25,15 @@ import 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@
 
 ## 安装 / 更新
 
-1. 首次使用时，在酒馆助手中导入 [GitHub ESM Import JSON](install/Freesia-Messenger-GitHub-ESM-Import-v0.3.35.json) 一次。
+1. 首次使用时，在酒馆助手中导入 [GitHub ESM Import JSON](install/Freesia-Messenger-GitHub-ESM-Import-v0.3.36.json) 一次。
 2. 若此前启用过旧的 **Permanent Bootstrap**，请停用旧入口，避免重复启动。
-3. 刷新酒馆，即从 GitHub 加载当前通讯侠本体。
-4. 后续更新只修改 `core/current/Freesia-Messenger.js`；使用者刷新酒馆即可获取更新，**不需要再次下载或导入 JSON**。
+3. 刷新酒馆，即从 GitHub `main` 分支加载当前通讯侠本体。
+4. 后续更新只修改 `core/current/Freesia-Messenger.js`；已安装用户刷新酒馆即可获取更新，**不需要再次下载或导入 JSON**。
 
-## 当前版本
+## 当前正式版本
 
-- Communicator Core：**v0.3.35**
+- Communicator Core：**v0.3.36**
+- 发布分支：`main`
 - 加载方式：静态 ES Module import（GitHub / jsDelivr）
 - 本地导入 JSON：仅作为固定入口，不包含通讯侠本体
 - IndexedDB：不参与通讯侠本体加载
@@ -44,4 +45,4 @@ import 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@
 
 ## 旧更新链
 
-`bootstrap/` 与 `loader/` 下的 Bootstrap / Remote Loader 文件仅保留为历史开发记录，不属于 v0.3.35 的安装和启动流程。
+`bootstrap/` 与 `loader/` 下的 Bootstrap / Remote Loader 文件仅保留为历史开发记录，不属于 v0.3.36 的安装和启动流程。
