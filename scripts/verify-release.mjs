@@ -4,9 +4,9 @@ import { Script } from 'node:vm';
 
 const root = new URL('../', import.meta.url);
 const EXPECTED_ID = '6ba49b66-ace8-4db4-acbd-292b6dde4ced';
-const EXPECTED_VERSION = '0.3.36';
-const EXPECTED_SHA256 = '557fa079b326d8720bc7831faaa16d765ed9e02d422dc4e147606a260a087f92';
-const EXPECTED_SIZE_BYTES = 371989;
+const EXPECTED_VERSION = '0.3.37';
+const EXPECTED_SHA256 = '15274a9985c701c069c4dd38ccdde17cc501828e85ec49a04331817689ad6b7d';
+const EXPECTED_SIZE_BYTES = 372230;
 const EXPECTED_IMPORT_URL = 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger-ESM.js';
 const EXPECTED_IMPORT = "import '" + EXPECTED_IMPORT_URL + "'";
 
@@ -17,11 +17,11 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-const sourcePath = 'core/v0.3.36/Freesia-Messenger.js';
+const sourcePath = 'core/v0.3.37/Freesia-Messenger.js';
 const currentPath = 'core/current/Freesia-Messenger-ESM.js';
-const packagePath = 'install/Freesia-Messenger-GitHub-ESM-Import-v0.3.36.json';
-const previousPath = 'core/v0.3.35/Freesia-Messenger.js';
-const manifestPath = 'core/v0.3.36/release.json';
+const packagePath = 'install/Freesia-Messenger-GitHub-ESM-Import-v0.3.37.json';
+const previousPath = 'core/v0.3.36/Freesia-Messenger.js';
+const manifestPath = 'core/v0.3.37/release.json';
 
 const [source, current, previous, packageText, manifestText] = await Promise.all([
   readText(sourcePath),
@@ -38,8 +38,8 @@ assert(manifest.version === EXPECTED_VERSION, 'Release manifest version must mat
 assert(manifest.channel === 'stable-esm-import', 'Release manifest must identify the Stable ESM-import channel');
 assert(manifest.source_path === sourcePath, 'Release manifest source path must match');
 assert(manifest.current_path === currentPath, 'Release manifest current alias path must match');
-assert(manifest.source_commit === '4b1fa89a5e14dc926d7b0e1d6cb16a97663d2498', 'Release manifest must pin the immutable source commit');
-assert(manifest.source_url === 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/4b1fa89a5e14dc926d7b0e1d6cb16a97663d2498/core/v0.3.36/Freesia-Messenger.js', 'Release manifest must use the immutable raw source URL');
+assert(manifest.source_commit === '0f318507aee98489c3e4a621fed1636841727cd0', 'Release manifest must pin the immutable source commit');
+assert(manifest.source_url === 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/0f318507aee98489c3e4a621fed1636841727cd0/core/v0.3.37/Freesia-Messenger.js', 'Release manifest must use the immutable raw source URL');
 assert(manifest.sha256 === EXPECTED_SHA256, 'Release manifest SHA-256 must match');
 assert(manifest.size_bytes === EXPECTED_SIZE_BYTES, 'Release manifest byte length must match');
 assert(manifest.import_package_path === packagePath, 'Release manifest must point to the ESM import package');
@@ -70,6 +70,10 @@ assert(!source.includes('max-width: none; max-height: none'), 'Redundant mobile 
 assert(source.includes('const maxWidth = Math.min(520, bounds.width - 16);'), 'PC frame width must remain JS-clamped to 520px');
 assert(source.includes("width: bounds.width + 'px'"), 'Mobile frame width must use the Visual Viewport width');
 assert(source.includes('messages-retry-dismiss') && source.includes('retryNoticeDismissed'), 'Retry notice must be dismissible and persist its state');
+assert(source.includes('data-fm-action="messages-retry-dismiss"'), 'Retry notice must render a close button');
+assert(source.includes("else if (action === 'messages-retry-dismiss') dismissMessageRetryNotice("), 'Retry close action must be handled');
+assert(source.includes("message.retryNoticeDismissed = true;"), 'Retry close action must persist the dismissed state');
+assert(source.includes('#${ROOT_ID} .fm-message-retry-dismiss svg { display: block; width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }'), 'Retry close icon must have visible SVG stroke styling');
 const internalStyleStart = source.indexOf('function buildStyle()');
 const externalStyleStart = source.indexOf('function buildExtensionStyle()');
 const destroyStart = source.indexOf('function destroy()', externalStyleStart);
