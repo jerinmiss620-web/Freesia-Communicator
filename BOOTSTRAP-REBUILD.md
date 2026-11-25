@@ -1,6 +1,6 @@
 # Freesia Messenger Bootstrap rebuild — isolated test branch
 
-Branch: `test-bootstrap-rebuild`
+Branch: `test-bootstrap-rebuild-verify` (PR #6 validation head)
 
 ## Scope
 
@@ -56,10 +56,10 @@ This branch's Stable manifest now points to the verified immutable Core v0.3.37 
 
 ## Remaining validation
 
-1. Run the new workflow and correct any syntax, manifest, hash, size, or package mismatch it reports.
-2. Add a complete Bootstrap → Loader → Core replay test using real repository sources. Cover first install, transient network errors, refresh recovery, Core and Loader upgrades, offline restart, corrupted source rejection, IndexedDB disconnect/reconnect, storage write failure, rollback, channel isolation, and destruction during pending work.
-3. Only after repository tests pass, provide the disabled test package for ST / TT / iPhone real-device acceptance.
-4. Do not promote to Stable until the actual iPhone / TT checks pass.
+1. Install the disabled test package in a disposable ST / TT test profile and verify the actual Tavern Helper lifecycle, script enable/disable behavior, and single-instance ownership.
+2. Verify on iPhone Safari / TT that IndexedDB reconnect, page refresh, offline recovery, the close button, and re-entry all behave correctly.
+3. Confirm the user's existing chat metadata, settings, and phone data remain intact through a real migration.
+4. Do not promote to Stable until those real-device checks pass.
 
 ## Reference implementation
 
