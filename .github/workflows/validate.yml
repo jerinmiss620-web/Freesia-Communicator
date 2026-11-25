@@ -29,10 +29,10 @@ jobs:
           CDN_URL="https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger.js"
 
           echo "Purging: $PURGE_URL"
-          curl -fsSL --retry 3 --retry-all-errors --retry-delay 2 "$PURGE_URL"
+          curl -fsSL --connect-timeout 5 --max-time 15 --retry 3 --retry-all-errors --retry-delay 2 "$PURGE_URL"
 
           for attempt in $(seq 1 12); do
-            BODY="$(curl -fsSL --retry 2 --retry-all-errors "$CDN_URL" || true)"
+            BODY="$(curl -fsSL --connect-timeout 5 --max-time 15 --retry 2 --retry-all-errors "$CDN_URL" || true)"
             if printf '%s' "$BODY" | grep -Fq "Freesia Messenger · 通讯侠 · $EXPECTED_VERSION"; then
               echo "jsDelivr now serves $EXPECTED_VERSION"
               exit 0
