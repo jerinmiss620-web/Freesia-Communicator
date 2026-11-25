@@ -7,7 +7,7 @@ GitHub Actions runs `node scripts/verify-release.mjs` on pushes and pull request
 - Stable, Test and Loader manifest schemas and project/channel identities.
 - Fixed Commit URL, version path and manifest source path consistency.
 - SHA-256 and UTF-8 byte-length equality for each published source.
-- JavaScript syntax for Core, Loader Runtime and Bootstrap.
+- JavaScript syntax for Core, Loader Runtime and both Bootstrap packages; four-route fallback and in-route integrity validation.
 - Bootstrap import JSON validity and exact equality between its embedded script and the standalone Bootstrap source.
 
 ## Current baseline
@@ -18,8 +18,8 @@ The v0.3.22 release remains the Stable baseline. Core v0.3.23 implements the fou
 |---|---:|---|
 | Core Stable | 0.3.22 | Unchanged |
 | Core Test | 0.3.23 | Manifest + SHA-256 + UTF-8 length configured |
-| Loader Runtime | 0.1.0 | Manifest + SHA-256 + UTF-8 length configured |
-| Bootstrap | 1.0.0 | Import package + standalone source configured |
+| Loader Runtime | 0.1.1 | Manifest + SHA-256 + UTF-8 length configured |
+| Bootstrap | 1.0.1 | Import package + standalone source configured; four-route fallback |
 
 ## Not yet validated on devices
 
