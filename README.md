@@ -15,6 +15,8 @@ SillyTavern / Tavern Helper 的独立通讯面板。项目采用 GitHub Remote L
 - Loader 清单：[loader/latest.json](loader/latest.json)
 - 一次性安装包：[Bootstrap 1.0.0 JSON](bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.0.json)
 
+> **当前状态：内部迁移基线，暂不作为社区正式升级公告。** v0.3.22 先用于验证 Remote Loader 架构；已知的移动端入口、821px 全屏、扩展开关和内部输入框主题隔离问题仍待下一版 Core 整改。计划先发布到 Test 通道并完成 ST/TT 设备测试，再提升到 Stable。社区用户暂时不需要迁移。
+
 ## 首次迁移
 
 1. 在酒馆助手中**停用**旧的完整通讯侠 v0.3.22 脚本，暂时保留它作为救援副本，不要删除。
