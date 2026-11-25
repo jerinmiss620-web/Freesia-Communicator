@@ -2,17 +2,67 @@
   "schema_version": 1,
   "project": "Freesia Messenger",
   "channel": "test",
-  "latest_version": "0.3.27",
-  "minimum_loader_version": "0.1.0",
+  "latest_version": "0.3.28",
+  "minimum_loader_version": "0.1.4",
   "release": {
-    "version": "0.3.27",
-    "source_path": "core/v0.3.27/Freesia-Messenger.js",
-    "source_commit": "06a9482e508d955d1212e836fe5eedbb18b566b7",
-    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/06a9482e508d955d1212e836fe5eedbb18b566b7/core/v0.3.27/Freesia-Messenger.js",
-    "changelog_path": "core/v0.3.27/CHANGELOG.md",
-    "sha256": "c9052740da1186883be6da439e033b47a6b2c942a2fd7c5179cac2f86cdee1b3",
-    "size_bytes": 379256
+    "version": "0.3.28",
+    "source_path": "core/v0.3.28/Freesia-Messenger.js",
+    "source_commit": "32fa1cdd9bd2735ace3dfe121436aab943ffd276",
+    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/32fa1cdd9bd2735ace3dfe121436aab943ffd276/core/v0.3.28/Freesia-Messenger.js",
+    "changelog_path": "core/v0.3.28/CHANGELOG.md",
+    "sha256": "67a395edcfc1dfe958257e541a56dbb066e2d053205f79776fa43e7cca8d951e",
+    "size_bytes": 379468
   },
-  "status": "Internal Test only. v0.3.27 adds TLE-style remote update controls to the existing Messenger extension fold. Real ST/TT runtime verification is required before Stable promotion.",
-  "notes": "Keeps the current Bootstrap 1.0.2 and headless Loader 0.1.3. Adds a user-facing update manager inside the existing Messenger extension fold: Stable/Test channel selection, manual check/install, rollback, automatic-update toggle, and live Loader/Bootstrap status. Does not add another floating launcher or alter the Stable manifest or existing data keys. Includes a loader-busy guard and copies Loader channel/version/status into the existing extension diagnostic report."
+  "status": "Internal Test only. v0.3.28 adds first-time Loader adoption controls. Requires Remote Loader v0.1.4 and Permanent Bootstrap v1.0.3. Runtime verification in ST/TT is required before Stable promotion.",
+  "notes": "Test release v0.3.28. Includes fixed-commit adoption records for Core v0.3.22–v0.3.27 so the Loader can verify and preserve the exact currently-running version as Last Known Good before replacing it. Existing chat data and storage keys remain unchanged.",
+  "adoptable_releases": [
+    {
+      "version": "0.3.22",
+      "source_path": "core/v0.3.22/Freesia-Messenger.js",
+      "source_commit": "e8e6f62490f786486d0a44fabd8feea870fc8c8f",
+      "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/e8e6f62490f786486d0a44fabd8feea870fc8c8f/core/v0.3.22/Freesia-Messenger.js",
+      "sha256": "26ad53fee07b9ec4af978360e80092394c706327943d71abefdfd8e141824b83",
+      "size_bytes": 358090
+    },
+    {
+      "version": "0.3.23",
+      "source_path": "core/v0.3.23/Freesia-Messenger.js",
+      "source_commit": "e3cc46939636be527515cee2e7bb69cb7c66f58e",
+      "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/e3cc46939636be527515cee2e7bb69cb7c66f58e/core/v0.3.23/Freesia-Messenger.js",
+      "sha256": "6da4e21c0d11c5ab7e3e69478f101356653fb5d3b932e029df5f6f0ed02e2447",
+      "size_bytes": 363224
+    },
+    {
+      "version": "0.3.24",
+      "source_path": "core/v0.3.24/Freesia-Messenger.js",
+      "source_commit": "8dd4e2ab278abcc0003a47cf17660b13f4e7d24d",
+      "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/8dd4e2ab278abcc0003a47cf17660b13f4e7d24d/core/v0.3.24/Freesia-Messenger.js",
+      "sha256": "667ed4f4e5ee84c1399686be7f405bd7cf8fde152fdb3b65f87391573b924003",
+      "size_bytes": 365247
+    },
+    {
+      "version": "0.3.25",
+      "source_path": "core/v0.3.25/Freesia-Messenger.js",
+      "source_commit": "fb00c089766a9b9bf589c36a6942d1dc2ccaedf8",
+      "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/fb00c089766a9b9bf589c36a6942d1dc2ccaedf8/core/v0.3.25/Freesia-Messenger.js",
+      "sha256": "f21c8f70c91c6d4962ab9108b504ff481b9ae360c9cc2f86718ecd0b311d3ceb",
+      "size_bytes": 371713
+    },
+    {
+      "version": "0.3.26",
+      "source_path": "core/v0.3.26/Freesia-Messenger.js",
+      "source_commit": "e87f29ab6997c51abb900fafc275608c2031cae9d",
+      "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/e87f29ab6997c51abb900fafc275608c2031cae9d/core/v0.3.26/Freesia-Messenger.js",
+      "sha256": "0fa1e9ad634ce39bbd65811099ed31221b2b656fb1b3a0890d5e3d285fae7a90",
+      "size_bytes": 372094
+    },
+    {
+      "version": "0.3.27",
+      "source_path": "core/v0.3.27/Freesia-Messenger.js",
+      "source_commit": "06a9482e508d955d1212e836fe5eedbb18b566b7",
+      "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/06a9482e508d955d1212e836fe5eedbb18b566b7/core/v0.3.27/Freesia-Messenger.js",
+      "sha256": "c9052740da1186883be6da439e033b47a6b2c942a2fd7c5179cac2f86cdee1b3",
+      "size_bytes": 379256
+    }
+  ]
 }
