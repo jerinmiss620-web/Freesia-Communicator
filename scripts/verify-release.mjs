@@ -44,7 +44,9 @@ assert(manifest.import_package_path === packagePath, 'Release manifest must poin
 assert(manifest.import_statement === EXPECTED_IMPORT, 'Release manifest must record the exact static import');
 const sourceBytes = Buffer.from(source, 'utf8');
 assert(sourceBytes.length === EXPECTED_SIZE_BYTES, 'Core UTF-8 byte length mismatch');
-assert(createHash('sha256').update(sourceBytes).digest('hex') === EXPECTED_SHA256, 'Core SHA-256 mismatch');
+const actualSha256 = createHash('sha256').update(sourceBytes).digest('hex');
+console.log('Actual Core SHA-256:', actualSha256);
+assert(actualSha256 === EXPECTED_SHA256, 'Core SHA-256 mismatch');
 
 assert(pkg.type === 'script', 'Tavern Helper package type must be script');
 assert(pkg.id === EXPECTED_ID, 'Tavern Helper script ID must be preserved');
