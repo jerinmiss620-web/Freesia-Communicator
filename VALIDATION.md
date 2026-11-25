@@ -25,7 +25,7 @@
 - The close action only dismisses the notice. It does not delete the failed user message or automatically retry it.
 - JavaScript syntax is checked with Node's `vm.Script`.
 - Phone and extension styles remain isolated; existing storage keys are compared with v0.3.36.
-- Stable GitHub Actions purges jsDelivr and verifies the actual CDN response before delivery is considered complete.
+- Stable GitHub Actions checks the actual CDN response and purges only when needed. An hourly scheduled retry recovers from jsDelivr purge throttling without requiring another importer change.
 
 ## Device validation status
 
