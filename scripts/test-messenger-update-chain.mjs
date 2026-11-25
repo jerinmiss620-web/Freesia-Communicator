@@ -14,12 +14,12 @@ const L = '__FREESIA_MESSENGER_REMOTE_LOADER_V1__';
 const C = '__FREESIA_MESSENGER_V1__';
 const AUTO = 'freesia_messenger_remote_auto_update_v1';
 const rootURL = 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/';
-const branch = 'test-bootstrap-rebuild-verify';
+const branch = 'test-bootstrap-toast-cleanup';
 const sources = new Map();
 let loaderManifest, coreManifest, testManifest = JSON.parse(read('channels/test.json')), offline = false, corrupt = false;
 let db = new IDBFactory();
 let storage = new Map([['freesia_messenger_appearance_v1', 'dark']]);
-let dom, host, frame, timers = new Map(), errors = [], blobs = new Map(), blobID = 0;
+let dom, host, frame, timers = new Map(), errors = [], toastEvents = [], blobs = new Map(), blobID = 0;
 let transient = null, transientUsed = false, pendingFetchResolve = null;
 let failWrite = () => false;
 const originalPut = IDBObjectStore.prototype.put;
@@ -162,6 +162,7 @@ async function writeCache(name, slot, value) {
 }
 async function boot({ empty = false, transientFailure = null } = {}) {
   errors = [];
+  toastEvents = [];
   timers = new Map();
   transient = transientFailure;
   transientUsed = false;
@@ -170,6 +171,7 @@ async function boot({ empty = false, transientFailure = null } = {}) {
   dom = new JSDOM('<!doctype html><html><head></head><body><div id="top-settings-holder"></div><div id="sheld"><div id="chat"></div><form id="send_form"><textarea id="send_textarea"></textarea></form></div><iframe></iframe></body></html>',
     { url: 'https://tavern.test/', runScripts: 'dangerously', pretendToBeVisual: true, virtualConsole: vc });
   host = dom.window;
+  host.toastr = Object.fromEntries(['info', 'success', 'warning', 'error'].map(kind => [kind, message => toastEvents.push({ kind, message: String(message) })]));
   frame = host.document.querySelector('iframe').contentWindow;
   Object.defineProperty(host, 'indexedDB', { value: db });
   for (const [key, value] of storage) host.localStorage.setItem(key, value);
@@ -286,6 +288,9 @@ try {
   await boot({ transientFailure: 'manifest' });
   await versions('0.3.37', '0.1.8');
   assert.deepEqual(errors, [], 'first transient manifest failure must recover without runtime exceptions');
+  assert.equal(toastEvents.filter(item => item.kind === 'warning').length, 0,
+    'a transient mirror failure followed by successful fallback must not produce user-facing warning toasts');
+  console.log('PASS: transient mirror failover remains silent when a later route succeeds');
   console.log('PASS: Bootstrap first-install retry reaches real Loader 0.1.8 and Core 0.3.37');
   const bootCache = await readBootstrapCache();
   const coreCache = await readLoaderCache();
