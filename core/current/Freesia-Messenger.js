@@ -4637,7 +4637,7 @@
       #${ROOT_ID} .fm-note-copy strong { overflow: hidden; color: light-dark(#695d69, var(--fm-text-strong)); font-size: max(var(--fm-font-cn-min), 10px); font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
       #${ROOT_ID} .fm-note-copy small { color: light-dark(#a095a0, var(--fm-text-muted)); font-size: 7px; letter-spacing: .1em; }
       #${ROOT_ID} .fm-note-version { flex: 0 0 auto; color: light-dark(#a397a2, var(--fm-text-muted)); font-size: max(var(--fm-font-number-min), 8px); font-weight: 750; letter-spacing: .05em; }
-      #${ROOT_ID} .fm-phone-footer { display: grid; flex: 0 0 21px; place-items: center; padding-bottom: 5px; }
+      #${ROOT_ID} .fm-phone-footer { display: grid; flex: 0 0 21px; place-items: center; }
       #${ROOT_ID} .fm-home-indicator { display: block; width: 74px; height: 4px; border-radius: 99px; background: light-dark(rgb(103 91 103 / 31%), var(--fm-accent-dark)); }
       #${ROOT_ID} .fm-app-view { padding: 0 21px 22px; }
       #${ROOT_ID} .fm-app-topline { display: flex; align-items: center; gap: 9px; min-height: 43px; border-bottom: 1px solid light-dark(rgb(255 255 255 / 52%), var(--fm-line)); }
@@ -5053,7 +5053,7 @@
         #${ROOT_ID} .fm-frame { position: absolute; inset: 0; width: auto; height: auto; min-height: 0; max-width: none; max-height: none; border: 0; border-radius: 0; box-shadow: none; transform: none; }
         #${ROOT_ID} .fm-resize-grip, #${ROOT_ID} .fm-window-maximize { display: none !important; }
         #${ROOT_ID} .fm-titlebar { flex-basis: calc(53px + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) 12px 0 14px; cursor: default; touch-action: auto; }
-        #${ROOT_ID} .fm-phone-footer { flex-basis: calc(21px + var(--fm-safe-bottom)); padding-bottom: calc(5px + var(--fm-safe-bottom)); }
+        #${ROOT_ID} .fm-phone-footer { flex-basis: calc(21px + var(--fm-safe-bottom)); padding-bottom: var(--fm-safe-bottom); }
         #${ROOT_ID} .fm-home-view { gap: 18px; padding: 16px 16px 14px; }
         #${ROOT_ID} .fm-app-grid { gap: 11px; }
         #${ROOT_ID} .fm-app-card { min-height: 139px; padding: 13px 12px 12px; gap: 13px; }
