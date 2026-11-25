@@ -11,7 +11,7 @@ const packagePath = 'install/Freesia-Messenger-Permanent-Bootstrap-1.0.6-TEST.js
 const loaderPath = 'loader/runtime/v0.1.8/Freesia-Messenger-Remote-Loader.js';
 const [bootstrap, packageText, loader, loaderManifestText, stableManifestText, testManifestText, core] =
   await Promise.all([
-    read(bootstrapPath), read(packagePath), read(loaderPath), read('loader/latest.json'),
+    read(bootstrapPath), read(packagePath), read(loaderPath), read('loader/test-latest.json'),
     read('latest.json'), read('channels/test.json'), read('core/v0.3.37/Freesia-Messenger.js')
   ]);
 const pkg = JSON.parse(packageText);
