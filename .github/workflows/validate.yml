@@ -2,7 +2,7 @@ name: Validate Freesia Messenger releases
 
 on:
   push:
-    branches: [main]
+    branches: [main, test-direct-esm-import]
   pull_request:
     branches: [main]
 
