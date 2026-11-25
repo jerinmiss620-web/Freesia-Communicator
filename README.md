@@ -6,21 +6,21 @@ SillyTavern / Tavern Helper 的独立通讯面板。项目采用 GitHub Remote L
 
 | 层级 | 当前版本 | 职责 |
 |---|---:|---|
-| Permanent Bootstrap | 1.0.0 | 本地固定引导脚本，负责加载/更新 Loader |
-| Remote Loader Runtime | 0.1.0 | 读取版本清单、验证源码、缓存、安装、健康检查与回滚 |
+| Permanent Bootstrap | 1.0.1 | 本地固定引导脚本，负责加载/更新 Loader |
+| Remote Loader Runtime | 0.1.1 | 读取版本清单、验证源码、缓存、安装、健康检查与回滚 |
 | Communicator Core | Stable 0.3.22 / Test 0.3.23 | 通讯侠实际功能 |
 
 - Stable 清单：[latest.json](latest.json)
 - Test 清单：[channels/test.json](channels/test.json)
 - Loader 清单：[loader/latest.json](loader/latest.json)
-- 一次性安装包：[Bootstrap 1.0.0 JSON](bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.0.json)
+- 一次性安装包：[Bootstrap 1.0.1 JSON](bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.1.json)
 
 > **当前状态：内部 Test，不是社区正式升级。** Test 通道现为 Core v0.3.23，已实现移动悬浮入口修复、821px 以下全屏、通讯侠/窗口/悬浮球分离控制，以及内部输入控件主题隔离。Stable 仍保持 v0.3.22；PC、Android、iPhone/TavernTogether 实机验证完成前，社区用户暂时不需要迁移。
 
 ## 首次迁移
 
 1. 在酒馆助手中**停用**旧的完整通讯侠 v0.3.22 脚本，暂时保留它作为救援副本，不要删除。
-2. 下载并导入 [Permanent Bootstrap 1.0.0](bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.0.json)。
+2. 下载并导入 [Permanent Bootstrap 1.0.1](bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.1.json)。已有 v1.0.0 用户需要重新导入一次；Bootstrap 本身是本地固定入口，不会被旧版本自动替换。
 3. 启用新导入的 Bootstrap。
 4. 刷新酒馆宿主页面。Bootstrap 会加载 Loader，Loader 再下载并验证 Core。
 5. 确认通讯侠入口、聊天记录、动态、订阅和设置均正常后，再决定是否长期保留旧脚本副本。
@@ -57,7 +57,7 @@ window.__FREESIA_MESSENGER_REMOTE_LOADER_V1__?.rollback()
 
 - Manifest 固定到 Git Commit 与版本目录。
 - Core/Loader 均验证 SHA-256 和 UTF-8 字节长度。
-- GitHub Raw、jsDelivr、Fastly 多线路下载；下载镜像不改变 Manifest 中的可信来源和固定 Commit。
+- GitHub Raw、jsDelivr、Fastly、TestingCF 四线路下载；可变 Manifest 优先读取 GitHub Raw，固定 Commit 源码优先使用 CDN。任何线路返回内容都必须先通过 JSON/版本/路径/字节长度/SHA-256 校验，失败才切换下一线路；镜像只负责传输，不改变 Manifest 中的可信来源和固定 Commit。
 - IndexedDB 保存 Candidate、Last Known Good 与 Previous；写入后读回校验。
 - 先验证候选源码，再加载；健康检查失败时恢复上一份已验证版本。
 - 远程 script + SRI 失败时，可回退到已校验源码的 Blob Script。
