@@ -4,7 +4,7 @@
   "name": "Freesia Messenger · 通讯侠（GitHub 本体直连 TEST）",
   "id": "6ba49b66-ace8-4db4-acbd-292b6dde4ced",
   "content": "import 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@test-direct-esm-import/core/current/Freesia-Messenger.js'",
-  "info": "# Freesia Messenger · 通讯侠\n\n**GitHub 本体直连测试包。** 仅通过 ES Module `import` 引入 GitHub 测试分支上的完整通讯侠本体；不内置功能代码，不使用 Bootstrap / Remote Loader / IndexedDB。\n\n- 测试本体：`core/current/Freesia-Messenger.js`（v0.3.33）\n- 窗口处理：撤回 v0.3.32 未经实机验证的移动端窗口定位改动，恢复此前的 visualViewport 定位逻辑；全屏边缘留白后续单独实测。\n- 重试提示：失败/未完成的角色回复提示新增 ×；关闭只隐藏该条提示并保存关闭状态，不删除消息、不修改发送状态；再次重试或编辑重发后，若再次失败会重新显示。\n- 样式边界：手机窗口使用 Shadow DOM 独立样式；酒馆扩展折叠面板的复选框、选择框继承酒馆主题，不由通讯侠设置控件外观。\n- 生效：刷新酒馆后重新加载远程模块。\n- 兼容：保留原通讯侠脚本 ID；不改动原有消息、动态、订阅、社区及预设数据。\n\n**替换时：** 用本包替换原来的独立通讯侠脚本，并停用旧的 Permanent Bootstrap，避免两条加载链同时启动。",
+  "info": "# Freesia Messenger · 通讯侠\n\n**GitHub 本体直连测试包。** 仅通过 ES Module `import` 引入 GitHub 测试分支上的完整通讯侠本体；不内置功能代码，不使用 Bootstrap / Remote Loader / IndexedDB。\n\n- 测试本体：`core/current/Freesia-Messenger.js`（v0.3.34）\n- 手机全屏：在 821px 以下的原有全屏媒体查询中增加 `max-width: none`，解除桌面基础规则残留的 `calc(100vw - 16px)` 最大宽度限制；不改变 JavaScript 窗口定位逻辑。\n- 重试提示：失败/未完成的角色回复提示可通过 × 关闭；关闭状态按单条消息保存，不删除消息、不修改发送状态；再次重试或编辑重发后若再次失败，会重新显示。\n- 样式边界：手机窗口使用 Shadow DOM 独立样式；酒馆扩展折叠面板的复选框、选择框继承酒馆主题。\n- 生效：刷新酒馆后重新加载远程模块。\n- 兼容：保留原通讯侠脚本 ID；不改动原有消息、动态、订阅、社区及预设数据。\n\n**替换时：** 用本包替换原来的独立通讯侠脚本，并停用旧的 Permanent Bootstrap，避免两条加载链同时启动。",
   "button": {
     "enabled": false,
     "buttons": []
