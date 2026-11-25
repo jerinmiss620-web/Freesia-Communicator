@@ -12,6 +12,8 @@ GitHub Actions runs `node scripts/verify-release.mjs` on pushes and pull request
 
 ## Current baseline
 
+The v0.3.22 release is an internal loader-migration baseline, not a public rollout candidate. The four reported mobile/UI fixes must be implemented in a new Test Core release and verified in real Tavern Helper environments before promotion to Stable.
+
 | Component | Version | Repository validation |
 |---|---:|---|
 | Core | 0.3.22 | Manifest + SHA-256 + UTF-8 length configured |
