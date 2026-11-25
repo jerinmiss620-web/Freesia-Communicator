@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "project": "Freesia Messenger",
+  "channel": "stable-esm-import",
+  "version": "0.3.36",
+  "source_path": "core/v0.3.36/Freesia-Messenger.js",
+  "source_commit": "4b1fa89a5e14dc926d7b0e1d6cb16a97663d2498",
+  "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/4b1fa89a5e14dc926d7b0e1d6cb16a97663d2498/core/v0.3.36/Freesia-Messenger.js",
+  "current_path": "core/current/Freesia-Messenger.js",
+  "import_package_path": "install/Freesia-Messenger-GitHub-ESM-Import-v0.3.36.json",
+  "import_statement": "import 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger.js'",
+  "changelog_path": "core/v0.3.36/CHANGELOG.md",
+  "sha256": "557fa079b326d8720bc7831faaa16d765ed9e02d422dc4e147606a260a087f92",
+  "size_bytes": 371989
+}
