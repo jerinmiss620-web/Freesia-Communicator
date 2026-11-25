@@ -4438,7 +4438,7 @@
         -webkit-font-smoothing: antialiased;
       }
       #${ROOT_ID}[data-fm-theme="dark"] { color-scheme: dark; }
-      /* Messenger owns its form-control visuals; host theme selectors must not restyle them. */
+      /* Only the phone Shadow DOM owns control visuals; the Tavern extension panel inherits host controls. */
       #${ROOT_ID} :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]), textarea, select) {
         box-sizing: border-box !important;
         appearance: auto !important;
