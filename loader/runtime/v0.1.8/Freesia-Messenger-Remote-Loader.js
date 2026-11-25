@@ -675,48 +675,77 @@
 
   async function readRecord(key, label) {
     const slot = slotForKey(key);
-
-    // IndexedDB is the primary source store; a localStorage pointer is optional.
+    let indexedRecord = null;
+    let indexedError = null;
     try {
-      const indexedRecord = await idbGet(slot);
-      if (indexedRecord) {
-        await verifySource(indexedRecord);
-        cacheFlags[slot] = true;
-        writeCachePointer(key, slot, indexedRecord);
-        return indexedRecord;
-      }
+      indexedRecord = await idbGet(slot);
+      if (indexedRecord) await verifySource(indexedRecord);
     } catch (error) {
+      indexedRecord = null;
+      indexedError = error;
       console.warn('[Freesia Messenger Loader] ' + label + ' IndexedDB 读取失败，尝试兼容缓存。', error);
     }
 
     const storage = getStorage();
-    if (!storage) return null;
-    let payload;
-    try { payload = JSON.parse(storage.getItem(key) || 'null'); }
-    catch { return null; }
-    if (!payload) return null;
+    let payload = null;
+    try { payload = JSON.parse(storage?.getItem(key) || 'null'); } catch {}
+    let legacyRecord = null;
+    // v0.1.6 / v0.1.7 stored full source in localStorage. Compare it with
+    // IndexedDB before migration: the older IDB record may predate that newer LKG.
+    if (payload?.schema_version === 1 && typeof payload.source === 'string') {
+      try {
+        await verifySource(payload);
+        legacyRecord = payload;
+      } catch (error) {
+        console.warn('[Freesia Messenger Loader] ' + label + ' localStorage 兼容缓存校验失败。', error);
+      }
+    }
 
-    // A version-2 pointer refers only to IndexedDB, never to an embedded source.
-    if (payload.schema_version === 2 && payload.backend === 'indexedDB') return null;
-    if (payload.schema_version !== 1 || typeof payload.source !== 'string') return null;
+    if (indexedRecord && legacyRecord) {
+      if (compareVersions(legacyRecord.version, indexedRecord.version) > 0) {
+        try {
+          const migrated = await writeIndexedRecord(slot, legacyRecord);
+          cacheFlags[slot] = true;
+          writeCachePointer(key, slot, migrated);
+          return migrated;
+        } catch (migrationError) {
+          console.warn('[Freesia Messenger Loader] ' + label + ' 更新较新的 localStorage 缓存到 IndexedDB 失败；暂时使用已校验的 localStorage 版本。', migrationError);
+          cacheFlags[slot] = true;
+          return legacyRecord;
+        }
+      }
+      cacheFlags[slot] = true;
+      writeCachePointer(key, slot, indexedRecord);
+      return indexedRecord;
+    }
 
-    try {
-      await verifySource(payload);
+    if (indexedRecord) {
+      cacheFlags[slot] = true;
+      writeCachePointer(key, slot, indexedRecord);
+      return indexedRecord;
+    }
+
+    if (legacyRecord) {
       cacheFlags[slot] = true;
       // Migrate only after the IndexedDB copy has been read back and hash-verified.
       try {
-        const migrated = await writeIndexedRecord(slot, payload);
+        const migrated = await writeIndexedRecord(slot, legacyRecord);
         writeCachePointer(key, slot, migrated);
         return migrated;
       } catch (migrationError) {
         console.warn('[Freesia Messenger Loader] ' + label + ' 迁移到 IndexedDB 失败，暂时保留原始 localStorage 缓存。', migrationError);
-        return payload;
+        return legacyRecord;
       }
-    } catch (error) {
+    }
+
+    // A version-2 pointer refers only to IndexedDB, never to an embedded source.
+    if (payload?.schema_version === 2 && payload.backend === 'indexedDB') {
       cacheFlags[slot] = false;
-      console.warn('[Freesia Messenger Loader] ' + label + ' 缓存校验失败。', error);
       return null;
     }
+    cacheFlags[slot] = false;
+    if (indexedError) console.warn('[Freesia Messenger Loader] ' + label + ' 没有可用的兼容源码缓存。', indexedError);
+    return null;
   }
 
   async function saveLastKnownGood(record) {
