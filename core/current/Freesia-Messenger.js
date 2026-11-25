@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  // Freesia Messenger · 通讯侠 · v0.3.34
+  // Freesia Messenger · 通讯侠 · v0.3.35
   // Independent floating phone shell for JS-Slash-Runner.
 
   const SCRIPT_WIN = window;
@@ -418,7 +418,7 @@
               <div class="fm-home-note">
                 <span class="fm-note-icon">${ICONS.sparkle}</span>
                 <span class="fm-note-copy"><strong>让故事在消息之外继续发生</strong><small>YOUR STORY, BEYOND THE CHAT</small></span>
-                <span class="fm-note-version">MESSENGER 0.3.34</span>
+                <span class="fm-note-version">MESSENGER 0.3.35</span>
               </div>
             </section>
             <section class="fm-app-view" data-fm-view="app" hidden>
@@ -3634,6 +3634,10 @@
         this.listen(host.visualViewport, 'resize', () => this.layout());
         this.listen(host.visualViewport, 'scroll', () => this.layout());
       }
+      this.listen(this.root, 'focusin', () => this.layout());
+      this.listen(this.root, 'focusout', () => {
+        this.host.requestAnimationFrame(() => this.layout());
+      });
       this.listen(this.titlebar, 'pointerdown', event => this.begin(event, false));
       this.listen(this.resizeGrip, 'pointerdown', event => this.begin(event, true));
       this.listen(this.bubble, 'pointerdown', event => this.beginBubble(event));
@@ -3670,6 +3674,26 @@
         width: Math.max(1, Number(viewport?.width) || Number(this.host.innerWidth) || 1),
         height: Math.max(1, Number(viewport?.height) || Number(this.host.innerHeight) || 1),
       };
+    }
+
+    syncKeyboardState(mobile) {
+      if (!mobile || !this.root) {
+        this.root?.classList.remove('fm-keyboard-open');
+        return;
+      }
+      const rootNode = this.root.getRootNode?.();
+      const active = rootNode?.activeElement || this.host.document?.activeElement;
+      const textEntry = !!active && (
+        active.matches?.('textarea, input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="file"]):not([type="range"]), [contenteditable="true"]')
+        || active.isContentEditable
+      );
+      const visualHeight = Number(this.host.visualViewport?.height) || 0;
+      const layoutHeight = Math.max(
+        Number(this.host.document?.documentElement?.clientHeight) || 0,
+        Number(this.host.innerHeight) || 0
+      );
+      const keyboardOpen = textEntry && visualHeight > 0 && layoutHeight - visualHeight > 120;
+      this.root.classList.toggle('fm-keyboard-open', keyboardOpen);
     }
 
     storageKey(kind, mode) {
@@ -3773,6 +3797,7 @@
       if (!this.frame || !this.root) return;
       const bounds = this.bounds();
       const mobile = this.mobile();
+      this.syncKeyboardState(mobile);
       this.loadGeometry(mobile);
       this.root.style.padding = '0';
       this.root.setAttribute('data-fm-viewport', mobile ? 'compact' : 'desktop');
@@ -4196,7 +4221,7 @@
     const ctx = snap.info.context;
     const win = state.windowController;
     return [
-      '通讯侠 v0.3.34 运行诊断',
+      '通讯侠 v0.3.35 运行诊断',
       '时间：' + new Date().toLocaleString(),
       '环境：' + HOST_WIN.navigator.userAgent,
       '窗口控制器：' + (win ? '已创建' : '未创建'),
@@ -4275,7 +4300,7 @@
     const select = (key, label) => '<label class="fm-ext-row"><span>' + label + '</span><select class="text_pole" data-fm-ext-field="' + key + '">' + proactiveFieldOptions[key].map(v => '<option value="' + v + '">' + (v === 0 ? '不限' : v + (key === 'limit' ? ' 轮' : ' 分钟')) + '</option>').join('') + '</select></label>';
     const status = (key, label) => '<div class="fm-ext-row"><span>' + label + '</span><span data-fm-ext-status="' + key + '">—</span></div>';
     entry.innerHTML = '<div class="inline-drawer"><div class="inline-drawer-toggle inline-drawer-header"><b>通讯侠 · Freesia Messenger</b><div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div></div><div class="inline-drawer-content"><div class="fm-extension-content">' +
-      '<div class="fm-ext-row"><small>v0.3.34 · 控制中心</small><small data-fm-ext-status="enabled-label">已启用</small></div>' +
+      '<div class="fm-ext-row"><small>v0.3.35 · 控制中心</small><small data-fm-ext-status="enabled-label">已启用</small></div>' +
       '<div class="fm-ext-primary">' + button('toggle-enabled', state.enabled ? '关闭通讯侠' : '启用通讯侠', state.enabled ? 'fa-power-off' : 'fa-play') + '</div>' +
       '<b>快捷设置</b><div class="fm-ext-checks">' + check('time', '真实时间感知') + check('active', 'Char 主动联络') + check('sync', '通讯记录同步正文') + '</div>' +
       '<div class="fm-ext-section" data-fm-ext-active-fields>' + select('interval', '检测间隔') + select('cooldown', '发信冷却') + select('limit', '每日联络上限') + check('notify', '主动消息通知') + '</div>' +
@@ -5023,11 +5048,12 @@
       #${EXTENSION_ID} .fm-ext-credit { text-align: end; }
       #${EXTENSION_ID} [hidden], #${ENTRY_ID}[hidden] { display: none !important; }
       @media (max-width: 821px) {
-        #${ROOT_ID} { padding: 0; }
+        #${ROOT_ID} { padding: 0; --fm-safe-bottom: env(safe-area-inset-bottom, 0px); }
+        #${ROOT_ID}.fm-keyboard-open { --fm-safe-bottom: 0px; }
         #${ROOT_ID} .fm-frame { position: absolute; inset: 0; width: auto; height: auto; min-height: 0; max-width: none; max-height: none; border: 0; border-radius: 0; box-shadow: none; transform: none; }
         #${ROOT_ID} .fm-resize-grip, #${ROOT_ID} .fm-window-maximize { display: none !important; }
         #${ROOT_ID} .fm-titlebar { flex-basis: calc(53px + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) 12px 0 14px; cursor: default; touch-action: auto; }
-        #${ROOT_ID} .fm-phone-footer { flex-basis: calc(21px + env(safe-area-inset-bottom, 0px)); padding-bottom: calc(5px + env(safe-area-inset-bottom, 0px)); }
+        #${ROOT_ID} .fm-phone-footer { flex-basis: calc(21px + var(--fm-safe-bottom)); padding-bottom: calc(5px + var(--fm-safe-bottom)); }
         #${ROOT_ID} .fm-home-view { gap: 18px; padding: 16px 16px 14px; }
         #${ROOT_ID} .fm-app-grid { gap: 11px; }
         #${ROOT_ID} .fm-app-card { min-height: 139px; padding: 13px 12px 12px; gap: 13px; }
@@ -5186,7 +5212,7 @@
   }
 
   const api = {
-    version: '0.3.34',
+    version: '0.3.35',
     open: () => openWindow(true),
     close: closeWindow,
     destroy,
@@ -5260,5 +5286,5 @@
   window.addEventListener(FRAME_EXIT_EVENT, handleFrameExit, { once: true });
   window.addEventListener('beforeunload', handleFrameExit, { once: true });
 
-  console.info('[Freesia Messenger] 通讯侠 v0.3.34 已启动。');
+  console.info('[Freesia Messenger] 通讯侠 v0.3.35 已启动。');
 })();
