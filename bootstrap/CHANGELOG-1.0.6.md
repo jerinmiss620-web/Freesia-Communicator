@@ -25,5 +25,5 @@
 ## 验证状态
 
 - 自动化回放覆盖单 Bootstrap 从缓存 Loader v0.1.6 迁移至 Loader v0.1.8，并验证旧启动提示被抑制、最终更新成功提示只出现一次。
-- GitHub Actions 的源码语法、完整更新链回放、发布完整性与 Bootstrap / Loader / Core 清单一致性均需通过后，才可进入下一轮实机验收。
-- 本文件对应 TEST 通道，不代表 iPhone、TT 或 ST 的全部实机验收已完成；通过实机验收前不替换 Stable Bootstrap 入口。
+- 当前测试分支已通过 GitHub Actions：JavaScript 语法、完整更新链回放、Core 发布完整性，以及 Bootstrap / Loader / Core 清单一致性检查全部通过。回放专门验证单一 Bootstrap 将缓存 Loader v0.1.6 迁移到 v0.1.8 时，不再泄漏旧提示，并且最终 Core 更新成功提示恰好出现一次。
+- 本文件对应 TEST 通道；提示收敛后的 iPhone、TT 与 ST 实机复测仍待完成。通过实机验收前不替换 Stable Bootstrap 入口。
