@@ -15,6 +15,10 @@ The active installation path uses a tiny Tavern Helper JSON whose `content` is o
 
 The active ESM-import path does not consume `latest.json` or `channels/test.json`; those remain legacy Remote Loader manifests. Do not add Bootstrap or Remote Loader back into the current loading path.
 
+## Test branch workflow
+
+The TEST importer `install/Freesia-Messenger-GitHub-ESM-Import-TEST.json` preserves the original script ID and statically imports `core/current/Freesia-Messenger.js` from `test-direct-esm-import`. Keep the test branch based on the current Stable baseline. Update its Core in place so existing TEST import entries receive new source after a Tavern refresh; do not ask testers to repeatedly import JSON. Do not update `main` until repository checks and real-device testing are accepted.
+
 ## Legacy Remote Loader records
 
 For historical Remote Loader releases only:
