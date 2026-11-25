@@ -18,7 +18,7 @@ SillyTavern / Tavern Helper 的独立通讯面板。项目采用 GitHub Remote L
 - Bootstrap 更新记录：[Bootstrap v1.0.4](bootstrap/CHANGELOG-1.0.4.md)
 - 一次性安装包：[Bootstrap 1.0.4 JSON](bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.4.json)
 
-> **当前状态：内部 Test，不是社区正式升级。** Stable 仍保持 v0.3.22；Test 为 v0.3.28。Bootstrap / Loader / Core 的首次接管与自动更新链仍需在 ST、TT 实机验证后才可提升 Stable。
+> **当前状态：内部 Test，不是社区正式升级。** Stable 仍保持 v0.3.22；Test 为 v0.3.29。Bootstrap / Loader / Core 的首次接管与自动更新链仍需在 ST、TT 实机验证后才可提升 Stable。
 
 ## 首次接管与启动器升级
 
@@ -36,8 +36,8 @@ SillyTavern / Tavern Helper 的独立通讯面板。项目采用 GitHub Remote L
 - Bootstrap 1.0.4 继续采用与 TLE Bootstrap v1.0.6 一致的直接父窗口宿主定位，并改用 localStorage 缓存，避免 IndexedDB 连接中断阻止启动。
 - Loader 0.1.5 将回滚源码缓存改为 localStorage 优先，旧 IndexedDB 读取失败不会再阻断启动。
 - Loader 0.1.5 保留固定历史版本接管，并在自动恢复授权存在但 Last Known Good 缺失时重新触发安全接管。
-- Test 清单包含 v0.3.22–v0.3.27 的固定 Commit / SHA-256 / 字节长度，供 Loader 安全建立当前版本的回滚副本。
-- Core v0.3.28 在现有扩展折叠栏加入「接管当前版本」入口；需要接管时禁用安装按钮，避免跳过回滚保护。
+- Test 清单包含 v0.3.22–v0.3.28 的固定 Commit / SHA-256 / 字节长度，供 Loader 安全建立当前版本的回滚副本。
+- Core v0.3.29 在现有扩展折叠栏加入「接管当前版本」入口；需要接管时禁用安装按钮，避免跳过回滚保护。
 
 ## 数据兼容原则
 
@@ -50,7 +50,7 @@ SillyTavern / Tavern Helper 的独立通讯面板。项目采用 GitHub Remote L
 
 ## 更新通道与接口
 
-Stable 是默认通道，目前为 v0.3.22。Test 通道为 v0.3.28；测试通过后，再将同一份已验证源码提升到 Stable。
+Stable 是默认通道，目前为 v0.3.22。Test 通道为 v0.3.29；测试通过后，再将同一份已验证源码提升到 Stable。
 
 Loader API 位于酒馆宿主窗口：
 
