@@ -2,16 +2,16 @@
   "schema_version": 1,
   "project": "Freesia Messenger",
   "channel": "test",
-  "latest_version": "0.3.23",
+  "latest_version": "0.3.24",
   "minimum_loader_version": "0.1.0",
   "release": {
-    "version": "0.3.23",
-    "source_path": "core/v0.3.23/Freesia-Messenger.js",
-    "source_commit": "e3cc46939636be527515cee2e7bb69cb7c66f58e",
-    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/e3cc46939636be527515cee2e7bb69cb7c66f58e/core/v0.3.23/Freesia-Messenger.js",
-    "changelog_path": "core/v0.3.23/CHANGELOG.md",
-    "sha256": "6da4e21c0d11c5ab7e3e69478f101356653fb5d3b932e029df5f6f0ed02e2447",
-    "size_bytes": 363224
+    "version": "0.3.24",
+    "source_path": "core/v0.3.24/Freesia-Messenger.js",
+    "source_commit": "8dd4e2ab278abcc0003a47cf17660b13f4e7d24d",
+    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/8dd4e2ab278abcc0003a47cf17660b13f4e7d24d/core/v0.3.24/Freesia-Messenger.js",
+    "changelog_path": "core/v0.3.24/CHANGELOG.md",
+    "sha256": "667ed4f4e5ee84c1399686be7f405bd7cf8fde152fdb3b65f87391573b924003",
+    "size_bytes": 365247
   },
-  "status": "Internal Test only. Adds a viewport-level floating launcher, full-screen layout at widths <=821px, separate Messenger enable/window/floating-ball controls, and stronger host-theme-independent form styling. Stable remains v0.3.22 pending PC, Android and iPhone/TavernTogether verification."
+  "status": "Internal Test only. Rebuilds the Messenger window shell on a shared Shadow DOM with Regex Manager-style ancestor host discovery. The draggable launcher and phone window now share the isolated root. Preserves the <=821px full-screen layout, existing storage keys and business data. Stable remains v0.3.22 pending real-device verification."
 }
