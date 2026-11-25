@@ -173,10 +173,10 @@ async function boot({ empty = false, transientFailure = null } = {}) {
   frame.fetch = async (input, options = {}) => {
     const url = canonicalUrl(input);
     const path = String(url).split('?')[0];
-    const isManifest = path.endsWith('/loader/latest.json') ||
+    const isManifest = path.endsWith('/loader/test-latest.json') ||
       path.endsWith('/latest.json') || path.endsWith('/channels/test.json');
     if (transient && !transientUsed &&
-        (transient === 'manifest' ? path.endsWith('/loader/latest.json') : path.includes('/loader/runtime/'))) {
+        (transient === 'manifest' ? path.endsWith('/loader/test-latest.json') : path.includes('/loader/runtime/'))) {
       transientUsed = true;
       if (transient === 'timeout') {
         return await new Promise((resolve, reject) => options.signal?.addEventListener('abort',
@@ -186,7 +186,7 @@ async function boot({ empty = false, transientFailure = null } = {}) {
     }
     if (offline) throw new TypeError('simulated offline');
     if (isManifest) {
-      const manifest = path.endsWith('/loader/latest.json') ? loaderManifest :
+      const manifest = path.endsWith('/loader/test-latest.json') ? loaderManifest :
         path.endsWith('/channels/test.json') ? JSON.parse(read('channels/test.json')) : coreManifest;
       return { ok: true, status: 200, text: async () => JSON.stringify(manifest) };
     }
