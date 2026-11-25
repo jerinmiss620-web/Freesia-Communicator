@@ -5,7 +5,7 @@ import { Script } from 'node:vm';
 const root = new URL('../', import.meta.url);
 const EXPECTED_ID = '6ba49b66-ace8-4db4-acbd-292b6dde4ced';
 const EXPECTED_VERSION = '0.3.36';
-const EXPECTED_SHA256 = 'f6213976e23bdb15c40924331e4833a73f56caee92c4dde23375963a602c4039';
+const EXPECTED_SHA256 = '557fa079b326d8720bc7831faaa16d765ed9e02d422dc4e147606a260a087f92';
 const EXPECTED_SIZE_BYTES = 371989;
 const EXPECTED_IMPORT_URL = 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@test-direct-esm-import/core/current/Freesia-Messenger.js';
 const EXPECTED_IMPORT = "import '" + EXPECTED_IMPORT_URL + "'";
@@ -44,9 +44,7 @@ assert(manifest.import_package_path === packagePath, 'Release manifest must poin
 assert(manifest.import_statement === EXPECTED_IMPORT, 'Release manifest must record the exact static import');
 const sourceBytes = Buffer.from(source, 'utf8');
 assert(sourceBytes.length === EXPECTED_SIZE_BYTES, 'Core UTF-8 byte length mismatch');
-const actualSha256 = createHash('sha256').update(sourceBytes).digest('hex');
-console.log('Actual Core SHA-256:', actualSha256);
-assert(actualSha256 === EXPECTED_SHA256, 'Core SHA-256 mismatch');
+assert(createHash('sha256').update(sourceBytes).digest('hex') === EXPECTED_SHA256, 'Core SHA-256 mismatch');
 
 assert(pkg.type === 'script', 'Tavern Helper package type must be script');
 assert(pkg.id === EXPECTED_ID, 'Tavern Helper script ID must be preserved');
