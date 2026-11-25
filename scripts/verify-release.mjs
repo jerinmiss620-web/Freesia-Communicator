@@ -55,7 +55,7 @@ assert(pkg.content === EXPECTED_IMPORT, 'Tavern Helper content must be exactly o
 assert(!pkg.content.includes('import('), 'Importer must not use a dynamic import wrapper');
 assert(!pkg.content.includes('window.'), 'Importer must not contain a custom host/bootstrap wrapper');
 
-const apiVersion = source.match(/version:\\s*'([^']+)'/)?.[1];
+const apiVersion = source.match(/version:\s*'([^']+)'/)?.[1];
 assert(apiVersion === EXPECTED_VERSION, 'Core API version must be ' + EXPECTED_VERSION);
 assert(source.includes('通讯侠 v' + EXPECTED_VERSION + ' 已启动'), 'Core startup log must match release version');
 assert(source.includes('const HOST_WIN = SCRIPT_WIN.parent;'), 'Core must use the direct parent Tavern host');
@@ -70,7 +70,7 @@ new Script(source, { filename: sourcePath });
 
 function storageKeys(text) {
   const values = new Map();
-  const pattern = /const\\s+([A-Z0-9_]+_KEY)\\s*=\\s*'([^']+)'/g;
+  const pattern = /const\s+([A-Z0-9_]+_KEY)\s*=\s*'([^']+)'/g;
   for (const match of text.matchAll(pattern)) {
     if (match[1] !== 'LOADER_KEY') values.set(match[1], match[2]);
   }
