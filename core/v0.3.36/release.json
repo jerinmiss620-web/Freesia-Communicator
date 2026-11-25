@@ -10,6 +10,6 @@
   "import_package_path": "install/Freesia-Messenger-GitHub-ESM-Import-TEST.json",
   "import_statement": "import 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@test-direct-esm-import/core/current/Freesia-Messenger.js'",
   "changelog_path": "core/v0.3.36/CHANGELOG.md",
-  "sha256": "f6213976e23bdb15c40924331e4833a73f56caee92c4dde23375963a602c4039",
+  "sha256": "557fa079b326d8720bc7831faaa16d765ed9e02d422dc4e147606a260a087f92",
   "size_bytes": 371989
 }
