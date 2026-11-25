@@ -11,7 +11,7 @@ The active installation path uses a tiny Tavern Helper JSON whose `content` is o
 5. Make `core/current/Freesia-Messenger-ESM.js` byte-for-byte identical to the immutable versioned source.
 6. Create a versioned Tavern Helper JSON entry. Its `content` must be a single static `import 'https://.../core/current/Freesia-Messenger-ESM.js'` statement. Preserve the existing script ID. Do not add a dynamic-import wrapper, cache-busting code, Bootstrap or Remote Loader.
 7. Update the changelog, README and `scripts/verify-release.mjs`. Validate the source snapshot/current equality, hash, byte length, Core syntax, exact importer content and business storage keys.
-8. Merge the release to `main`. Existing users retain the same import entry; future Core updates happen on GitHub and are picked up after refreshing Tavern. Users do not repeatedly download or import JSON.
+8. Merge the release to `main`. Existing users retain the same import entry when its URL remains unchanged; if a CDN alias must be migrated, require one explicit entry replacement, then future Core updates happen on GitHub without repeated JSON imports.
 9. On Stable pushes, purge the jsDelivr cache for `core/current/Freesia-Messenger-ESM.js` and verify that `testingcf.jsdelivr.net` actually serves the expected Core version. Do not call a release delivered until this CDN check passes.
 
 The active ESM-import path does not consume `latest.json` or `channels/test.json`; those remain legacy Remote Loader manifests. Do not add Bootstrap or Remote Loader back into the current loading path.
