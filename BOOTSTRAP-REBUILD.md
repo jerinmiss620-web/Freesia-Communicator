@@ -66,3 +66,9 @@ This branch's Stable manifest now points to the verified immutable Core v0.3.37 
 - TLE Bootstrap: `jerinmiss620-web/Tavern-Layout-Engine/loader/bootstrap/TLE-Permanent-Bootstrap-1.0.6.js`
 - TLE Loader: `jerinmiss620-web/Tavern-Layout-Engine/loader/runtime/v0.3.6/TLE-Remote-Loader.js`
 - TLE full-chain test: `jerinmiss620-web/Tavern-Layout-Engine/tests/tle-update-chain.test.mjs`
+
+## CI follow-up
+
+- The first replay run confirmed that all three JavaScript sources parse and that the replay dependencies install.
+- The first harness assertion incorrectly expected the Core style element in the host document; the Core intentionally mounts its visual stylesheet inside the Messenger Shadow DOM. The assertion now checks the Shadow DOM, matching the actual Core architecture.
+- The replay suite is being rerun against the corrected assertion. A separate legacy workflow still asserts the old Loader v0.1.6 manifest and is not the new rebuild verifier; it must be reconciled before any Stable merge.
