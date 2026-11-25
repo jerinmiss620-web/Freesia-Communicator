@@ -50,7 +50,7 @@ async function checkSource(manifestPath, channel) {
 const stable = await checkSource('latest.json', 'stable');
 const test = await checkSource('channels/test.json', 'test');
 const loader = await checkSource('loader/latest.json', 'stable-loader');
-assert(test.minimum_loader_version === '0.1.4', 'Test Core must require Remote Loader 0.1.4');
+assert(test.minimum_loader_version === '0.1.5', 'Test Core must require Remote Loader 0.1.5');
 assert(Array.isArray(test.adoptable_releases) && test.adoptable_releases.length >= 6, 'Test manifest must include historical Core adoption records');
 const adoptedVersions = new Set();
 for (const record of test.adoptable_releases) {
@@ -75,7 +75,7 @@ if (compareVersions(test.release.version, stable.release.version) === 0) {
 }
 
 const bootstrapSources = {};
-for (const version of ['1.0.0', '1.0.1', '1.0.2', '1.0.3']) {
+for (const version of ['1.0.0', '1.0.1', '1.0.2', '1.0.3', '1.0.4']) {
   const base = 'bootstrap/Freesia-Communicator-Permanent-Bootstrap-' + version;
   const bootstrapSource = await readText(base + '.js');
   new Script(bootstrapSource, { filename: 'Permanent Bootstrap ' + version });
@@ -85,7 +85,7 @@ for (const version of ['1.0.0', '1.0.1', '1.0.2', '1.0.3']) {
   assert(bootstrapPackage.enabled === false, 'Bootstrap import package must be disabled by default: ' + version);
   bootstrapSources[version] = bootstrapSource;
 }
-const activeBootstrap = bootstrapSources['1.0.3'];
+const activeBootstrap = bootstrapSources['1.0.4'];
 const loaderSource = await readText(loader.release.source_path);
 const coreTestSource = await readText(test.release.source_path);
 for (const [label, source] of [['Bootstrap 1.0.2', activeBootstrap], ['Loader ' + loader.release.version, loaderSource]]) {
@@ -101,12 +101,21 @@ assert(loaderSource.includes('lastRequest'), 'Loader must retain per-route reque
 assert(loaderSource.includes('maxAttempts: routes.length'), 'Loader diagnostics must report the full fallback route count');
 assert(loaderSource.includes("CHANNEL === 'test'"), 'Loader status must identify the active update channel');
 
-assert(loader.minimum_bootstrap_version === '1.0.3', 'Loader v0.1.4 must require Bootstrap 1.0.3');
-for (const [label, script] of [['Bootstrap 1.0.3', activeBootstrap], ['Loader 0.1.4', loaderSource], ['Core ' + test.release.version, coreTestSource]]) {
+assert(loader.minimum_bootstrap_version === '1.0.4', 'Loader v0.1.5 must require Bootstrap 1.0.4');
+for (const [label, script] of [['Bootstrap 1.0.4', activeBootstrap], ['Loader 0.1.5', loaderSource], ['Core ' + test.release.version, coreTestSource]]) {
   assert(script.includes('const HOST_WIN = SCRIPT_WIN.parent;'), label + ': must use the TLE direct-parent host contract');
   assert(!script.includes('function findHost(frame)'), label + ': must not guess the host by traversing ancestors');
 }
 assert(activeBootstrap.includes('maybeAdoptCurrentCore()'), 'Bootstrap must initiate first-time Core adoption');
+assert(activeBootstrap.includes('(info.autoRestoreAuthorized && info.hasLastKnownGood)'), 'Bootstrap must retry adoption when restore is authorized but the LKG cache is missing');
+assert(activeBootstrap.includes("const CACHE_PREFIX = 'freesia_messenger_bootstrap_cache_v2_'"), 'Bootstrap must use the localStorage cache namespace');
+assert(!activeBootstrap.includes('indexedDB.open'), 'Bootstrap must not require IndexedDB to read or write its cache');
+assert(loaderSource.includes('function writeLocalStorageRecord'), 'Loader must persist verified source records in localStorage');
+assert(loaderSource.includes('const readback = writeLocalStorageRecord(key, record);'), 'Loader save path must write and read back localStorage first');
+const loaderReadStart = loaderSource.indexOf('async function readRecord');
+assert(loaderSource.indexOf('payload?.schema_version === 1', loaderReadStart) < loaderSource.indexOf('const indexedRecord = await idbGet(slot)', loaderReadStart), 'Loader must prefer localStorage before attempting legacy IndexedDB reads');
+assert(!loaderSource.includes('async function idbPut'), 'Loader must not write new rollback records to IndexedDB');
+assert(coreTestSource.includes('(!loaderInfo?.autoRestoreAuthorized || !loaderInfo?.hasLastKnownGood)'), 'Core must show adoption action when Last Known Good is missing');
 assert(activeBootstrap.includes('await runtime.adoptCurrent()'), 'Bootstrap must call Loader adoption after startup');
 assert(loaderSource.includes('function validateAdoptableRelease(release)'), 'Loader must validate historical adoption records');
 assert(loaderSource.includes('adoptableReleases.find(item => item.version === active.version)'), 'Loader must adopt an older active Core from the historical release list');
@@ -147,4 +156,4 @@ console.log('Freesia Messenger release validation passed.');
 console.log('Stable Core:', stable.release.version);
 console.log('Test Core:', test.release.version);
 console.log('Loader Runtime:', loader.release.version);
-console.log('Bootstrap Runtime: 1.0.3');
+console.log('Bootstrap Runtime: 1.0.4');

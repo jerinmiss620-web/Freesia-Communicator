@@ -2,16 +2,16 @@
   "schema_version": 1,
   "project": "Freesia Messenger",
   "channel": "stable-loader",
-  "latest_version": "0.1.4",
-  "minimum_bootstrap_version": "1.0.3",
+  "latest_version": "0.1.5",
+  "minimum_bootstrap_version": "1.0.4",
   "release": {
-    "version": "0.1.4",
-    "source_path": "loader/runtime/v0.1.4/Freesia-Messenger-Remote-Loader.js",
-    "source_commit": "2a1d41e153902a77a06c8e2f1546cea38a4ace2f",
-    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/2a1d41e153902a77a06c8e2f1546cea38a4ace2f/loader/runtime/v0.1.4/Freesia-Messenger-Remote-Loader.js",
-    "changelog_path": "loader/runtime/v0.1.4/CHANGELOG.md",
-    "sha256": "fe637972ca82074a34d45f8df2419309687075cb329bad85abd869cbb7907180",
-    "size_bytes": 63415
+    "version": "0.1.5",
+    "source_path": "loader/runtime/v0.1.5/Freesia-Messenger-Remote-Loader.js",
+    "source_commit": "cd4c5edfd545fbf16e974c8fe710196b02443278",
+    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/cd4c5edfd545fbf16e974c8fe710196b02443278/loader/runtime/v0.1.5/Freesia-Messenger-Remote-Loader.js",
+    "changelog_path": "loader/runtime/v0.1.5/CHANGELOG.md",
+    "sha256": "4a2f337eaba5689af05c358e84f472c249afaffeb698ca2f9470d8e2e14f8993",
+    "size_bytes": 60841
   },
-  "notes": "Remote Loader v0.1.4 fixes first-time Core adoption and aligns host resolution with the TLE Bootstrap/Loader contract. Requires Permanent Bootstrap v1.0.3. The loader validates fixed historical Core releases listed in the Test channel manifest before adopting an already-running standalone Core. Existing user data and cache keys are preserved."
+  "notes": "Remote Loader v0.1.5 moves Last Known Good and Previous Known Good to verified localStorage source records. IndexedDB is retained only as a non-blocking legacy read path. Requires Permanent Bootstrap v1.0.4."
 }

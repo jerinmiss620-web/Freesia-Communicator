@@ -2,19 +2,19 @@
   "schema_version": 1,
   "project": "Freesia Messenger",
   "channel": "test",
-  "latest_version": "0.3.28",
-  "minimum_loader_version": "0.1.4",
+  "latest_version": "0.3.29",
+  "minimum_loader_version": "0.1.5",
   "release": {
-    "version": "0.3.28",
-    "source_path": "core/v0.3.28/Freesia-Messenger.js",
-    "source_commit": "32fa1cdd9bd2735ace3dfe121436aab943ffd276",
-    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/32fa1cdd9bd2735ace3dfe121436aab943ffd276/core/v0.3.28/Freesia-Messenger.js",
-    "changelog_path": "core/v0.3.28/CHANGELOG.md",
-    "sha256": "67a395edcfc1dfe958257e541a56dbb066e2d053205f79776fa43e7cca8d951e",
-    "size_bytes": 379468
+    "version": "0.3.29",
+    "source_path": "core/v0.3.29/Freesia-Messenger.js",
+    "source_commit": "d83b47781969c1aeda835d7c6fabae1848104fa5",
+    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/d83b47781969c1aeda835d7c6fabae1848104fa5/core/v0.3.29/Freesia-Messenger.js",
+    "changelog_path": "core/v0.3.29/CHANGELOG.md",
+    "sha256": "df812a1e3154d0a22a3a76c6203e55f5910bb4caef855112915eb569d4ab2112",
+    "size_bytes": 379503
   },
-  "status": "Internal Test only. v0.3.28 adds first-time Loader adoption controls. Requires Remote Loader v0.1.4 and Permanent Bootstrap v1.0.3. Runtime verification in ST/TT is required before Stable promotion.",
-  "notes": "Test release v0.3.28. Includes fixed-commit adoption records for Core v0.3.22–v0.3.27 so the Loader can verify and preserve the exact currently-running version as Last Known Good before replacing it. Existing chat data and storage keys remain unchanged.",
+  "status": "Internal Test only. v0.3.29 adds the missing-Last-Known-Good adoption UI fix. Requires Remote Loader v0.1.5 and Permanent Bootstrap v1.0.4. Repository validation is not device validation; test in ST, TT and iPhone Safari before Stable promotion.",
+  "notes": "Test Core v0.3.29 fixes the adoption entry state when automatic restore authorization exists but the verified Last Known Good cache is missing. Requires Remote Loader 0.1.5. Existing Core releases v0.3.22–v0.3.28 remain listed for safe adoption.",
   "adoptable_releases": [
     {
       "version": "0.3.22",
@@ -63,6 +63,14 @@
       "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/06a9482e508d955d1212e836fe5eedbb18b566b7/core/v0.3.27/Freesia-Messenger.js",
       "sha256": "c9052740da1186883be6da439e033b47a6b2c942a2fd7c5179cac2f86cdee1b3",
       "size_bytes": 379256
+    },
+    {
+      "version": "0.3.28",
+      "source_path": "core/v0.3.28/Freesia-Messenger.js",
+      "source_commit": "32fa1cdd9bd2735ace3dfe121436aab943ffd276",
+      "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/32fa1cdd9bd2735ace3dfe121436aab943ffd276/core/v0.3.28/Freesia-Messenger.js",
+      "sha256": "67a395edcfc1dfe958257e541a56dbb066e2d053205f79776fa43e7cca8d951e",
+      "size_bytes": 379468
     }
   ]
 }
