@@ -8,7 +8,7 @@ const bytes = value => Buffer.byteLength(value, 'utf8');
 
 const bootstrapPath = 'bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.6-TEST.js';
 const packagePath = 'install/Freesia-Messenger-Permanent-Bootstrap-1.0.6-TEST.json';
-const loaderPath = 'loader/runtime/v0.1.7/Freesia-Messenger-Remote-Loader.js';
+const loaderPath = 'loader/runtime/v0.1.8/Freesia-Messenger-Remote-Loader.js';
 const [bootstrap, packageText, loader, loaderManifestText, stableManifestText, testManifestText, core] =
   await Promise.all([
     read(bootstrapPath), read(packagePath), read(loaderPath), read('loader/latest.json'),
@@ -26,13 +26,17 @@ assert.equal(pkg.content, bootstrap, 'Tavern Helper package must contain the exa
 assert.match(bootstrap, /const VERSION = '1\.0\.6'/);
 assert.ok(bootstrap.includes('test-bootstrap-rebuild/loader/latest.json'));
 assert.ok(bootstrap.includes("'0.1.6': {"), 'old Loader 0.1.6 rollback source must be registered');
+assert.ok(bootstrap.includes("'0.1.7': {"), 'test Loader 0.1.7 rollback source must be registered');
+assert.ok(bootstrap.includes('Freesia_Messenger_Remote_Bootstrap_Cache'));
+assert.ok(bootstrap.includes('readLegacyLocalStorageSlot'));
+assert.ok(bootstrap.includes('withDbReconnect'), 'Bootstrap must use the TLE IndexedDB reconnect lifecycle');
 assert.ok(bootstrap.includes('freesia_messenger_bootstrap_cache_v2_'), 'existing Bootstrap cache namespace must remain');
 assert.ok(bootstrap.includes('__FREESIA_MESSENGER_V1__'), 'Messenger Core API identity must remain');
 assert.ok(bootstrap.includes('freesia-messenger-root-host'), 'Messenger root health check must remain');
 
 assert.equal(loaderManifest.project, 'Freesia Messenger');
 assert.equal(loaderManifest.channel, 'stable-loader');
-assert.equal(loaderManifest.latest_version, '0.1.7');
+assert.equal(loaderManifest.latest_version, '0.1.8');
 assert.equal(loaderManifest.minimum_bootstrap_version, '1.0.6');
 assert.equal(loaderManifest.release.source_path, loaderPath);
 assert.match(loaderManifest.release.source_commit, /^[a-f0-9]{40}$/);
@@ -41,13 +45,17 @@ assert.equal(loaderManifest.release.source_url,
   loaderManifest.release.source_commit + '/' + loaderPath);
 assert.equal(loaderManifest.release.size_bytes, bytes(loader));
 assert.equal(loaderManifest.release.sha256, digest(loader));
-assert.ok(loader.includes("const LOADER_VERSION = '0.1.7';"));
+assert.ok(loader.includes("const LOADER_VERSION = '0.1.8';"));
 assert.ok(loader.includes('test-bootstrap-rebuild/latest.json'));
 assert.ok(loader.includes('test-bootstrap-rebuild/channels/test.json'));
 assert.ok(loader.includes('(?:main|test-bootstrap-rebuild)'), 'mutable branch manifests must be recognized');
 assert.ok(loader.includes('__FREESIA_MESSENGER_V1__'));
 assert.ok(loader.includes('freesia.messenger.loader.lastKnownGood.v1'));
-assert.ok(loader.includes('withDbReconnect'), 'existing IndexedDB reconnect compatibility path must remain');
+assert.ok(loader.includes('withDbReconnect'), 'TLE IndexedDB reconnect lifecycle must remain');
+assert.ok(loader.includes('async function idbPut'));
+assert.ok(loader.includes('async function writeIndexedRecord'));
+assert.ok(loader.includes("await writeIndexedRecord('candidate', record)"));
+assert.ok(loader.includes("schema_version: 2, backend: 'indexedDB'"));
 
 assert.equal(stableManifest.project, 'Freesia Messenger');
 assert.equal(stableManifest.channel, 'stable');
