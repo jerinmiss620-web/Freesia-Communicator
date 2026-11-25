@@ -171,7 +171,7 @@ async function boot({ empty = false, transientFailure = null } = {}) {
   dom = new JSDOM('<!doctype html><html><head></head><body><div id="top-settings-holder"></div><div id="sheld"><div id="chat"></div><form id="send_form"><textarea id="send_textarea"></textarea></form></div><iframe></iframe></body></html>',
     { url: 'https://tavern.test/', runScripts: 'dangerously', pretendToBeVisual: true, virtualConsole: vc });
   host = dom.window;
-  host.toastr = Object.fromEntries(['info', 'success', 'warning', 'error'].map(kind => [kind, message => toastEvents.push({ kind, message: String(message) })]));
+  host.toastr = Object.fromEntries(['info', 'success', 'warning', 'error'].map(kind => [kind, (message, title) => toastEvents.push({ kind, message: String(message), title: String(title || '') })]));
   frame = host.document.querySelector('iframe').contentWindow;
   Object.defineProperty(host, 'indexedDB', { value: db });
   for (const [key, value] of storage) host.localStorage.setItem(key, value);
@@ -297,7 +297,66 @@ try {
   assert.ok(bootCache.some(record => record.slot === 'last' && record.version === '0.1.8'));
   assert.ok(coreCache.some(record => record.slot === 'lkg' && record.version === '0.3.37'));
   console.log('PASS: Bootstrap Loader cache and Core LKG are durably written to their IndexedDB stores');
-  
+
+  // Migration UX regression: a single Bootstrap may restore one cached v0.1.6
+  // Loader before replacing it with v0.1.8. Its old startup emits progress and
+  // "already latest" toasts; only the final Core update result should reach users.
+  close();
+  db = new IDBFactory();
+  offline = false;
+  storage = new Map([['freesia_messenger_remote_auto_update_v1', 'true']]);
+  const legacyLoaderSource = `(() => {
+    const host = window.parent;
+    const key = '${L}';
+    const api = {
+      version: '0.1.6', channel: 'stable-loader', bootstrapManaged: true,
+      diagnostics: { destroyed: false, scriptInjectionAvailable: true },
+      getInfo() {
+        return {
+          currentVersion: '0.3.22', autoRestoreAuthorized: true,
+          hasLastKnownGood: true, busy: false,
+          lastStatus: { message: 'legacy startup status' }
+        };
+      },
+      checkRemote: async () => null,
+      loadRemote: async () => false,
+      destroy() {
+        this.diagnostics.destroyed = true;
+        if (host[key] === this) delete host[key];
+      }
+    };
+    host[key] = api;
+    api.ready = Promise.resolve().then(() => {
+      host.toastr.success('自动恢复成功：实际运行 通讯侠 v0.3.22。正在检查远程更新。', 'Freesia Messenger Loader');
+      host.toastr.warning('GitHub Raw 请求超时：Fetch is aborted；正在切换下一备用线路。', 'Freesia Messenger Loader');
+      host.toastr.success('远程源码校验通过：v0.3.22。当前运行版本已经是最新版本，无需重新加载。', 'Freesia Messenger Loader');
+      host.toastr.info('正在读取 Stable 正式通道版本清单……', 'Freesia Messenger Loader');
+    });
+  })();`;
+  const legacyCommit = createHash('sha1').update(legacyLoaderSource).digest('hex');
+  const legacyUrl = rootURL + legacyCommit + '/loader/runtime/v0.1.6/Freesia-Messenger-Remote-Loader.js';
+  sources.set(legacyUrl, legacyLoaderSource);
+  await writeCache('Freesia_Messenger_Remote_Bootstrap_Cache', 'last', {
+    schema_version: 2, version: '0.1.6', source: legacyLoaderSource,
+    size_bytes: bytes(legacyLoaderSource), sha256: hash(legacyLoaderSource),
+    source_url: legacyUrl, source_commit: legacyCommit,
+    saved_at: new Date().toISOString()
+  });
+  publish('core', '0.3.37');
+  publish('loader', '0.1.8');
+  await boot();
+  await versions('0.3.37', '0.1.8');
+  const leakedLegacyNotices = toastEvents.filter(item =>
+    /自动恢复成功|正在切换下一备用线路|远程源码校验通过|正在读取 Stable 正式通道版本清单/.test(item.message));
+  assert.deepEqual(leakedLegacyNotices, [],
+    'legacy Loader progress, route failover and already-latest notices must be suppressed during migration');
+  assert.equal(toastEvents.filter(item =>
+    item.kind === 'success' && /更新成功：实际运行 通讯侠 v0.3.37/.test(item.message)).length, 1,
+    'the user receives exactly one final Core update success toast');
+  console.log('PASS: one Bootstrap migrates cached Loader 0.1.6 to 0.1.8 without legacy startup toast spam');
+  console.log('PASS: final Core update success is preserved exactly once');
+  close();
+
   publish('core', '0.3.38');
   await tick();
   await versions('0.3.38', '0.1.8');
