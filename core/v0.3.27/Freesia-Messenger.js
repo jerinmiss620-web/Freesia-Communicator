@@ -4186,7 +4186,7 @@
       else if (action === 'rollback') result = await loader.rollback();
       const info = getRemoteLoaderInfo();
       const message = info?.lastStatus?.message || (result ? 'Loader 操作完成。' : 'Loader 操作未完成，请查看运行状态。');
-      extensionNotice(String(message).split('\\n')[0].slice(0, 220));
+      extensionNotice(String(message).split('\n')[0].slice(0, 220));
     } catch (error) {
       extensionNotice('Loader 操作失败：' + String(error?.message || error).slice(0, 220));
     } finally {
