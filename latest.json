@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "project": "Freesia Messenger",
+  "channel": "stable",
+  "latest_version": "0.3.22",
+  "minimum_loader_version": "0.1.0",
+  "release": {
+    "version": "0.3.22",
+    "source_path": "core/v0.3.22/Freesia-Messenger.js",
+    "source_commit": "e8e6f62490f786486d0a44fabd8feea870fc8c8f",
+    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/e8e6f62490f786486d0a44fabd8feea870fc8c8f/core/v0.3.22/Freesia-Messenger.js",
+    "changelog_path": "core/v0.3.22/CHANGELOG.md",
+    "sha256": "26ad53fee07b9ec4af978360e80092394c706327943d71abefdfd8e141824b83",
+    "size_bytes": 358090
+  },
+  "notes": "Initial remote release. Based on the original v0.3.22 JSON; only the stale runtime API version marker was normalized from 0.3.21 to 0.3.22. Existing storage keys and data structures are preserved."
+}
