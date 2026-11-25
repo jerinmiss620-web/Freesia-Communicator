@@ -50,6 +50,24 @@ async function checkSource(manifestPath, channel) {
 const stable = await checkSource('latest.json', 'stable');
 const test = await checkSource('channels/test.json', 'test');
 const loader = await checkSource('loader/latest.json', 'stable-loader');
+assert(test.minimum_loader_version === '0.1.4', 'Test Core must require Remote Loader 0.1.4');
+assert(Array.isArray(test.adoptable_releases) && test.adoptable_releases.length >= 6, 'Test manifest must include historical Core adoption records');
+const adoptedVersions = new Set();
+for (const record of test.adoptable_releases) {
+  assert(/^\\d+\\.\\d+\\.\\d+$/.test(record.version || ''), 'Adoption record version invalid');
+  assert(compareVersions(record.version, test.release.version) < 0, 'Adoption records must be older than the Test release');
+  assert(!adoptedVersions.has(record.version), 'Duplicate adoption record: ' + record.version);
+  adoptedVersions.add(record.version);
+  assert(record.source_path === 'core/v' + record.version + '/Freesia-Messenger.js', 'Adoption source path mismatch: ' + record.version);
+  assert(/^[a-f0-9]{40}$/.test(record.source_commit || ''), 'Adoption Commit invalid: ' + record.version);
+  assert(/^[a-f0-9]{64}$/.test(record.sha256 || ''), 'Adoption SHA-256 invalid: ' + record.version);
+  assert(Number.isSafeInteger(record.size_bytes) && record.size_bytes > 0, 'Adoption size invalid: ' + record.version);
+  assert(record.source_url === repoPrefix + record.source_commit + '/' + record.source_path, 'Adoption URL is not pinned: ' + record.version);
+  const historicalSource = await readText(record.source_path);
+  assert(Buffer.byteLength(historicalSource, 'utf8') === record.size_bytes, 'Adoption byte length mismatch: ' + record.version);
+  assert(sha256(historicalSource) === record.sha256, 'Adoption SHA-256 mismatch: ' + record.version);
+  new Script(historicalSource, { filename: record.source_path });
+}
 
 assert(compareVersions(test.release.version, stable.release.version) >= 0, 'Test Core must not be older than Stable');
 if (compareVersions(test.release.version, stable.release.version) === 0) {
@@ -57,7 +75,7 @@ if (compareVersions(test.release.version, stable.release.version) === 0) {
 }
 
 const bootstrapSources = {};
-for (const version of ['1.0.0', '1.0.1', '1.0.2']) {
+for (const version of ['1.0.0', '1.0.1', '1.0.2', '1.0.3']) {
   const base = 'bootstrap/Freesia-Communicator-Permanent-Bootstrap-' + version;
   const bootstrapSource = await readText(base + '.js');
   new Script(bootstrapSource, { filename: 'Permanent Bootstrap ' + version });
@@ -67,7 +85,7 @@ for (const version of ['1.0.0', '1.0.1', '1.0.2']) {
   assert(bootstrapPackage.enabled === false, 'Bootstrap import package must be disabled by default: ' + version);
   bootstrapSources[version] = bootstrapSource;
 }
-const activeBootstrap = bootstrapSources['1.0.2'];
+const activeBootstrap = bootstrapSources['1.0.3'];
 const loaderSource = await readText(loader.release.source_path);
 const coreTestSource = await readText(test.release.source_path);
 for (const [label, source] of [['Bootstrap 1.0.2', activeBootstrap], ['Loader ' + loader.release.version, loaderSource]]) {
@@ -83,29 +101,17 @@ assert(loaderSource.includes('lastRequest'), 'Loader must retain per-route reque
 assert(loaderSource.includes('maxAttempts: routes.length'), 'Loader diagnostics must report the full fallback route count');
 assert(loaderSource.includes("CHANNEL === 'test'"), 'Loader status must identify the active update channel');
 
-assert(loader.minimum_bootstrap_version === '1.0.2', 'Loader v0.1.3 must require Bootstrap 1.0.2');
-assert(activeBootstrap.includes('const HOST_WIN = findHost(SCRIPT_WIN);'), 'Bootstrap must use the Core ancestor host resolver');
-assert(loaderSource.includes('HOST_WIN = findHost(SCRIPT_WIN);'), 'Loader must use the Core ancestor host resolver');
-assert(coreTestSource.includes('const HOST_WIN = findHost(window);'), 'Test Core must expose the shared ancestor host resolver');
-
-function extractResolver(source, nextMarker, label) {
-  const start = source.indexOf('  function findHost(frame) {');
-  const end = source.indexOf(nextMarker, start);
-  assert(start >= 0 && end > start, label + ': host resolver block not found');
-  return source.slice(start, end).trim();
+assert(loader.minimum_bootstrap_version === '1.0.3', 'Loader v0.1.4 must require Bootstrap 1.0.3');
+for (const [label, script] of [['Bootstrap 1.0.3', activeBootstrap], ['Loader 0.1.4', loaderSource], ['Core ' + test.release.version, coreTestSource]]) {
+  assert(script.includes('const HOST_WIN = SCRIPT_WIN.parent;'), label + ': must use the TLE direct-parent host contract');
+  assert(!script.includes('function findHost(frame)'), label + ': must not guess the host by traversing ancestors');
 }
-const coreResolver = extractResolver(coreTestSource, '\n\n  const HOST_WIN = findHost(window);', 'Core');
-const bootstrapResolver = extractResolver(activeBootstrap, '\n  const HOST_WIN = findHost(SCRIPT_WIN);', 'Bootstrap');
-const loaderResolver = extractResolver(loaderSource, '\n\n  let HOST_WIN;', 'Loader');
-assert(bootstrapResolver === coreResolver, 'Bootstrap host resolver differs from Core');
-assert(loaderResolver === coreResolver, 'Loader host resolver differs from Core');
-
-const resolveHost = new Function('frame', coreResolver + '\nreturn findHost(frame);');
-const topWindow = { document: { getElementById: id => id === 'sheld' ? {} : null }, parent: null };
-topWindow.parent = topWindow;
-const wrapperWindow = { document: { getElementById: () => null }, parent: topWindow };
-const scriptWindow = { document: { getElementById: () => null }, parent: wrapperWindow };
-assert(resolveHost(scriptWindow) === topWindow, 'nested script frame must resolve the same top-level Tavern host');
+assert(activeBootstrap.includes('maybeAdoptCurrentCore()'), 'Bootstrap must initiate first-time Core adoption');
+assert(activeBootstrap.includes('await runtime.adoptCurrent()'), 'Bootstrap must call Loader adoption after startup');
+assert(loaderSource.includes('function validateAdoptableRelease(release)'), 'Loader must validate historical adoption records');
+assert(loaderSource.includes('adoptableReleases.find(item => item.version === active.version)'), 'Loader must adopt an older active Core from the historical release list');
+assert(loaderSource.includes('if (active && isHealthy(active, active.version))'), 'Loader must detect an already-running Core using its actual health contract');
+assert(loaderSource.includes('isHealthy(previous, previous.version)'), 'Loader rollback detection must not depend on a nonexistent state field');
 
 function extractRootHelper(source, nextMarker, label) {
   const start = source.indexOf('  function getMessengerRoot() {');
@@ -123,8 +129,8 @@ for (const [label, helper] of [['Loader', loaderRootHelper], ['Bootstrap', boots
   assert(getRoot(hostDocument) === shadowRootNode, label + ': Shadow DOM root was not detected');
 }
 assert(loaderSource.includes('api.hostWindow === HOST_WIN &&\n      getMessengerRoot()'), 'Loader health check must use Shadow DOM-aware root lookup');
-assert(activeBootstrap.includes('core?.remoteLoaderManaged === true'), 'Bootstrap must only accept a Loader-managed Core as successful startup');
-assert(activeBootstrap.includes('core.version === runtimeVersion'), 'Bootstrap must compare the actual Core version with Loader runtime state');
+assert(activeBootstrap.includes("typeof core.close === 'function'"), 'Bootstrap must verify the actual Core close API');
+assert(!activeBootstrap.includes('core?.remoteLoaderManaged === true'), 'Bootstrap must not misclassify a healthy standalone Core as failed startup');
 
 assert(coreTestSource.includes("const width = Math.min(420, Math.max(360, bounds.width - 32));"), 'PC default window width must be 420px');
 assert(coreTestSource.includes("const height = Math.min(780, Math.max(520, bounds.height - 32));"), 'PC default window height must cap at 780px');
@@ -141,4 +147,4 @@ console.log('Freesia Messenger release validation passed.');
 console.log('Stable Core:', stable.release.version);
 console.log('Test Core:', test.release.version);
 console.log('Loader Runtime:', loader.release.version);
-console.log('Bootstrap Runtime: 1.0.2');
+console.log('Bootstrap Runtime: 1.0.3');
