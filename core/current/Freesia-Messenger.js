@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  // Freesia Messenger · 通讯侠 · v0.3.31
+  // Freesia Messenger · 通讯侠 · v0.3.32
   // Independent floating phone shell for JS-Slash-Runner.
 
   const SCRIPT_WIN = window;
@@ -3766,8 +3766,9 @@
       if (mobile) {
         this.maximized = false;
         Object.assign(this.frame.style, {
-          left: bounds.x + 'px', top: bounds.y + 'px', right: 'auto', bottom: 'auto',
-          width: bounds.width + 'px', height: bounds.height + 'px', minHeight: '0', maxHeight: 'none',
+          position: 'absolute',
+          left: '0', top: '0', right: '0', bottom: '0',
+          width: 'auto', height: 'auto', minHeight: '0', maxHeight: 'none',
           transform: 'none', border: '0', borderRadius: '0', boxShadow: 'none',
         });
         if (this.resizeGrip) this.resizeGrip.hidden = true;
@@ -4181,7 +4182,7 @@
     const ctx = snap.info.context;
     const win = state.windowController;
     return [
-      '通讯侠 v0.3.31 运行诊断',
+      '通讯侠 v0.3.32 运行诊断',
       '时间：' + new Date().toLocaleString(),
       '环境：' + HOST_WIN.navigator.userAgent,
       '窗口控制器：' + (win ? '已创建' : '未创建'),
@@ -4260,7 +4261,7 @@
     const select = (key, label) => '<label class="fm-ext-row"><span>' + label + '</span><select class="text_pole" data-fm-ext-field="' + key + '">' + proactiveFieldOptions[key].map(v => '<option value="' + v + '">' + (v === 0 ? '不限' : v + (key === 'limit' ? ' 轮' : ' 分钟')) + '</option>').join('') + '</select></label>';
     const status = (key, label) => '<div class="fm-ext-row"><span>' + label + '</span><span data-fm-ext-status="' + key + '">—</span></div>';
     entry.innerHTML = '<div class="inline-drawer"><div class="inline-drawer-toggle inline-drawer-header"><b>通讯侠 · Freesia Messenger</b><div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div></div><div class="inline-drawer-content"><div class="fm-extension-content">' +
-      '<div class="fm-ext-row"><small>v0.3.31 · 控制中心</small><small data-fm-ext-status="enabled-label">已启用</small></div>' +
+      '<div class="fm-ext-row"><small>v0.3.32 · 控制中心</small><small data-fm-ext-status="enabled-label">已启用</small></div>' +
       '<div class="fm-ext-primary">' + button('toggle-enabled', state.enabled ? '关闭通讯侠' : '启用通讯侠', state.enabled ? 'fa-power-off' : 'fa-play') + '</div>' +
       '<b>快捷设置</b><div class="fm-ext-checks">' + check('time', '真实时间感知') + check('active', 'Char 主动联络') + check('sync', '通讯记录同步正文') + '</div>' +
       '<div class="fm-ext-section" data-fm-ext-active-fields>' + select('interval', '检测间隔') + select('cooldown', '发信冷却') + select('limit', '每日联络上限') + check('notify', '主动消息通知') + '</div>' +
@@ -5167,7 +5168,7 @@
   }
 
   const api = {
-    version: '0.3.31',
+    version: '0.3.32',
     open: () => openWindow(true),
     close: closeWindow,
     destroy,
@@ -5241,5 +5242,5 @@
   window.addEventListener(FRAME_EXIT_EVENT, handleFrameExit, { once: true });
   window.addEventListener('beforeunload', handleFrameExit, { once: true });
 
-  console.info('[Freesia Messenger] 通讯侠 v0.3.31 已启动。');
+  console.info('[Freesia Messenger] 通讯侠 v0.3.32 已启动。');
 })();
