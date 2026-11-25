@@ -3,7 +3,7 @@
   "project": "Freesia Messenger",
   "channel": "stable",
   "latest_version": "0.3.37",
-  "minimum_loader_version": "0.1.8",
+  "minimum_loader_version": "0.1.6",
   "release": {
     "version": "0.3.37",
     "source_path": "core/v0.3.37/Freesia-Messenger.js",
@@ -13,5 +13,5 @@
     "sha256": "15274a9985c701c069c4dd38ccdde17cc501828e85ec49a04331817689ad6b7d",
     "size_bytes": 372230
   },
-  "notes": "Bootstrap rebuild test branch only. Aligns the Stable remote Core manifest with the verified v0.3.37 release; does not change main or the currently published ESM import entry. Requires Remote Loader v0.1.8 or newer."
+  "notes": "Bootstrap rebuild test branch only. Aligns the Stable remote Core manifest with the verified v0.3.37 release; does not change main or the currently published ESM import entry. Requires Remote Loader v0.1.6 or newer or newer."
 }
