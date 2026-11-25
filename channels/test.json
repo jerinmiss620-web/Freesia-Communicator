@@ -10,7 +10,7 @@
     "source_commit": "e3cc46939636be527515cee2e7bb69cb7c66f58e",
     "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/e3cc46939636be527515cee2e7bb69cb7c66f58e/core/v0.3.23/Freesia-Messenger.js",
     "changelog_path": "core/v0.3.23/CHANGELOG.md",
-    "sha256": "86b7702ef4307c6c1ce2788289c00e60e534e70529f406f6393f19c03675f32b",
+    "sha256": "6da4e21c0d11c5ab7e3e69478f101356653fb5d3b932e029df5f6f0ed02e2447",
     "size_bytes": 363224
   },
   "status": "Internal Test only. Adds a viewport-level floating launcher, full-screen layout at widths <=821px, separate Messenger enable/window/floating-ball controls, and stronger host-theme-independent form styling. Stable remains v0.3.22 pending PC, Android and iPhone/TavernTogether verification."
