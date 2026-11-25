@@ -6,25 +6,25 @@ SillyTavern / Tavern Helper 的独立通讯面板。项目采用 GitHub Remote L
 
 | 层级 | 当前版本 | 职责 |
 |---|---:|---|
-| Permanent Bootstrap | 1.0.4 | 固定启动器；localStorage 缓存、完整性读回校验与首次 Core 安全接管 |
-| Remote Loader Runtime | 0.1.5 | 验证源码、localStorage 回滚缓存、接管、安装、健康检查与回滚 |
+| Permanent Bootstrap | 1.0.5 | 固定启动器；旧 Loader 迁移回滚、启动 Promise 错误隔离与完整性校验 |
+| Remote Loader Runtime | 0.1.6 | localStorage Candidate/LKG/Previous、旧缓存兼容读取、安装、健康检查与回滚 |
 | Communicator Core | Stable 0.3.22 / Test 0.3.29 | 通讯侠实际功能 |
 
 - Stable 清单：[latest.json](latest.json)
 - Test 清单：[channels/test.json](channels/test.json)
 - Test 更新记录：[Core v0.3.29](core/v0.3.29/CHANGELOG.md)
 - Loader 清单：[loader/latest.json](loader/latest.json)
-- Loader 更新记录：[Runtime v0.1.5](loader/runtime/v0.1.5/CHANGELOG.md)
-- Bootstrap 更新记录：[Bootstrap v1.0.4](bootstrap/CHANGELOG-1.0.4.md)
-- 一次性安装包：[Bootstrap 1.0.4 JSON](bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.4.json)
+- Loader 更新记录：[Runtime v0.1.6](loader/runtime/v0.1.6/CHANGELOG.md)
+- Bootstrap 更新记录：[Bootstrap v1.0.5](bootstrap/CHANGELOG-1.0.5.md)
+- 一次性安装包：[Bootstrap 1.0.5 JSON](bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.5.json)
 
 > **当前状态：内部 Test，不是社区正式升级。** Stable 仍保持 v0.3.22；Test 为 v0.3.29。Bootstrap / Loader / Core 的首次接管与自动更新链仍需在 ST、TT 实机验证后才可提升 Stable。
 
 ## 首次接管与启动器升级
 
 1. 保留原先单独导入的通讯侠 Core JSON，作为救援副本；不要清除站点数据。
-2. 在酒馆助手中用 Bootstrap 1.0.4 替换 1.0.3 并启用。
-3. Bootstrap 会将 Remote Loader 更新到 0.1.5。若发现当前通讯侠仍由独立脚本运行、尚未建立回滚授权，会提示「接管当前通讯侠」。
+2. 在酒馆助手中用 Bootstrap 1.0.5 替换 1.0.3 / 1.0.4 并启用。
+3. Bootstrap 会先为现有 Loader v0.1.2–v0.1.5 建立固定 Commit 回滚副本，再将 Remote Loader 更新到 0.1.6。若发现当前通讯侠仍由独立脚本运行、尚未建立回滚授权，会提示「接管当前通讯侠」。
 4. 确认接管后，Loader 会按当前 Core 版本，从 Test 清单的固定 Git Commit 下载对应历史源码，验证 SHA-256 与 UTF-8 字节长度，并写入、读回校验 Last Known Good。此步骤不会替换当前运行实例。
 5. 看到接管成功后，在酒馆助手中停用原来单独导入的通讯侠 Core 脚本，再完整刷新酒馆。
 6. Bootstrap / Loader 会从 Last Known Good 恢复当前版本，再检查并安装 Test v0.3.29。自动更新关闭时，可在通讯侠扩展折叠栏的「远程更新」区域手动检查和安装。
@@ -33,9 +33,9 @@ SillyTavern / Tavern Helper 的独立通讯面板。项目采用 GitHub Remote L
 
 ## 本次修复内容
 
-- Bootstrap 1.0.4 继续采用与 TLE Bootstrap v1.0.6 一致的直接父窗口宿主定位，并改用 localStorage 缓存，避免 IndexedDB 连接中断阻止启动。
-- Loader 0.1.5 将回滚源码缓存改为 localStorage 优先，旧 IndexedDB 读取失败不会再阻断启动。
-- Loader 0.1.5 保留固定历史版本接管，并在自动恢复授权存在但 Last Known Good 缺失时重新触发安全接管。
+- Bootstrap 1.0.5 保留 TLE 的直接父窗口宿主契约；旧 Loader 缺少新 Bootstrap 缓存时，先下载并验证固定 Commit 回滚副本，再执行升级。
+- Loader 0.1.6 将 Candidate、Last Known Good 与 Previous 全部改为 localStorage 读回校验；IndexedDB 仅保留旧缓存的可选只读兼容路径。
+- Bootstrap 1.0.5 修复 ready Promise 失败后重复等待的问题；Loader 0.1.6 修复 0.1.5 中遗留的未定义 writeIndexedRecord 调用。
 - Test 清单包含 v0.3.22–v0.3.28 的固定 Commit / SHA-256 / 字节长度，供 Loader 安全建立当前版本的回滚副本。
 - Core v0.3.29 在现有扩展折叠栏加入「接管当前版本」入口；需要接管时禁用安装按钮，避免跳过回滚保护。
 
