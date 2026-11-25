@@ -33,7 +33,10 @@ jobs:
 
           for attempt in $(seq 1 12); do
             BODY="$(curl -fsSL --connect-timeout 5 --max-time 15 --retry 2 --retry-all-errors "$CDN_URL" || true)"
-            if [[ "$BODY" == *"Freesia Messenger · 通讯侠 · $EXPECTED_VERSION"* ]]; then
+            if [[ "$BODY" == *"Freesia Messenger · 通讯侠 · $EXPECTED_VERSION"* ]] \
+              && [[ "$BODY" == *'data-fm-action="messages-retry-dismiss"'* ]] \
+              && [[ "$BODY" == *"function dismissMessageRetryNotice(messageId)"* ]] \
+              && [[ "$BODY" == *"message.retryNoticeDismissed = true"* ]]; then
               echo "jsDelivr now serves $EXPECTED_VERSION"
               exit 0
             fi
