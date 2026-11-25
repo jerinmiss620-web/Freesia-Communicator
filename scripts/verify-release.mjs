@@ -76,6 +76,11 @@ for (const [label, source] of [['Bootstrap 1.0.1', activeBootstrap], ['Loader ' 
   assert(source.includes('await validate('), label + ': integrity validation is not inside route fallback');
 }
 assert(activeBootstrap.includes('const MAX_ATTEMPTS = 4'), 'Bootstrap must attempt all four routes');
+assert(loaderSource.includes('let checkPromise = null'), 'Loader must deduplicate concurrent remote checks');
+assert(loaderSource.includes('if (checkPromise) return checkPromise'), 'Loader shared check promise is not used');
+assert(loaderSource.includes('lastRequest'), 'Loader must retain per-route request diagnostics');
+assert(loaderSource.includes('maxAttempts: routes.length'), 'Loader diagnostics must report the full fallback route count');
+assert(loaderSource.includes("CHANNEL === 'test'"), 'Loader status must identify the active update channel');
 
 console.log('Freesia Messenger release validation passed.');
 console.log('Stable Core:', stable.release.version);
