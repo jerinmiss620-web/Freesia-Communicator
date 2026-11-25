@@ -3,7 +3,7 @@
   "project": "Freesia Messenger",
   "channel": "stable",
   "latest_version": "0.3.22",
-  "minimum_loader_version": "0.1.0",
+  "minimum_loader_version": "0.1.6",
   "release": {
     "version": "0.3.22",
     "source_path": "core/v0.3.22/Freesia-Messenger.js",
@@ -13,5 +13,5 @@
     "sha256": "26ad53fee07b9ec4af978360e80092394c706327943d71abefdfd8e141824b83",
     "size_bytes": 358090
   },
-  "notes": "Initial remote release. Based on the original v0.3.22 JSON; only the stale runtime API version marker was normalized from 0.3.21 to 0.3.22. Existing storage keys and data structures are preserved."
+  "notes": "Initial remote release. Based on the original v0.3.22 JSON; only the stale runtime API version marker was normalized from 0.3.21 to 0.3.22. Existing storage keys and data structures are preserved. Requires Remote Loader v0.1.6 or newer for localStorage-only candidate staging."
 }
