@@ -22,6 +22,6 @@
 
 ## GitHub 引入方式
 
-- 正式本体位于 `core/current/Freesia-Messenger.js`。
+- 正式本体位于 `core/current/Freesia-Messenger-ESM.js`。
 - 酒馆助手 JSON 只包含一条指向 GitHub `main` 分支的静态 ES Module `import`。
-- 已安装旧版 GitHub ESM Import 入口的用户无需重新导入；刷新酒馆即可获取更新。
+- 因旧别名的 CDN 缓存持续返回 v0.3.30，现有用户需要将导入入口替换为新的 `Freesia-Messenger-ESM.js` 地址一次；完成迁移后，后续更新无需重新导入。
