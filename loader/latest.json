@@ -2,16 +2,16 @@
   "schema_version": 1,
   "project": "Freesia Messenger",
   "channel": "stable-loader",
-  "latest_version": "0.1.8",
-  "minimum_bootstrap_version": "1.0.6",
+  "latest_version": "0.1.6",
+  "minimum_bootstrap_version": "1.0.5",
   "release": {
-    "version": "0.1.8",
-    "source_path": "loader/runtime/v0.1.8/Freesia-Messenger-Remote-Loader.js",
-    "source_commit": "0e309a50c03bac7278f15ac833c2b576ac5f7456",
-    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/0e309a50c03bac7278f15ac833c2b576ac5f7456/loader/runtime/v0.1.8/Freesia-Messenger-Remote-Loader.js",
-    "changelog_path": "loader/runtime/v0.1.8/CHANGELOG.md",
-    "sha256": "9265e6e37655afb7be00fa2c133e6a6df031aca63a410b3f997e6ca437e7507a",
-    "size_bytes": 65487
+    "version": "0.1.6",
+    "source_path": "loader/runtime/v0.1.6/Freesia-Messenger-Remote-Loader.js",
+    "source_commit": "9691b83a0ff097099ac1bfbc923ab22bb3d2d958",
+    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/9691b83a0ff097099ac1bfbc923ab22bb3d2d958/loader/runtime/v0.1.6/Freesia-Messenger-Remote-Loader.js",
+    "changelog_path": "loader/runtime/v0.1.6/CHANGELOG.md",
+    "sha256": "d872e4767d8c593681234070b94f0b3d6e1d7c60592efa49675546c7efdbb124",
+    "size_bytes": 61217
   },
-  "notes": "Bootstrap rebuild test runtime. Ports TLE Stable Loader 0.3.6 IndexedDB-primary Candidate/LKG/Previous persistence, verified readback, localStorage pointer migration, reconnect-and-retry behavior, and localStorage fallback only when IndexedDB cannot be opened. Preserves Messenger Core API and existing cache keys. Not a Stable release."
+  "notes": "Remote Loader v0.1.6 stages Candidate, Last Known Good and Previous in verified localStorage records. IndexedDB is retained only as an optional read-only compatibility path for legacy cache records. Requires Permanent Bootstrap v1.0.5."
 }
