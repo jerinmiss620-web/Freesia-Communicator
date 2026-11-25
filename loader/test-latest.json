@@ -7,11 +7,11 @@
   "release": {
     "version": "0.1.8",
     "source_path": "loader/runtime/v0.1.8/Freesia-Messenger-Remote-Loader.js",
-    "source_commit": "0e309a50c03bac7278f15ac833c2b576ac5f7456",
-    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/0e309a50c03bac7278f15ac833c2b576ac5f7456/loader/runtime/v0.1.8/Freesia-Messenger-Remote-Loader.js",
+    "source_commit": "6918a737593c68479afa8015cf89efde76307838",
+    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/6918a737593c68479afa8015cf89efde76307838/loader/runtime/v0.1.8/Freesia-Messenger-Remote-Loader.js",
     "changelog_path": "loader/runtime/v0.1.8/CHANGELOG.md",
-    "sha256": "9265e6e37655afb7be00fa2c133e6a6df031aca63a410b3f997e6ca437e7507a",
-    "size_bytes": 65487
+    "sha256": "1126d06a9c8ec939870a805a0b8a4e8fde448d94226ca56507741fe84258e3f4",
+    "size_bytes": 65515
   },
   "notes": "Bootstrap rebuild test runtime. Ports TLE Stable Loader 0.3.6 IndexedDB-primary Candidate/LKG/Previous persistence, verified readback, localStorage pointer migration, reconnect-and-retry behavior, and localStorage fallback only when IndexedDB cannot be opened. Preserves Messenger Core API and existing cache keys. Not a Stable release."
 }
