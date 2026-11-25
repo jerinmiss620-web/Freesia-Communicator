@@ -57,7 +57,7 @@ if (compareVersions(test.release.version, stable.release.version) === 0) {
 }
 
 const bootstrapSources = {};
-for (const version of ['1.0.0', '1.0.1']) {
+for (const version of ['1.0.0', '1.0.1', '1.0.2']) {
   const base = 'bootstrap/Freesia-Communicator-Permanent-Bootstrap-' + version;
   const bootstrapSource = await readText(base + '.js');
   new Script(bootstrapSource, { filename: 'Permanent Bootstrap ' + version });
@@ -67,9 +67,10 @@ for (const version of ['1.0.0', '1.0.1']) {
   assert(bootstrapPackage.enabled === false, 'Bootstrap import package must be disabled by default: ' + version);
   bootstrapSources[version] = bootstrapSource;
 }
-const activeBootstrap = bootstrapSources['1.0.1'];
+const activeBootstrap = bootstrapSources['1.0.2'];
 const loaderSource = await readText(loader.release.source_path);
-for (const [label, source] of [['Bootstrap 1.0.1', activeBootstrap], ['Loader ' + loader.release.version, loaderSource]]) {
+const coreTestSource = await readText(test.release.source_path);
+for (const [label, source] of [['Bootstrap 1.0.2', activeBootstrap], ['Loader ' + loader.release.version, loaderSource]]) {
   for (const host of ['raw.githubusercontent.com', 'cdn.jsdelivr.net', 'fastly.jsdelivr.net', 'testingcf.jsdelivr.net']) {
     assert(source.includes(host), label + ': missing fallback host ' + host);
   }
@@ -82,8 +83,51 @@ assert(loaderSource.includes('lastRequest'), 'Loader must retain per-route reque
 assert(loaderSource.includes('maxAttempts: routes.length'), 'Loader diagnostics must report the full fallback route count');
 assert(loaderSource.includes("CHANNEL === 'test'"), 'Loader status must identify the active update channel');
 
+assert(loader.minimum_bootstrap_version === '1.0.2', 'Loader v0.1.3 must require Bootstrap 1.0.2');
+assert(activeBootstrap.includes('const HOST_WIN = findHost(SCRIPT_WIN);'), 'Bootstrap must use the Core ancestor host resolver');
+assert(loaderSource.includes('HOST_WIN = findHost(SCRIPT_WIN);'), 'Loader must use the Core ancestor host resolver');
+assert(coreTestSource.includes('const HOST_WIN = findHost(window);'), 'Test Core must expose the shared ancestor host resolver');
+
+function extractResolver(source, nextMarker, label) {
+  const start = source.indexOf('  function findHost(frame) {');
+  const end = source.indexOf(nextMarker, start);
+  assert(start >= 0 && end > start, label + ': host resolver block not found');
+  return source.slice(start, end).trim();
+}
+const coreResolver = extractResolver(coreTestSource, '\\n\\n  const HOST_WIN = findHost(window);', 'Core');
+const bootstrapResolver = extractResolver(activeBootstrap, '\\n  const HOST_WIN = findHost(SCRIPT_WIN);', 'Bootstrap');
+const loaderResolver = extractResolver(loaderSource, '\\n\\n  let HOST_WIN;', 'Loader');
+assert.equal(bootstrapResolver, coreResolver, 'Bootstrap host resolver differs from Core');
+assert.equal(loaderResolver, coreResolver, 'Loader host resolver differs from Core');
+
+const resolveHost = new Function('frame', coreResolver + '\\nreturn findHost(frame);');
+const topWindow = { document: { getElementById: id => id === 'sheld' ? {} : null }, parent: null };
+topWindow.parent = topWindow;
+const wrapperWindow = { document: { getElementById: () => null }, parent: topWindow };
+const scriptWindow = { document: { getElementById: () => null }, parent: wrapperWindow };
+assert.equal(resolveHost(scriptWindow), topWindow, 'nested script frame must resolve the same top-level Tavern host');
+
+function extractRootHelper(source, nextMarker, label) {
+  const start = source.indexOf('  function getMessengerRoot() {');
+  const end = source.indexOf(nextMarker, start);
+  assert(start >= 0 && end > start, label + ': Shadow DOM root helper not found');
+  return source.slice(start, end).trim();
+}
+const loaderRootHelper = extractRootHelper(loaderSource, '\\n\\n  function isHealthy', 'Loader');
+const bootstrapRootHelper = extractRootHelper(activeBootstrap, '\\n\\n  function coreIsRunning', 'Bootstrap');
+for (const [label, helper] of [['Loader', loaderRootHelper], ['Bootstrap', bootstrapRootHelper]]) {
+  const shadowRootNode = { id: 'freesia-messenger-root' };
+  const rootHost = { shadowRoot: { querySelector: selector => selector === '#freesia-messenger-root' ? shadowRootNode : null } };
+  const hostDocument = { getElementById: id => id === 'freesia-messenger-root-host' ? rootHost : null };
+  const getRoot = new Function('HOST_DOC', helper + '\\nreturn getMessengerRoot();');
+  assert.equal(getRoot(hostDocument), shadowRootNode, label + ': Shadow DOM root was not detected');
+}
+assert(loaderSource.includes('api.hostWindow === HOST_WIN &&\\n      getMessengerRoot()'), 'Loader health check must use Shadow DOM-aware root lookup');
+assert(activeBootstrap.includes('core?.remoteLoaderManaged === true'), 'Bootstrap must only accept a Loader-managed Core as successful startup');
+assert(activeBootstrap.includes('core.version === runtimeVersion'), 'Bootstrap must compare the actual Core version with Loader runtime state');
+
 console.log('Freesia Messenger release validation passed.');
 console.log('Stable Core:', stable.release.version);
 console.log('Test Core:', test.release.version);
 console.log('Loader Runtime:', loader.release.version);
-console.log('Bootstrap Runtime: 1.0.1');
+console.log('Bootstrap Runtime: 1.0.2');
