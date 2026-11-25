@@ -27,8 +27,8 @@
   }
   let CHANNEL = readConfiguredChannel();
   const MANIFEST_URL = () => CHANNEL === 'test'
-    ? 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/test-bootstrap-rebuild-verify/channels/test.json'
-    : 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/test-bootstrap-rebuild-verify/latest.json';
+    ? 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/test-bootstrap-toast-cleanup/channels/test.json'
+    : 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/test-bootstrap-toast-cleanup/latest.json';
   const INSTANCE_KEY = '__FREESIA_MESSENGER_V1__';
   const LOADER_KEY = '__FREESIA_MESSENGER_REMOTE_LOADER_V1__';
   const LKG_KEY = 'freesia.messenger.loader.lastKnownGood.v1';
@@ -258,7 +258,7 @@
   function downloadRoutes(originalUrl, authoritativeFirst = false) {
     const root = 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/';
     if (!originalUrl.startsWith(root)) throw new Error('下载来源仓库不受信任');
-    const target = /^(main|test-bootstrap-rebuild-verify|[a-f0-9]{40})\/(loader\/latest\.json|latest\.json|channels\/test\.json|loader\/runtime\/v\d+\.\d+\.\d+\/Freesia-Messenger-Remote-Loader\.js|core\/v\d+\.\d+\.\d+\/Freesia-Messenger\.js)(\?.*)?$/.exec(originalUrl.slice(root.length));
+    const target = /^(main|test-bootstrap-toast-cleanup|[a-f0-9]{40})\/(loader\/latest\.json|latest\.json|channels\/test\.json|loader\/runtime\/v\d+\.\d+\.\d+\/Freesia-Messenger-Remote-Loader\.js|core\/v\d+\.\d+\.\d+\/Freesia-Messenger\.js)(\?.*)?$/.exec(originalUrl.slice(root.length));
     if (!target) throw new Error('下载路径或固定 Commit 无效');
     const cdnPath = 'jerinmiss620-web/Freesia-Communicator@' + target[1] + '/' + target[2] + (target[3] || '');
     const official = { url: originalUrl, label: 'GitHub Raw', timeout: 20000 };
@@ -272,7 +272,7 @@
   }
 
   async function fetchText(url, timeoutMs = 20000, validate = null) {
-    const isManifest = /\/(?:main|test-bootstrap-rebuild-verify)\/(?:loader\/latest\.json|latest\.json|channels\/test\.json)(?:\?|$)/.test(url);
+    const isManifest = /\/(?:main|test-bootstrap-toast-cleanup)\/(?:loader\/latest\.json|latest\.json|channels\/test\.json)(?:\?|$)/.test(url);
     const routes = downloadRoutes(url, isManifest);
     const stage = isManifest
       ? (url.includes('/channels/test.json') ? 'Test Core 清单' : 'Stable Core 清单')
