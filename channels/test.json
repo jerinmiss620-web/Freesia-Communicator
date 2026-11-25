@@ -3,7 +3,7 @@
   "project": "Freesia Messenger",
   "channel": "test",
   "latest_version": "0.3.29",
-  "minimum_loader_version": "0.1.6",
+  "minimum_loader_version": "0.1.8",
   "release": {
     "version": "0.3.29",
     "source_path": "core/v0.3.29/Freesia-Messenger.js",
@@ -13,8 +13,8 @@
     "sha256": "df812a1e3154d0a22a3a76c6203e55f5910bb4caef855112915eb569d4ab2112",
     "size_bytes": 379503
   },
-  "status": "Internal Test only. v0.3.29 adds the missing-Last-Known-Good adoption UI fix. Requires Remote Loader v0.1.6 and Permanent Bootstrap v1.0.5. Repository validation is not device validation; test in ST, TT and iPhone Safari before Stable promotion.",
-  "notes": "Test Core v0.3.29 fixes the adoption entry state when automatic restore authorization exists but the verified Last Known Good cache is missing. Requires Remote Loader 0.1.6 and Permanent Bootstrap 1.0.5. Existing Core releases v0.3.22–v0.3.28 remain listed for safe adoption.",
+  "status": "Internal Test only. v0.3.29 adds the missing-Last-Known-Good adoption UI fix. Requires Remote Loader v0.1.8 and Permanent Bootstrap v1.0.6. Repository validation is not device validation; test in ST, TT and iPhone Safari before Stable promotion.",
+  "notes": "Test Core v0.3.29 fixes the adoption entry state when automatic restore authorization exists but the verified Last Known Good cache is missing. Requires Remote Loader 0.1.8 and Permanent Bootstrap 1.0.5. Existing Core releases v0.3.22–v0.3.28 remain listed for safe adoption.",
   "adoptable_releases": [
     {
       "version": "0.3.22",
