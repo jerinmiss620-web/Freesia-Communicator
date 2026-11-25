@@ -1008,7 +1008,7 @@
           cacheWarning = '；当前 通讯侠 健康运行，但缓存维护失败：' + (cacheError?.message || cacheError);
           console.warn('[Freesia Messenger Remote Loader] 当前实例健康；缓存维护失败，不影响运行。', cacheError);
         }
-        setStatus('远程源码校验通过：v' + record.version + '。当前运行版本已经是最新版本，无需重新加载。' + cacheWarning, cacheWarning ? 'warning' : 'success');
+        setStatus('远程源码校验通过：v' + record.version + '。当前运行版本已经是最新版本，无需重新加载。' + cacheWarning, cacheWarning ? 'warning' : 'info');
       } else {
         const lkg = await readLastKnownGood();
         if (active && !lkg) {
