@@ -113,6 +113,19 @@
     }
   }
 
+  // Internal route failover is diagnostic progress, not a user-facing warning.
+  // A failed mirror followed by a successful fallback must not emit a toast.
+  function setTransientStatus(message) {
+    if (closed) return;
+    diagnosticState.lastStatus = {
+      message: String(message || '').slice(0, 1600),
+      kind: 'info',
+      at: new Date().toISOString(),
+    };
+    notifyHostState();
+    try { HOST_WIN.console?.info?.('[Freesia Messenger Remote Loader] ' + message); } catch {}
+  }
+
   function setMeta(message) {
     diagnosticState.summary = String(message || '').slice(0, 800);
   }
@@ -342,7 +355,7 @@
         };
         lastError = new Error(route.label + (timedOut ? ' 请求超时' : ' 下载或校验失败') + '：' + reason);
         if (attempt < routes.length - 1) {
-          setStatus(lastError.message + '；正在切换下一备用线路。', 'warning');
+          setTransientStatus(lastError.message + '；正在切换下一备用线路。');
         } else {
           notifyHostState();
         }
