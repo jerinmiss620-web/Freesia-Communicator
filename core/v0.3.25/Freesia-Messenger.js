@@ -3823,6 +3823,11 @@
       this.root?.setAttribute('aria-hidden', String(!this.visible));
       this.bubble.hidden = !state.enabled || this.visible;
       this.layoutBubble();
+      this.bubble.tabIndex = this.bubble.hidden ? -1 : 0;
+      this.bubble.setAttribute('aria-hidden', String(this.bubble.hidden));
+      const info = getMessageContext();
+      const unread = info.ok ? proactiveUnread(info.record) : 0;
+      this.bubble.setAttribute('data-fm-unread', unread ? String(Math.min(unread, 99)) : '');
     }
 
     open(resetToHome) {
@@ -4077,6 +4082,7 @@
     HOST_DOC.getElementById(ENTRY_ID)?.remove();
     state.windowController = new WindowController(HOST_WIN, state.root, state.frame, 'freesia_messenger');
     state.chatEntry = state.windowController.bubble;
+    syncViewportMode();
     refreshAppearance();
     syncChatEntryState();
   }
