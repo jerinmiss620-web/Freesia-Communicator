@@ -8,14 +8,14 @@ SillyTavern / Tavern Helper 的独立通讯面板。项目采用 GitHub Remote L
 |---|---:|---|
 | Permanent Bootstrap | 1.0.1 | 本地固定引导脚本，负责加载/更新 Loader |
 | Remote Loader Runtime | 0.1.1 | 读取版本清单、验证源码、缓存、安装、健康检查与回滚 |
-| Communicator Core | Stable 0.3.22 / Test 0.3.23 | 通讯侠实际功能 |
+| Communicator Core | Stable 0.3.22 / Test 0.3.24 | 通讯侠实际功能 |
 
 - Stable 清单：[latest.json](latest.json)
-- Test 清单：[channels/test.json](channels/test.json)
+- Test 清单：[channels/test.json](channels/test.json)\n- Test 更新记录：[Core v0.3.24](core/v0.3.24/CHANGELOG.md)
 - Loader 清单：[loader/latest.json](loader/latest.json)
 - 一次性安装包：[Bootstrap 1.0.1 JSON](bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.1.json)
 
-> **当前状态：内部 Test，不是社区正式升级。** Test 通道现为 Core v0.3.23，已实现移动悬浮入口修复、821px 以下全屏、通讯侠/窗口/悬浮球分离控制，以及内部输入控件主题隔离。Stable 仍保持 v0.3.22；PC、Android、iPhone/TavernTogether 实机验证完成前，社区用户暂时不需要迁移。
+> **当前状态：内部 Test，不是社区正式升级。** Test 通道现为 Core v0.3.24，已实现移动悬浮入口修复、821px 以下全屏、通讯侠/窗口/悬浮球分离控制、内部输入控件主题隔离，以及正则侠式逐层宿主定位与共享 Shadow DOM 窗口壳。Stable 仍保持 v0.3.22；PC、Android、iPhone/TavernTogether 实机验证完成前，社区用户暂时不需要迁移。
 
 ## 首次迁移
 
@@ -29,7 +29,7 @@ SillyTavern / Tavern Helper 的独立通讯面板。项目采用 GitHub Remote L
 
 ## 数据兼容原则
 
-v0.3.23 Core 基于 v0.3.22，保留原通讯侠的存储键与数据结构，不做迁移重命名：
+v0.3.24 Core 基于 v0.3.23，保留原通讯侠的存储键与数据结构，不做迁移重命名：
 
 - localStorage：窗口位置、悬浮入口位置、AI 预设、外观、入口显示、主动联络、现实时间感知、正文同步、隐私遮罩、社区模式等。
 - 当前聊天元数据：通讯消息、动态、订阅、社区记录。
@@ -39,7 +39,7 @@ Loader 自身使用独立的全新命名空间与 IndexedDB 数据库，不占�
 
 ## 更新通道
 
-Stable 是默认通道，目前为 v0.3.22。Test 通道现为 v0.3.23，版本高于 Stable；测试通过后，将同一份已验证源码提升到 Stable。
+Stable 是默认通道，目前为 v0.3.22。Test 通道现为 v0.3.24，版本高于 Stable；测试通过后，将同一份已验证源码提升到 Stable。
 
 Loader API 位于酒馆宿主窗口：
 
