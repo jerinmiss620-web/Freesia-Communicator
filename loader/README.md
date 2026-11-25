@@ -1,6 +1,6 @@
 # Freesia Messenger Remote Loader
 
-Loader Runtime v0.1.1 是无独立面板的 headless 管理层，由 Permanent Bootstrap v1.0.1 持有。它不另建一套通讯 UI，也不改变通讯侠业务数据。
+Loader Runtime v0.1.2 是无独立面板的 headless 管理层，由 Permanent Bootstrap v1.0.1 持有。它不另建一套通讯 UI，也不改变通讯侠业务数据。
 
 ## 职责
 
@@ -12,6 +12,8 @@ Loader Runtime v0.1.1 是无独立面板的 headless 管理层，由 Permanent B
 - 使用独立 IndexedDB 保存 Candidate、Last Known Good 与 Previous，并读回验证。
 - 在 Core 健康检查失败时尝试恢复上一份已验证版本。
 - 自动恢复已授权缓存、周期检查远程版本、网络恢复后重试。
+- `checkRemote()` 使用共享 Promise；并发触发的检查复用同一个请求任务。
+- `getInfo()` 提供当前通道、版本、缓存状态，以及最近一次请求的阶段、线路、尝试次数、超时、HTTP 状态、耗时和失败原因。
 - 提供 `getInfo()`、`checkRemote()`、`loadRemote()`、`rollback()`、`setChannel()` 等只读/控制 API。
 
 ## 通道
@@ -19,7 +21,7 @@ Loader Runtime v0.1.1 是无独立面板的 headless 管理层，由 Permanent B
 - `stable`：默认；读取根目录 `latest.json`。
 - `test`：读取 `channels/test.json`。
 
-通过 `window.__FREESIA_MESSENGER_REMOTE_LOADER_V1__.setChannel('test')` 切换到测试通道；切换时需要用户确认。切换回 Stable 时，如目标版本较旧，也会要求确认后才允许降级。
+通过 `window.__FREESIA_MESSENGER_REMOTE_LOADER_V1__.setChannel('test')` 切换到测试通道；切换时需要用户确认。切换回 Stable 时，如目标版本较旧，也会要求确认后才允许降级。通道选择保存在独立 localStorage 键中，刷新后仍然保留。
 
 Core 版本号必须跨通道单调递增；不要在相同版本号下发布不同源码。
 
