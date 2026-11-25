@@ -23,7 +23,7 @@ assert.equal(pkg.type, 'script');
 assert.equal(pkg.enabled, false, 'test installer must import disabled');
 assert.equal(pkg.id, 'b6d6a0f1-6d7b-4c4a-9d18-8a2f0b7e61c3');
 assert.equal(pkg.content, bootstrap, 'Tavern Helper package must contain the exact Bootstrap source');
-assert.match(bootstrap, /const VERSION = '1\\.0\\.6'/);
+assert.match(bootstrap, /const VERSION = '1\.0\.6'/);
 assert.ok(bootstrap.includes('test-bootstrap-rebuild/loader/latest.json'));
 assert.ok(bootstrap.includes("'0.1.6': {"), 'old Loader 0.1.6 rollback source must be registered');
 assert.ok(bootstrap.includes('freesia_messenger_bootstrap_cache_v2_'), 'existing Bootstrap cache namespace must remain');
@@ -56,12 +56,12 @@ assert.equal(stableManifest.minimum_loader_version, '0.1.6');
 assert.equal(stableManifest.release.source_path, 'core/v0.3.37/Freesia-Messenger.js');
 assert.equal(stableManifest.release.size_bytes, bytes(core));
 assert.equal(stableManifest.release.sha256, digest(core));
-assert.equal(core.match(/version:\\s*'([^']+)'/)?.[1], '0.3.37');
+assert.equal(core.match(/version:\s*'([^']+)'/)?.[1], '0.3.37');
 assert.ok(core.includes('const CHAT_DATA_KEY ='));
 assert.ok(core.includes('const PRESET_KEY ='));
 
 assert.equal(testManifest.channel, 'test');
 assert.equal(testManifest.latest_version, '0.3.29');
-assert.ok(Number(testManifest.minimum_loader_version) <= 0.1 || testManifest.minimum_loader_version === '0.1.6');
+assert.equal(testManifest.minimum_loader_version, '0.1.6');
 
 console.log('Messenger Bootstrap rebuild static release checks passed.');
