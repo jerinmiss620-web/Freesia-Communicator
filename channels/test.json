@@ -10,7 +10,7 @@
     "source_commit": "06a9482e508d955d1212e836fe5eedbb18b566b7",
     "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/06a9482e508d955d1212e836fe5eedbb18b566b7/core/v0.3.27/Freesia-Messenger.js",
     "changelog_path": "core/v0.3.27/CHANGELOG.md",
-    "sha256": "393898846d2e9614b8b5fe6b9ba9197d44da90435d02640f214827667a1cfb58",
+    "sha256": "c9052740da1186883be6da439e033b47a6b2c942a2fd7c5179cac2f86cdee1b3",
     "size_bytes": 379256
   },
   "status": "Internal Test only. v0.3.27 adds TLE-style remote update controls to the existing Messenger extension fold. Real ST/TT runtime verification is required before Stable promotion.",
