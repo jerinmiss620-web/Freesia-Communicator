@@ -4125,7 +4125,7 @@
   }
 
   function extensionBusy() {
-    return state.messageBusy || state.messageSending || state.momentsBusy || state.subscriptionBusy || state.momentCommentsBusy || state.momentCommentSending || state.communityBusy || state.proactiveRunning || state.apiTesting || state.backupBusy;
+    return state.messageBusy || state.messageSending || state.momentsBusy || state.subscriptionBusy || state.momentCommentsBusy || state.momentCommentSending || state.communityBusy || state.proactiveRunning || state.apiTesting || state.backupBusy || state.loaderBusy;
   }
 
   function getRemoteLoader() {
@@ -4315,6 +4315,11 @@
       '下次检测：' + snap.next,
       '今日发信：' + snap.count,
       '生成任务：' + (extensionBusy() ? '忙碌' : '空闲'),
+      '远程更新：' + (getRemoteLoader() ? 'Bootstrap ' + (HOST_WIN.__FREESIA_MESSENGER_REMOTE_BOOTSTRAP_V1__?.version || '未知') + ' / Loader ' + (getRemoteLoader().version || '未知') : '未连接'),
+      '更新通道：' + (getRemoteLoaderInfo()?.channel || '—'),
+      '当前 Core：' + (getRemoteLoaderInfo()?.currentVersion || '—'),
+      '远程 Core：' + (getRemoteLoaderInfo()?.availableVersion || '—'),
+      'Loader 状态：' + (getRemoteLoaderInfo()?.lastStatus?.message || '—'),
       '页面可见：' + (!HOST_DOC.hidden),
     ].join('\n');
   }
