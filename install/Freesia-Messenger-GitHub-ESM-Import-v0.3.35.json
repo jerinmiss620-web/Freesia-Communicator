@@ -1,0 +1,17 @@
+{
+  "type": "script",
+  "enabled": true,
+  "name": "Freesia Messenger · 通讯侠 v0.3.35（GitHub 本体引入）",
+  "id": "6ba49b66-ace8-4db4-acbd-292b6dde4ced",
+  "content": "import 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger.js'",
+  "info": "# Freesia Messenger · 通讯侠 v0.3.35\n\n**GitHub 本体引入入口。** 本脚本只保留一条静态 ES Module `import`，与输入助手采用相同的引入形式；通讯侠完整功能代码只保存在 GitHub，不内嵌在此 JSON 中。\n\n- **引入地址：** `https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger.js`\n- **首次安装：** 在酒馆助手中导入本 JSON 一次。\n- **后续更新：** 只更新 GitHub 的 `core/current/Freesia-Messenger.js`；使用者刷新酒馆即可加载新本体，不需要再次下载或导入 JSON。\n- **兼容：** 保留原通讯侠脚本 ID、业务存储键、聊天元数据、预设及通讯记录。\n- **加载链：** 不依赖 Permanent Bootstrap、Remote Loader、IndexedDB 或额外更新器。\n\n**注意：** 若此前启用过旧的 Permanent Bootstrap，请停用它，避免重复启动通讯侠。",
+  "button": {
+    "enabled": false,
+    "buttons": []
+  },
+  "data": {},
+  "export_with": {
+    "data": true,
+    "button": true
+  }
+}
