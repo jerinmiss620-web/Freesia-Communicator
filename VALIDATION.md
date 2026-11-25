@@ -16,12 +16,12 @@ GitHub Actions runs `node scripts/verify-release.mjs` on pushes and pull request
 
 ## Current baseline
 
-The v0.3.22 release remains the Stable baseline. Core v0.3.24 is on the Test channel. Repository checks do not replace real PC, Android and iPhone/TavernTogether testing; do not promote to Stable before those tests pass.
+The v0.3.22 release remains the Stable baseline. Core v0.3.26 is on the Test channel. Repository checks do not replace real PC, Android and iPhone/TavernTogether testing; do not promote to Stable before those tests pass.
 
 | Component | Version | Repository validation |
 |---|---:|---|
 | Core Stable | 0.3.22 | Unchanged |
-| Core Test | 0.3.24 | Manifest + SHA-256 + UTF-8 length configured |
+| Core Test | 0.3.26 | Manifest + SHA-256 + UTF-8 length; PC portrait geometry and mobile full-screen assertions |
 | Loader Runtime | 0.1.3 | Manifest + SHA-256 + UTF-8 length configured; Shadow DOM / host resolver tests |
 | Bootstrap | 1.0.2 | Import package + standalone source configured; shared host resolver and Shadow DOM checks |
 
@@ -29,12 +29,13 @@ The v0.3.22 release remains the Stable baseline. Core v0.3.24 is on the Test cha
 
 The repository-side checks do not prove successful execution inside Tavern Helper. Before announcing a public Stable migration, test:
 
-- PC desktop viewport.
+- PC desktop viewport: default window approximately 420×780px, remains portrait-shaped, and does not expand to a 920–1120px wide panel.
+- PC manual resize and maximize remain capped at 520px wide.
 - PC browser with a narrow/mobile viewport.
 - Android browser / SillyTavern.
 - iPhone / TavernTogether.
 - Re-import Bootstrap 1.0.2 over the existing 1.0.1 installation; confirm the existing IndexedDB caches remain readable.
-- Test Core v0.3.24 installation and actual runtime version after Shadow DOM health check.
+- Test Core v0.3.26 installation and actual runtime version after Shadow DOM health check.
 - Refresh and offline cache restore.
 - A Test Core upgrade followed by an explicit rollback to Stable.
 - Existing chat messages, moments, comments, subscriptions and settings after migration.
