@@ -7,3 +7,5 @@
 - Retains the TLE reconnect-on-lost-connection behavior: invalidate stale DB handles, reopen once, retry once, then report failure without deleting cached data.
 - Preserves Messenger Core API identity, localStorage preference keys, and chat/user data.
 - Test branch only; not a Stable release.
+
+- Migration checks both verified stores and chooses the newer valid record, preventing a stale legacy IndexedDB entry from shadowing a newer v0.1.6 / v0.1.7 localStorage LKG.
