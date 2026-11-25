@@ -14,6 +14,15 @@ function assert(condition, message) {
 function sha256(text) {
   return createHash('sha256').update(Buffer.from(text, 'utf8')).digest('hex');
 }
+function compareVersions(left, right) {
+  const a = left.split('.').map(Number);
+  const b = right.split('.').map(Number);
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    const delta = (a[i] || 0) - (b[i] || 0);
+    if (delta) return delta;
+  }
+  return 0;
+}
 function checkManifest(manifest, expectedChannel, path) {
   assert(manifest.schema_version === 1, path + ': unsupported schema_version');
   assert(manifest.project === 'Freesia Messenger', path + ': project mismatch');
@@ -42,8 +51,10 @@ const stable = await checkSource('latest.json', 'stable');
 const test = await checkSource('channels/test.json', 'test');
 const loader = await checkSource('loader/latest.json', 'stable-loader');
 
-assert(stable.release.version === test.release.version, 'Initial Stable/Test baseline versions differ');
-assert(stable.release.sha256 === test.release.sha256, 'Initial Stable/Test baseline sources differ');
+assert(compareVersions(test.release.version, stable.release.version) >= 0, 'Test Core must not be older than Stable');
+if (compareVersions(test.release.version, stable.release.version) === 0) {
+  assert(stable.release.sha256 === test.release.sha256, 'Stable/Test sources must match when their versions match');
+}
 
 const bootstrapSource = await readText('bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.0.js');
 new Script(bootstrapSource, { filename: 'Permanent Bootstrap 1.0.0' });
