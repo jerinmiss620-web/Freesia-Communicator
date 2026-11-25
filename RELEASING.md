@@ -21,6 +21,14 @@
 
 Bootstrap is the fixed local entry point. Only replace it when the loader startup protocol must change. When replacing it, add a new versioned `.js` and `.json` pair; update the JSON package's embedded `content` to match the standalone JS exactly. Existing installations must import the new Bootstrap once because an installed Bootstrap cannot update itself.
 
-## Transport fallback policy\n\n- Four routes: GitHub Raw, jsDelivr, Fastly and TestingCF.\n- Mutable branch manifests prefer GitHub Raw; immutable commit-pinned source files try CDN routes before GitHub Raw.\n- Network/timeout/HTTP errors and response validation errors all advance to the next route. Validation includes manifest JSON/schema/project/channel/version/path, UTF-8 byte length and SHA-256.\n- Mirrors are transport only; the canonical `source_url` remains the fixed GitHub Raw URL with an immutable Commit.\n- Exhausting all routes leaves the currently running version and verified rollback caches untouched.\n\n## Version policy
+## Transport fallback policy
+
+- Four routes: GitHub Raw, jsDelivr, Fastly and TestingCF.
+- Mutable branch manifests prefer GitHub Raw; immutable commit-pinned source files try CDN routes before GitHub Raw.
+- Network/timeout/HTTP errors and response validation errors all advance to the next route. Validation includes manifest JSON/schema/project/channel/version/path, UTF-8 byte length and SHA-256.
+- Mirrors are transport only; the canonical `source_url` remains the fixed GitHub Raw URL with an immutable Commit.
+- Exhausting all routes leaves the currently running version and verified rollback caches untouched.
+
+## Version policy
 
 Core versions are monotonically increasing across Stable and Test. Do not publish different source bytes under the same version number. Test starts from the current Stable baseline and advances ahead; promotion copies the exact tested commit and hash into Stable.
