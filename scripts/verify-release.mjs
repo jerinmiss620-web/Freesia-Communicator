@@ -97,15 +97,15 @@ function extractResolver(source, nextMarker, label) {
 const coreResolver = extractResolver(coreTestSource, '\n\n  const HOST_WIN = findHost(window);', 'Core');
 const bootstrapResolver = extractResolver(activeBootstrap, '\n  const HOST_WIN = findHost(SCRIPT_WIN);', 'Bootstrap');
 const loaderResolver = extractResolver(loaderSource, '\n\n  let HOST_WIN;', 'Loader');
-assert.equal(bootstrapResolver, coreResolver, 'Bootstrap host resolver differs from Core');
-assert.equal(loaderResolver, coreResolver, 'Loader host resolver differs from Core');
+assert(bootstrapResolver === coreResolver, 'Bootstrap host resolver differs from Core');
+assert(loaderResolver === coreResolver, 'Loader host resolver differs from Core');
 
 const resolveHost = new Function('frame', coreResolver + '\nreturn findHost(frame);');
 const topWindow = { document: { getElementById: id => id === 'sheld' ? {} : null }, parent: null };
 topWindow.parent = topWindow;
 const wrapperWindow = { document: { getElementById: () => null }, parent: topWindow };
 const scriptWindow = { document: { getElementById: () => null }, parent: wrapperWindow };
-assert.equal(resolveHost(scriptWindow), topWindow, 'nested script frame must resolve the same top-level Tavern host');
+assert(resolveHost(scriptWindow) === topWindow, 'nested script frame must resolve the same top-level Tavern host');
 
 function extractRootHelper(source, nextMarker, label) {
   const start = source.indexOf('  function getMessengerRoot() {');
@@ -120,7 +120,7 @@ for (const [label, helper] of [['Loader', loaderRootHelper], ['Bootstrap', boots
   const rootHost = { shadowRoot: { querySelector: selector => selector === '#freesia-messenger-root' ? shadowRootNode : null } };
   const hostDocument = { getElementById: id => id === 'freesia-messenger-root-host' ? rootHost : null };
   const getRoot = new Function('HOST_DOC', helper + '\nreturn getMessengerRoot();');
-  assert.equal(getRoot(hostDocument), shadowRootNode, label + ': Shadow DOM root was not detected');
+  assert(getRoot(hostDocument) === shadowRootNode, label + ': Shadow DOM root was not detected');
 }
 assert(loaderSource.includes('api.hostWindow === HOST_WIN &&\n      getMessengerRoot()'), 'Loader health check must use Shadow DOM-aware root lookup');
 assert(activeBootstrap.includes('core?.remoteLoaderManaged === true'), 'Bootstrap must only accept a Loader-managed Core as successful startup');
