@@ -8,22 +8,22 @@ SillyTavern / Tavern Helper 的独立通讯面板。项目采用 GitHub Remote L
 |---|---:|---|
 | Permanent Bootstrap | 1.0.2 | 固定启动器；与 Core 共用逐层宿主定位及 Shadow DOM 健康检查 |
 | Remote Loader Runtime | 0.1.3 | 读取版本清单、验证源码、缓存、安装、健康检查、请求诊断与回滚 |
-| Communicator Core | Stable 0.3.22 / Test 0.3.24 | 通讯侠实际功能 |
+| Communicator Core | Stable 0.3.22 / Test 0.3.26 | 通讯侠实际功能 |
 
 - Stable 清单：[latest.json](latest.json)
 - Test 清单：[channels/test.json](channels/test.json)
-- Test 更新记录：[Core v0.3.24](core/v0.3.24/CHANGELOG.md)
+- Test 更新记录：[Core v0.3.26](core/v0.3.26/CHANGELOG.md)
 - Loader 清单：[loader/latest.json](loader/latest.json)
 - Loader 更新记录：[Runtime v0.1.3](loader/runtime/v0.1.3/CHANGELOG.md)
 - Bootstrap 更新记录：[Bootstrap v1.0.2](bootstrap/CHANGELOG-1.0.2.md)
 - 一次性安装包：[Bootstrap 1.0.2 JSON](bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.2.json)
 
-> **当前状态：内部 Test，不是社区正式升级。** Test 通道现为 Core v0.3.24，包含移动端窗口重构、821px 以下全屏、输入控件主题隔离、逐层宿主定位与共享 Shadow DOM 窗口壳。Stable 仍保持 v0.3.22；PC、Android、iPhone/TavernTogether 实机验证完成前，社区用户暂时不需要迁移。
+> **当前状态：内部 Test，不是社区正式升级。** Test 通道现为 Core v0.3.26。PC 默认使用约 420×780px 的竖向手机应用式浮窗（可在 360–520px 宽度内调整）；821px 以下继续全屏。悬浮球、WindowController、Shadow DOM 和单一扩展总开关保持不变。Stable 仍保持 v0.3.22；PC、Android、iPhone/TavernTogether 实机验证完成前，社区用户暂时不需要迁移。
 
 ## 首次迁移与本次启动器升级
 
 1. 在酒馆助手中停用旧的完整通讯侠脚本，保留原 JSON 作为救援副本，不要删除。
-2. **如果目前使用 Bootstrap 1.0.1，请停用它，并导入 Bootstrap 1.0.2。** 本次必须更新固定启动器：Core v0.3.24 已改为逐层宿主定位和 Shadow DOM 根节点，旧 Bootstrap/Loader 的宿主定位与健康检查仍按旧 DOM 结构工作。
+2. **如果目前使用 Bootstrap 1.0.1，请停用它，并导入 Bootstrap 1.0.2。** 本次必须更新固定启动器：Core v0.3.25 已改为逐层宿主定位和 Shadow DOM 根节点，旧 Bootstrap/Loader 的宿主定位与健康检查仍按旧 DOM 结构工作。
 3. 启用 Bootstrap 1.0.2 并刷新酒馆宿主页面。
 4. Bootstrap 会复用原有缓存，升级 Loader 至 0.1.3；Loader 再下载并验证 Core。
 5. 确认实际运行版本、通讯入口、聊天记录、动态、订阅和设置正常后，再决定是否长期保留旧脚本副本。
@@ -34,7 +34,7 @@ SillyTavern / Tavern Helper 的独立通讯面板。项目采用 GitHub Remote L
 
 ## 数据兼容原则
 
-v0.3.24 Core 基于 v0.3.23，保留原通讯侠的存储键与数据结构，不做迁移重命名：
+v0.3.26 Core 基于 v0.3.25，保留原通讯侠的存储键与数据结构，不做迁移重命名：
 
 - localStorage：窗口位置、悬浮入口位置、AI 预设、外观、入口显示、主动联络、现实时间感知、正文同步、隐私遮罩、社区模式等。
 - 当前聊天元数据：通讯消息、动态、订阅、社区记录。
@@ -44,7 +44,7 @@ Loader 自身使用独立的 Freesia Messenger Remote Loader 命名空间与 Ind
 
 ## 更新通道
 
-Stable 是默认通道，目前为 v0.3.22。Test 通道现为 v0.3.24，版本高于 Stable；测试通过后，将同一份已验证源码提升到 Stable。
+Stable 是默认通道，目前为 v0.3.22。Test 通道现为 v0.3.26，版本高于 Stable；测试通过后，将同一份已验证源码提升到 Stable。
 
 Loader API 位于酒馆宿主窗口：
 
@@ -66,7 +66,7 @@ window.__FREESIA_MESSENGER_REMOTE_LOADER_V1__?.rollback()
 - IndexedDB 保存 Candidate、Last Known Good 与 Previous；写入后读回校验。
 - 先验证候选源码，再加载；健康检查失败时恢复上一份已验证版本。
 - 远程 script + SRI 失败时，可回退到已校验源码的 Blob Script。
-- Bootstrap、Loader、Core 使用同一套逐层宿主定位；Loader 与 Bootstrap 同时识别旧 DOM 根节点和 v0.3.24 的 Shadow DOM 根节点。
+- Bootstrap、Loader、Core 使用同一套逐层宿主定位；Loader 与 Bootstrap 同时识别旧 DOM 根节点和 v0.3.25 的 Shadow DOM 根节点。
 - SHA-256 与固定 Commit 提供完整性验证，不等同于发行者数字签名；信任根仍是本 GitHub 仓库。
 
 ## 开发与发布
