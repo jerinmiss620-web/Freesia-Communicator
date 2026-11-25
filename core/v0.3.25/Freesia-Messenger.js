@@ -5265,6 +5265,7 @@
   HOST_DOC.head.appendChild(style);
 
   state.root = createWindowShell(style);
+  (HOST_DOC.body || HOST_DOC.documentElement).appendChild(state.rootHost);
   state.root.setAttribute('aria-hidden', 'true');
   state.frame = state.root.querySelector('.fm-frame');
   state.titlebar = state.root.querySelector('[data-fm-drag-handle]');
