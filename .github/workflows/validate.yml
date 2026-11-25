@@ -23,7 +23,7 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: bash
         run: |
-          EXPECTED_VERSION="$(grep -m1 -oE 'v[0-9]+\.[0-9]+\.[0-9]+' core/current/Freesia-Messenger.js)"
+          EXPECTED_VERSION="$(grep -m1 -oE 'v[0-9]+\.[0-9]+\.[0-9]+' core/current/Freesia-Messenger-ESM.js)"
           test -n "$EXPECTED_VERSION"
           PURGE_URL="https://purge.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger-ESM.js"
           CDN_URL="https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger-ESM.js"
