@@ -126,6 +126,17 @@ assert(loaderSource.includes('api.hostWindow === HOST_WIN &&\n      getMessenger
 assert(activeBootstrap.includes('core?.remoteLoaderManaged === true'), 'Bootstrap must only accept a Loader-managed Core as successful startup');
 assert(activeBootstrap.includes('core.version === runtimeVersion'), 'Bootstrap must compare the actual Core version with Loader runtime state');
 
+assert(coreTestSource.includes("const width = Math.min(420, Math.max(360, bounds.width - 32));"), 'PC default window width must be 420px');
+assert(coreTestSource.includes("const height = Math.min(780, Math.max(520, bounds.height - 32));"), 'PC default window height must cap at 780px');
+assert(coreTestSource.includes("kind === 'workspace' && mode === 'desktop' ? 'v8' : 'v7'"), 'Only the PC workspace geometry key should migrate to v8');
+assert(coreTestSource.includes("const maxWidth = Math.max(minWidth, Math.min(520, bounds.width - 16));"), 'PC window resize must cap at 520px');
+assert(coreTestSource.includes("w: Math.min(maxWidth, Math.max(minWidth, drag.width + dx))"), 'PC resize handler must enforce the portrait width cap');
+assert(coreTestSource.includes("width: min(420px, calc(100vw - 32px));"), 'PC frame CSS fallback width must be 420px');
+assert(coreTestSource.includes("height: min(780px, calc(100dvh - 32px));"), 'PC frame CSS fallback height must cap at 780px');
+assert(coreTestSource.includes("max-width: min(520px, calc(100vw - 16px));"), 'PC frame CSS must prevent desktop-wide stretching');
+assert(coreTestSource.includes("@media (max-width: 821px)"), 'Mobile full-screen breakpoint must remain at 821px');
+assert(coreTestSource.includes("#${ROOT_ID} .fm-frame { position: absolute; inset: 0; width: auto; height: auto; min-height: 0; max-height: none; border: 0; border-radius: 0; box-shadow: none; transform: none; }"), 'Mobile full-screen frame rules must remain intact');
+
 console.log('Freesia Messenger release validation passed.');
 console.log('Stable Core:', stable.release.version);
 console.log('Test Core:', test.release.version);
