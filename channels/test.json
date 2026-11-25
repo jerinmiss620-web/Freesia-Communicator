@@ -10,7 +10,7 @@
     "source_commit": "d83b47781969c1aeda835d7c6fabae1848104fa5",
     "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/d83b47781969c1aeda835d7c6fabae1848104fa5/core/v0.3.29/Freesia-Messenger.js",
     "changelog_path": "core/v0.3.29/CHANGELOG.md",
-    "sha256": "97e27cfa42d0702b977a4ed17d5fc2feab8c544252deb3d25ff9f22ceefecd3e",
+    "sha256": "df812a1e3154d0a22a3a76c6203e55f5910bb4caef855112915eb569d4ab2112",
     "size_bytes": 379503
   },
   "status": "Internal Test only. v0.3.29 adds the missing-Last-Known-Good adoption UI fix. Requires Remote Loader v0.1.5 and Permanent Bootstrap v1.0.4. Repository validation is not device validation; test in ST, TT and iPhone Safari before Stable promotion.",
