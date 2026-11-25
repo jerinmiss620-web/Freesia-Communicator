@@ -61,7 +61,7 @@ assert.ok(loader.includes("schema_version: 2, backend: 'indexedDB'"));
 assert.equal(stableManifest.project, 'Freesia Messenger');
 assert.equal(stableManifest.channel, 'stable');
 assert.equal(stableManifest.latest_version, '0.3.37');
-assert.equal(stableManifest.minimum_loader_version, '0.1.8');
+assert.equal(stableManifest.minimum_loader_version, '0.1.6');
 assert.equal(stableManifest.release.source_path, 'core/v0.3.37/Freesia-Messenger.js');
 assert.equal(stableManifest.release.size_bytes, bytes(core));
 assert.equal(stableManifest.release.sha256, digest(core));
@@ -71,6 +71,6 @@ assert.ok(core.includes('const PRESET_KEY ='));
 
 assert.equal(testManifest.channel, 'test');
 assert.equal(testManifest.latest_version, '0.3.29');
-assert.equal(testManifest.minimum_loader_version, '0.1.8');
+assert.equal(testManifest.minimum_loader_version, '0.1.6');
 
 console.log('Messenger Bootstrap rebuild static release checks passed.');
