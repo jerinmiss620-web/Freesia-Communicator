@@ -23,6 +23,9 @@
   const PROJECT = 'Freesia Messenger';
   const MAX_BYTES = 512 * 1024;
   const CACHE_PREFIX = 'freesia_messenger_bootstrap_cache_v2_';
+  const DB_NAME = 'Freesia_Messenger_Remote_Bootstrap_Cache';
+  const STORE = 'records';
+  let dbPromise = null;
   const LEGACY_LOADER_RELEASES = {
     '0.1.2': {
       version: '0.1.2',
@@ -657,45 +660,169 @@
     return CACHE_PREFIX + slot;
   }
 
-  async function readSlot(slot) {
+  function isLostDbConnection(error) {
+    const message = String(error?.message || error || '');
+    return /connection to indexed database server lost|database connection (?:is|has been) clos(?:ed|ing)|database (?:has been|is) closed|connection (?:was|is) closed|backing store.*(?:closed|disconnect)/i.test(message);
+  }
+
+  function invalidateDb() {
+    const previous = dbPromise;
+    dbPromise = null;
+    previous?.then(db => { try { db.close(); } catch {} }).catch(() => {});
+  }
+
+  function getDb() {
+    if (!dbPromise) {
+      const opening = new Promise((resolve, reject) => {
+        let request;
+        try {
+          if (!HOST_WIN.indexedDB) throw new Error('宿主 IndexedDB 不可用');
+          request = HOST_WIN.indexedDB.open(DB_NAME, 1);
+        } catch (error) { reject(error); return; }
+        request.onupgradeneeded = () => {
+          if (!request.result.objectStoreNames.contains(STORE)) {
+            request.result.createObjectStore(STORE, { keyPath: 'slot' });
+          }
+        };
+        request.onsuccess = () => {
+          const db = request.result;
+          db.onversionchange = () => {
+            try { db.close(); } catch {}
+            if (dbPromise === opening) dbPromise = null;
+          };
+          db.onclose = () => { if (dbPromise === opening) dbPromise = null; };
+          resolve(db);
+        };
+        request.onerror = () => reject(request.error || new Error('Bootstrap IndexedDB 无法打开'));
+        request.onblocked = () => reject(new Error('Bootstrap IndexedDB 被其他页面占用'));
+      });
+      dbPromise = opening;
+      opening.catch(() => { if (dbPromise === opening) dbPromise = null; });
+    }
+    return dbPromise;
+  }
+
+  async function withDbReconnect(operation) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try { return await operation(await getDb()); }
+      catch (error) {
+        if (!isLostDbConnection(error)) throw error;
+        invalidateDb();
+        if (attempt === 1) {
+          throw new Error('Bootstrap IndexedDB 连接失效，重新连接后仍不可用。请彻底退出并重新打开 TT／酒馆；原缓存未删除。' +
+            ' 原因：' + (error?.message || error));
+        }
+        setStatus('Bootstrap IndexedDB 连接中断，正在重新连接一次（保留原缓存）…', 'warning');
+      }
+    }
+  }
+
+  async function readIdbSlot(slot) {
+    return withDbReconnect(db => new Promise((resolve, reject) => {
+      let result = null;
+      let settled = false;
+      const fail = error => {
+        if (settled) return;
+        settled = true;
+        reject(error || new Error('Bootstrap 缓存读取失败'));
+      };
+      let tx;
+      try {
+        tx = db.transaction(STORE, 'readonly');
+        const req = tx.objectStore(STORE).get(slot);
+        req.onsuccess = () => { result = req.result || null; };
+        req.onerror = () => fail(req.error);
+        tx.oncomplete = () => {
+          if (settled) return;
+          settled = true;
+          resolve(result);
+        };
+        tx.onerror = () => fail(tx.error);
+        tx.onabort = () => fail(tx.error || new Error('Bootstrap 缓存读取事务中止'));
+      } catch (error) { fail(error); }
+    }));
+  }
+
+  async function writeIdbSlot(slot, record) {
+    await withDbReconnect(db => new Promise((resolve, reject) => {
+      let settled = false;
+      const fail = error => {
+        if (settled) return;
+        settled = true;
+        reject(error || new Error('Bootstrap 缓存写入失败'));
+      };
+      let tx;
+      try {
+        tx = db.transaction(STORE, 'readwrite');
+        tx.objectStore(STORE).put({
+          slot, schema_version: 1, version: record.version,
+          source: record.source, size_bytes: record.size_bytes, sha256: record.sha256,
+          source_url: record.source_url, source_commit: record.source_commit,
+          saved_at: new Date().toISOString()
+        });
+        tx.oncomplete = () => {
+          if (settled) return;
+          settled = true;
+          resolve(true);
+        };
+        tx.onerror = () => fail(tx.error);
+        tx.onabort = () => fail(tx.error || new Error('Bootstrap 缓存写入事务中止'));
+      } catch (error) { fail(error); }
+    }));
+    const readback = await readIdbSlot(slot);
+    await verify(readback);
+    if (readback.version !== record.version || readback.sha256 !== record.sha256) {
+      throw new Error('Bootstrap IndexedDB 缓存读回版本不一致');
+    }
+    return readback;
+  }
+
+  async function readLegacyLocalStorageSlot(slot) {
     let storage;
     try { storage = HOST_WIN.localStorage; }
-    catch (error) { throw new Error('宿主 localStorage 不可用：' + (error?.message || error)); }
-    if (!storage) throw new Error('宿主 localStorage 不可用，无法读取 Loader 缓存');
+    catch (error) { throw new Error('旧版 Bootstrap localStorage 缓存不可访问：' + (error?.message || error)); }
+    if (!storage) return null;
     const raw = storage.getItem(cacheKey(slot));
     if (!raw) return null;
     let value;
     try { value = JSON.parse(raw); }
-    catch { throw new Error('Bootstrap ' + slot + ' 缓存不是有效 JSON'); }
+    catch { throw new Error('旧版 Bootstrap ' + slot + ' 缓存不是有效 JSON'); }
     await verify(value);
     return value;
   }
 
+  async function readSlot(slot) {
+    let idbError = null;
+    try {
+      const value = await readIdbSlot(slot);
+      if (value) {
+        await verify(value);
+        return value;
+      }
+    } catch (error) {
+      idbError = error;
+    }
+
+    // Migration is read-only until the IDB copy has been verified by writeIdbSlot.
+    // Keep the original localStorage record intact as an emergency compatibility copy.
+    const legacy = await readLegacyLocalStorageSlot(slot);
+    if (legacy) {
+      try {
+        await writeIdbSlot(slot, legacy);
+        setStatus('已将旧版 Bootstrap ' + slot + ' 回滚缓存迁移到 IndexedDB；原 localStorage 副本保留。', 'success');
+      } catch (migrationError) {
+        setStatus('旧版 Bootstrap ' + slot + ' 缓存已校验，但 IndexedDB 迁移未完成：' +
+          (migrationError?.message || migrationError), 'warning');
+      }
+      return legacy;
+    }
+    if (idbError) throw idbError;
+    return null;
+  }
+
   async function writeSlot(slot, record) {
     await verify(record);
-    let storage;
-    try { storage = HOST_WIN.localStorage; }
-    catch (error) { throw new Error('宿主 localStorage 不可用：' + (error?.message || error)); }
-    if (!storage) throw new Error('宿主 localStorage 不可用，无法保存 Loader 回滚缓存');
-    const payload = {
-      schema_version: 2,
-      slot,
-      version: record.version,
-      source: record.source,
-      size_bytes: record.size_bytes,
-      sha256: record.sha256,
-      source_url: record.source_url,
-      source_commit: record.source_commit,
-      saved_at: new Date().toISOString()
-    };
-    const key = cacheKey(slot);
-    storage.setItem(key, JSON.stringify(payload));
-    const readback = JSON.parse(storage.getItem(key) || 'null');
-    await verify(readback);
-    if (readback.version !== record.version || readback.sha256 !== record.sha256) {
-      throw new Error('Bootstrap localStorage 缓存读回版本不一致');
-    }
-    return readback;
+    return await writeIdbSlot(slot, record);
   }
 
   async function readCached(slot) {
@@ -1024,6 +1151,7 @@
     const legacyCore = LEGACY_PARENT !== HOST_WIN ? LEGACY_PARENT.__FREESIA_MESSENGER_V1__ : null;
     if (core?.remoteLoaderManaged) core.destroy?.();
     if (legacyCore?.remoteLoaderManaged && legacyCore !== core) legacyCore.destroy?.();
+    invalidateDb();
     if (HOST_WIN[BOOT_KEY] === api) delete HOST_WIN[BOOT_KEY];
   }
   const api = {
