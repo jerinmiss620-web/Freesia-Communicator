@@ -72,7 +72,7 @@ assert(source.includes("const MOBILE_WINDOW_SIZE_KEY = 'freesia_messenger_mobile
 assert(source.includes("const compact = state.mobileWindowSize === '90';"), 'Mobile 90% size mode must remain available');
 assert(source.includes('bounds.width * (compact ? 0.9 : 1)'), 'Mobile width must preserve full-screen / 90% sizing');
 assert(source.includes('bounds.height * (compact ? 0.9 : 1)'), 'Mobile height must preserve full-screen / 90% sizing');
-assert(source.includes("width: bounds.width + 'px'"), 'Mobile frame width must use the Visual Viewport width');
+assert(source.includes("width: width + 'px'"), 'Mobile frame width must use the Visual Viewport width, scaled by the mobile size preference');
 assert(source.includes('messages-retry-dismiss') && source.includes('retryNoticeDismissed'), 'Retry notice must be dismissible and persist its state');
 assert(source.includes('data-fm-action="messages-retry-dismiss"'), 'Retry notice must render a close button');
 assert(source.includes("else if (action === 'messages-retry-dismiss') dismissMessageRetryNotice("), 'Retry close action must be handled');
