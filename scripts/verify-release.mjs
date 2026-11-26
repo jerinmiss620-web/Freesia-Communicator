@@ -4,9 +4,9 @@ import { Script } from 'node:vm';
 
 const root = new URL('../', import.meta.url);
 const EXPECTED_ID = '6ba49b66-ace8-4db4-acbd-292b6dde4ced';
-const EXPECTED_VERSION = '0.3.37';
-const EXPECTED_SHA256 = '15274a9985c701c069c4dd38ccdde17cc501828e85ec49a04331817689ad6b7d';
-const EXPECTED_SIZE_BYTES = 372230;
+const EXPECTED_VERSION = '0.3.38';
+const EXPECTED_SHA256 = '5baf91681107b2a1f189345e9b7b647dcaaae26f8ccb2728caa2970b17690071';
+const EXPECTED_SIZE_BYTES = 374286;
 const EXPECTED_IMPORT_URL = 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@main/core/current/Freesia-Messenger-ESM.js';
 const EXPECTED_IMPORT = "import '" + EXPECTED_IMPORT_URL + "'";
 
@@ -17,11 +17,11 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-const sourcePath = 'core/v0.3.37/Freesia-Messenger.js';
+const sourcePath = 'core/v0.3.38/Freesia-Messenger.js';
 const currentPath = 'core/current/Freesia-Messenger-ESM.js';
-const packagePath = 'install/Freesia-Messenger-GitHub-ESM-Import-v0.3.37.json';
-const previousPath = 'core/v0.3.36/Freesia-Messenger.js';
-const manifestPath = 'core/v0.3.37/release.json';
+const packagePath = 'install/Freesia-Messenger-GitHub-ESM-Import-v0.3.38.json';
+const previousPath = 'core/v0.3.37/Freesia-Messenger.js';
+const manifestPath = 'core/v0.3.38/release.json';
 
 const [source, current, previous, packageText, manifestText] = await Promise.all([
   readText(sourcePath),
@@ -38,8 +38,8 @@ assert(manifest.version === EXPECTED_VERSION, 'Release manifest version must mat
 assert(manifest.channel === 'stable-esm-import', 'Release manifest must identify the Stable ESM-import channel');
 assert(manifest.source_path === sourcePath, 'Release manifest source path must match');
 assert(manifest.current_path === currentPath, 'Release manifest current alias path must match');
-assert(manifest.source_commit === '0f318507aee98489c3e4a621fed1636841727cd0', 'Release manifest must pin the immutable source commit');
-assert(manifest.source_url === 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/0f318507aee98489c3e4a621fed1636841727cd0/core/v0.3.37/Freesia-Messenger.js', 'Release manifest must use the immutable raw source URL');
+assert(manifest.source_commit === 'e7401cb09cb717c3991598f7a521fa7e00315681', 'Release manifest must pin the immutable source commit');
+assert(manifest.source_url === 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/e7401cb09cb717c3991598f7a521fa7e00315681/core/v0.3.38/Freesia-Messenger.js', 'Release manifest must use the immutable raw source URL');
 assert(manifest.sha256 === EXPECTED_SHA256, 'Release manifest SHA-256 must match');
 assert(manifest.size_bytes === EXPECTED_SIZE_BYTES, 'Release manifest byte length must match');
 assert(manifest.import_package_path === packagePath, 'Release manifest must point to the ESM import package');
@@ -68,6 +68,10 @@ assert(source.includes('padding-bottom: var(--fm-safe-bottom)'), 'Mobile footer 
 assert(!source.includes('max-width: min(520px, calc(100vw - 16px))'), 'Frame CSS max-width cap must be absent');
 assert(!source.includes('max-width: none; max-height: none'), 'Redundant mobile max-width override must be absent');
 assert(source.includes('const maxWidth = Math.min(520, bounds.width - 16);'), 'PC frame width must remain JS-clamped to 520px');
+assert(source.includes("const MOBILE_WINDOW_SIZE_KEY = 'freesia_messenger_mobile_window_size_v1';"), 'Mobile window size preference must use its dedicated persistent key');
+assert(source.includes("const compact = state.mobileWindowSize === '90';"), 'Mobile 90% size mode must remain available');
+assert(source.includes('bounds.width * (compact ? 0.9 : 1)'), 'Mobile width must preserve full-screen / 90% sizing');
+assert(source.includes('bounds.height * (compact ? 0.9 : 1)'), 'Mobile height must preserve full-screen / 90% sizing');
 assert(source.includes("width: bounds.width + 'px'"), 'Mobile frame width must use the Visual Viewport width');
 assert(source.includes('messages-retry-dismiss') && source.includes('retryNoticeDismissed'), 'Retry notice must be dismissible and persist its state');
 assert(source.includes('data-fm-action="messages-retry-dismiss"'), 'Retry notice must render a close button');
@@ -99,7 +103,7 @@ function storageKeys(text) {
 }
 const before = storageKeys(previous);
 const after = storageKeys(source);
-assert(before.size === after.size, 'Core storage key count changed during release');
+assert(after.size >= before.size, 'Core storage key count must not shrink during release');
 for (const [name, value] of before) {
   assert(after.get(name) === value, 'Core business storage key changed: ' + name);
 }
