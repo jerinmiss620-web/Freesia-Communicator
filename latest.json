@@ -1,17 +1,15 @@
 {
+  "latest_version": "0.3.38",
+  "minimum_loader_version": "0.1.9",
+  "release": {
+    "version": "0.3.38",
+    "source_path": "core/v0.3.38/Freesia-Messenger.js",
+    "source_commit": "876440158c79ecc8fb2d77e0bfd66f4872af8d7c",
+    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/876440158c79ecc8fb2d77e0bfd66f4872af8d7c/core/v0.3.38/Freesia-Messenger.js",
+    "sha256": "5baf91681107b2a1f189345e9b7b647dcaaae26f8ccb2728caa2970b17690071",
+    "size_bytes": 374286
+  },
   "schema_version": 1,
   "project": "Freesia Messenger",
-  "channel": "stable",
-  "latest_version": "0.3.37",
-  "minimum_loader_version": "0.1.6",
-  "release": {
-    "version": "0.3.37",
-    "source_path": "core/v0.3.37/Freesia-Messenger.js",
-    "source_commit": "0f318507aee98489c3e4a621fed1636841727cd0",
-    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/0f318507aee98489c3e4a621fed1636841727cd0/core/v0.3.37/Freesia-Messenger.js",
-    "changelog_path": "core/v0.3.37/CHANGELOG.md",
-    "sha256": "15274a9985c701c069c4dd38ccdde17cc501828e85ec49a04331817689ad6b7d",
-    "size_bytes": 372230
-  },
-  "notes": "Stable Core v0.3.37. Requires Remote Loader v0.1.6 or newer. Existing storage keys, chat metadata and user settings are preserved."
+  "channel": "stable"
 }
