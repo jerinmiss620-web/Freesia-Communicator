@@ -99,6 +99,7 @@ jobs:
           assert.match(testBootstrap.content, /freesia-messenger-loader-auto-update-preference/, 'TEST Bootstrap must retry Core update after safe adoption');
           assert.match(testBootstrap.content, /async function waitForLoaderIdle/, 'TEST Bootstrap must wait for a busy legacy Loader before migration');
           assert.match(testBootstrap.content, /await waitForLoaderIdle\(running\)/, 'Loader migration must wait for the active runtime to become idle');
+          assert.match(testBootstrap.content, /compareVersions\(record\.version, cached\.version\) < 0/, 'Remote Loader must not downgrade below a verified local cache');
           assert.match(testBootstrap.content, /远程版本 v\[\\d\.\]\+ 低于当前运行版本/, 'Legacy stale Core downgrade toast must be filtered during migration');
           const startupBlock = testBootstrap.content.slice(testBootstrap.content.indexOf('async function startup()'), testBootstrap.content.indexOf('function destroy()', testBootstrap.content.indexOf('async function startup()')));
           assert.ok(startupBlock.indexOf('await refreshAutomatic()') < startupBlock.indexOf('await installRecord(cached)'), 'Remote Loader must be attempted before offline cached Loader fallback');
