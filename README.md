@@ -2,14 +2,25 @@
 
 SillyTavern / Tavern Helper 的独立通讯面板。
 
-## 当前正式版本：v0.3.37
+## 当前正式版本：Core v0.3.38
 
-### GitHub 静态 ES Module 引入
+### 两种安装方式
 
+通讯侠提供两种互相独立的安装入口，**不要同时启用两种入口**。
+
+#### 方式 A：Permanent Bootstrap（推荐用于远程更新）
+
+- 导入 [Permanent Bootstrap 1.0.8 Stable](install/Freesia-Messenger-Permanent-Bootstrap-1.0.8.json) 并启用。
+- 单入口更新链：Bootstrap 1.0.8 → Remote Loader 0.1.9 → Core 0.3.38。
+- 用户只需管理 Bootstrap；不需要另外导入或启用 Loader。
+- Bootstrap 先检查远程 Loader；已验证缓存只作为离线回退，并保留上一版本以便恢复。
+- 自动更新可在通讯侠现有扩展设置中关闭；手动更新仍保留确认流程。
+
+#### 方式 B：GitHub 静态 ES Module 引入
+
+- 首次安装导入 [GitHub ESM Import JSON](install/Freesia-Messenger-GitHub-ESM-Import-v0.3.38.json) 一次。
 - 酒馆助手 JSON 只保留一条静态 `import`，不内嵌通讯侠本体。
-- 完整功能代码保存在 GitHub：`core/current/Freesia-Messenger-ESM.js`。
-- 首次安装导入 [GitHub ESM Import JSON](install/Freesia-Messenger-GitHub-ESM-Import-v0.3.37.json) 一次。
-- 后续只更新 GitHub 本体；GitHub Actions 自动刷新 CDN 并验证实际返回内容；若 CDN 清缓存接口触发限流，每 30 分钟的定时任务会继续检查并重试。用户无需反复导入 JSON。
+- 已安装该入口的用户无需重复导入；后续更新 `core/current/Freesia-Messenger-ESM.js` 后刷新酒馆即可。
 
 正式导入语句：
 
@@ -19,32 +30,41 @@ import 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@
 
 | 文件 | 用途 |
 |---|---|
-| [当前正式本体](core/current/Freesia-Messenger-ESM.js) | 已安装入口加载的完整源码 |
-| [v0.3.37 版本快照](core/v0.3.37/Freesia-Messenger.js) | 不可变正式版本 |
-| [v0.3.37 更新记录](core/v0.3.37/CHANGELOG.md) | 重试提示关闭按钮可见性修复 |
-| [v0.3.37 发布清单](core/v0.3.37/release.json) | 固定源码提交、SHA-256 和字节长度 |
-| [v0.3.37 导入入口](install/Freesia-Messenger-GitHub-ESM-Import-v0.3.37.json) | 酒馆助手静态 import 包 |
+| [Permanent Bootstrap 1.0.8](install/Freesia-Messenger-Permanent-Bootstrap-1.0.8.json) | 单入口远程更新安装包 |
+| [当前正式本体](core/current/Freesia-Messenger-ESM.js) | GitHub ESM 入口加载的完整源码 |
+| [v0.3.38 版本快照](core/v0.3.38/Freesia-Messenger.js) | 不可变正式版本 |
+| [v0.3.38 更新记录](core/v0.3.38/CHANGELOG.md) | 移动端窗口尺寸选项 |
+| [v0.3.38 发布清单](core/v0.3.38/release.json) | 固定源码 Commit、SHA-256 和字节长度 |
+| [v0.3.38 ESM 导入入口](install/Freesia-Messenger-GitHub-ESM-Import-v0.3.38.json) | GitHub 静态 import 包 |
+| [Bootstrap 1.0.8 更新说明](bootstrap/CHANGELOG-1.0.8.md) | 远程更新链迁移修复 |
 
-## v0.3.37 修复
+## Core v0.3.38 新增
 
-重试提示的关闭按钮此前已有 DOM、点击事件和持久化状态，但 SVG 缺少描边样式，导致叉号不可见。v0.3.37 为按钮提供明确的 28×28px 触控区域、可见背景/边框，以及完整的 SVG 描边规则。关闭只隐藏该条失败提示，不删除消息，也不触发重试。
+### 移动端窗口尺寸选项
+
+- 在酒馆助手「通讯侠」现有扩展折叠内容中增加「移动端窗口尺寸」设置。
+- 默认 100% 全屏；可选 90% 视口尺寸，窗口居中并恢复圆角、边框和轻阴影。
+- 选择自动保存，刷新或重新加载后保留。
+- 仅作用于移动端；PC 窗口尺寸、拖动、缩放、最大化和悬浮球行为不变。
+
+## Bootstrap 1.0.8 迁移修复
+
+- 远程 Loader 优先：启动时先检查并安装当前远程版本，已验证缓存仅用于离线回退。
+- 旧 Loader 正在执行操作时，最多等待 45 秒；超时保留当前版本，不强行中断。
+- 合并旧 Loader 的过期启动提示，避免旧版本清单造成误导。
+- 远程 Loader 低于已验证缓存时拒绝降级。
+- 保留 Stable / Test 通道偏好、原脚本 ID、Core API、聊天数据和用户设置。
+- 不需要清除酒馆站点数据。
 
 ## 更新与迁移
 
-- 已使用 `core/current/Freesia-Messenger-ESM.js` 地址的用户：刷新酒馆即可，无需重新导入。
-- 仍使用旧的 `core/current/Freesia-Messenger.js` 地址的用户：需要一次性替换入口，以后不再需要反复导入。
-- GitHub ESM Import 与 Permanent Bootstrap 是两种安装方式，不应同时启用；切换方式时停用旧入口即可，不需要清除数据。
-- 不要为更新通讯侠而清除酒馆站点数据。
+- Permanent Bootstrap 与 GitHub ESM Import 是两种独立安装方式，不应同时启用。
+- 切换安装方式时停用旧入口即可；不要为更新通讯侠清除酒馆站点数据。
+- 只使用一份 Permanent Bootstrap；不要再单独启用 Remote Loader。
+- Stable 更新链使用 `main`；Test 通道通过 `main/channels/test.json` 管理。
 
-## Permanent Bootstrap 1.0.6 · TEST
+## 验证边界
 
-另有一条单入口 Bootstrap 更新链正在进行测试：Bootstrap 1.0.6 管理 Remote Loader 0.1.8，再由 Loader 管理 Core。用户只启用 Bootstrap，不需要单独启用 Loader。
-
-首次迁移时，Bootstrap 可能从自己的缓存恢复旧 Loader，再替换为新版；这是同一入口内部的迁移步骤，不代表多份脚本同时运行。该 TEST 包尚未替换 Stable 安装方式。
-
-- [Bootstrap 1.0.6 测试导入包](install/Freesia-Messenger-Permanent-Bootstrap-1.0.6-TEST.json)
-- [Bootstrap 1.0.6 更新说明](bootstrap/CHANGELOG-1.0.6.md)
-
-## 验证规则
-
-正式发布必须通过源码哈希、字节长度、JavaScript 语法、业务存储键、导入入口和 CDN 实际响应检查。CDN 检查同时验证版本号、重试关闭按钮 DOM、点击处理、持久化标记和 SVG 描边样式；未通过不得宣布交付。
+- Bootstrap 1.0.8 的 TT 实机更新链已验证：成功启动，实际运行 Core v0.3.38，加载速度正常。
+- 代码完整性、SHA-256、UTF-8 字节长度及语法由发布工作流检查。
+- 不同 Android 设备、ST 与 iPhone Safari 的表现仍建议按实际环境回归；自动化检查不替代实机验证。
