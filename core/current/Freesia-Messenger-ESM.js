@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  // Freesia Messenger · 通讯侠 · v0.3.37
+  // Freesia Messenger · 通讯侠 · v0.3.38
   // Independent floating phone shell for JS-Slash-Runner.
 
   const SCRIPT_WIN = window;
@@ -21,6 +21,7 @@
   const LEGACY_MINI_ID = 'freesia-messenger-mini';
   const POSITION_KEY = 'freesia_messenger_window_position_v1';
   const ENTRY_POSITION_KEY = 'freesia_messenger_entry_position_v1';
+  const MOBILE_WINDOW_SIZE_KEY = 'freesia_messenger_mobile_window_size_v1';
   const PRESET_KEY = 'freesia_messenger_prompt_preset_v1';
   const APPEARANCE_KEY = 'freesia_messenger_appearance_v1';
   const ENABLED_KEY = 'freesia_messenger_enabled_v1';
@@ -46,6 +47,7 @@
     destroyed: false,
     enabled: true,
     minimized: false,
+    mobileWindowSize: 'full',
     root: null,
     rootHost: null,
     shadowRoot: null,
@@ -419,7 +421,7 @@
               <div class="fm-home-note">
                 <span class="fm-note-icon">${ICONS.sparkle}</span>
                 <span class="fm-note-copy"><strong>让故事在消息之外继续发生</strong><small>YOUR STORY, BEYOND THE CHAT</small></span>
-                <span class="fm-note-version">MESSENGER 0.3.37</span>
+                <span class="fm-note-version">MESSENGER 0.3.38</span>
               </div>
             </section>
             <section class="fm-app-view" data-fm-view="app" hidden>
@@ -3808,10 +3810,18 @@
       this.frame.setAttribute('data-fm-viewport', mobile ? 'compact' : 'desktop');
       if (mobile) {
         this.maximized = false;
+        const compact = state.mobileWindowSize === '90';
+        const width = bounds.width * (compact ? 0.9 : 1);
+        const height = bounds.height * (compact ? 0.9 : 1);
+        const left = bounds.x + (bounds.width - width) / 2;
+        const top = bounds.y + (bounds.height - height) / 2;
         Object.assign(this.frame.style, {
-          left: bounds.x + 'px', top: bounds.y + 'px', right: 'auto', bottom: 'auto',
-          width: bounds.width + 'px', height: bounds.height + 'px', minHeight: '0', maxHeight: 'none',
-          transform: 'none', border: '0', borderRadius: '0', boxShadow: 'none',
+          left: left + 'px', top: top + 'px', right: 'auto', bottom: 'auto',
+          width: width + 'px', height: height + 'px', minHeight: '0', maxHeight: 'none',
+          transform: 'none',
+          border: compact ? '1px solid light-dark(rgb(226 216 220 / 92%), var(--fm-line))' : '0',
+          borderRadius: compact ? '24px' : '0',
+          boxShadow: compact ? '0 8px 22px light-dark(rgb(49 34 44 / 12%), var(--fm-shadow-color)), 0 1px 4px light-dark(rgb(49 34 44 / 6%), var(--fm-shadow-color))' : 'none',
         });
         if (this.resizeGrip) this.resizeGrip.hidden = true;
       } else {
@@ -4129,6 +4139,22 @@
     }
   }
 
+  function setMobileWindowSize(value) {
+    if (!['full', '90'].includes(value)) return;
+    const previous = state.mobileWindowSize;
+    state.mobileWindowSize = value;
+    try { HOST_WIN.localStorage.setItem(MOBILE_WINDOW_SIZE_KEY, value); }
+    catch (error) {
+      state.mobileWindowSize = previous;
+      state.extensionStatus = '移动端窗口尺寸保存失败：' + String(error.message || error);
+      syncExtensionControls();
+      return;
+    }
+    state.extensionStatus = value === '90' ? '移动端窗口已切换为 90% 尺寸。' : '移动端窗口已恢复全屏。';
+    state.windowController?.layout();
+    syncExtensionControls();
+  }
+
   function toggleProactive() {
     if (!state.proactive.enabled && !state.realTimeEnabled) { extensionNotice('请先开启真实时间感知'); syncExtensionControls(); return; }
     const previous = state.proactive.enabled;
@@ -4191,6 +4217,8 @@
       const el = entry.querySelector('[data-fm-ext-field="' + key + '"]');
       if (el) el.value = String(state.proactive[key]);
     });
+    const mobileSize = entry.querySelector('[data-fm-ext-field="mobile-size"]');
+    if (mobileSize) mobileSize.value = state.mobileWindowSize;
     const fields = entry.querySelector('[data-fm-ext-active-fields]');
     if (fields) fields.hidden = !state.proactive.enabled;
     const snap = extensionSnapshot();
@@ -4225,7 +4253,7 @@
     const ctx = snap.info.context;
     const win = state.windowController;
     return [
-      '通讯侠 v0.3.37 运行诊断',
+      '通讯侠 v0.3.38 运行诊断',
       '时间：' + new Date().toLocaleString(),
       '环境：' + HOST_WIN.navigator.userAgent,
       '窗口控制器：' + (win ? '已创建' : '未创建'),
@@ -4304,10 +4332,11 @@
     const select = (key, label) => '<label class="fm-ext-row"><span>' + label + '</span><select class="text_pole" data-fm-ext-field="' + key + '">' + proactiveFieldOptions[key].map(v => '<option value="' + v + '">' + (v === 0 ? '不限' : v + (key === 'limit' ? ' 轮' : ' 分钟')) + '</option>').join('') + '</select></label>';
     const status = (key, label) => '<div class="fm-ext-row"><span>' + label + '</span><span data-fm-ext-status="' + key + '">—</span></div>';
     entry.innerHTML = '<div class="inline-drawer"><div class="inline-drawer-toggle inline-drawer-header"><b>通讯侠 · Freesia Messenger</b><div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div></div><div class="inline-drawer-content"><div class="fm-extension-content">' +
-      '<div class="fm-ext-row"><small>v0.3.37 · 控制中心</small><small data-fm-ext-status="enabled-label">已启用</small></div>' +
+      '<div class="fm-ext-row"><small>v0.3.38 · 控制中心</small><small data-fm-ext-status="enabled-label">已启用</small></div>' +
       '<div class="fm-ext-primary">' + button('toggle-enabled', state.enabled ? '关闭通讯侠' : '启用通讯侠', state.enabled ? 'fa-power-off' : 'fa-play') + '</div>' +
       '<b>快捷设置</b><div class="fm-ext-checks">' + check('time', '真实时间感知') + check('active', 'Char 主动联络') + check('sync', '通讯记录同步正文') + '</div>' +
       '<div class="fm-ext-section" data-fm-ext-active-fields>' + select('interval', '检测间隔') + select('cooldown', '发信冷却') + select('limit', '每日联络上限') + check('notify', '主动消息通知') + '</div>' +
+      '<div class="fm-ext-section"><b>窗口显示</b><label class="fm-ext-row"><span>移动端窗口尺寸</span><select class="text_pole" data-fm-ext-field="mobile-size"><option value="full">全屏（100%）</option><option value="90">90%（留白）</option></select></label><p>仅影响移动端窗口，PC 端窗口保持原样。</p></div>' +
       '<div class="fm-ext-section"><b>通讯状态</b>' + status('name', '当前联络对象') + status('last', '上次检测') + status('next', '下次检测') + status('latest', '上次主动联络') + status('count', '今日联络轮数') + '<p data-fm-ext-status="result" role="status"></p></div>' +
       '<div class="fm-ext-buttons">' + button('check', '立即检测', 'fa-clock') + button('api', 'API 连接测试', 'fa-plug') + button('export', '导出通讯备份', 'fa-download') + button('import', '导入通讯备份', 'fa-upload') + button('diagnostic', '复制运行诊断', 'fa-stethoscope') + button('help', '使用说明', 'fa-circle-question') + '</div>' +
       '<input type="file" accept=".json,application/json" data-fm-ext-file hidden><p data-fm-ext-status="feedback" role="status"></p><div data-fm-ext-help hidden><p>可拖动悬浮球是通讯侠唯一的窗口入口：启用后显示，点击打开；最小化或关闭窗口后回到悬浮球。此处的「关闭通讯侠」会停用整个功能并隐藏悬浮球，重新启用后恢复。AI 预设管理位于通讯侠窗口的「设置」页面。单独关闭窗口不会停止主动联络；要暂停自动联络，请关闭 Char 主动联络。立即检测会跳过间隔、冷却和每日上限，但仍需启用通讯侠、主动联络及真实时间感知。API 测试会消耗少量额度。备份仅包含当前会话的原始通讯数据，不包含 API 凭证；导入会覆盖当前会话数据。</p></div><p class="fm-ext-credit">Freesia Messenger · 小松鼠 &amp; 小松7</p>' +
@@ -4324,6 +4353,7 @@
       if (key === 'time') toggleRealTimeAwareness();
       else if (key === 'active') toggleProactive();
       else if (key === 'sync') togglePhoneStorySync();
+      else if (key === 'mobile-size') setMobileWindowSize(target.value);
       else if (key === 'notify') setProactiveField(key, target.checked);
       else if (proactiveFieldOptions[key]) setProactiveField(key, Number(target.value));
       syncExtensionControls();
@@ -5223,7 +5253,7 @@
   }
 
   const api = {
-    version: '0.3.37',
+    version: '0.3.38',
     open: () => openWindow(true),
     close: closeWindow,
     destroy,
@@ -5245,6 +5275,10 @@
     if (['auto', 'light', 'dark'].includes(storedMode)) state.appearanceMode = storedMode;
   } catch {}
   try { state.enabled = HOST_WIN.localStorage.getItem(ENABLED_KEY) !== 'false'; } catch {}
+  try {
+    const mobileSize = HOST_WIN.localStorage.getItem(MOBILE_WINDOW_SIZE_KEY);
+    if (['full', '90'].includes(mobileSize)) state.mobileWindowSize = mobileSize;
+  } catch {}
   try { state.realTimeEnabled = HOST_WIN.localStorage.getItem(TIME_AWARENESS_KEY) === 'true'; } catch {}
   try { state.phoneStorySyncEnabled = HOST_WIN.localStorage.getItem(PHONE_SYNC_ENABLED_KEY) !== 'false'; } catch {}
   try {
@@ -5297,5 +5331,5 @@
   window.addEventListener(FRAME_EXIT_EVENT, handleFrameExit, { once: true });
   window.addEventListener('beforeunload', handleFrameExit, { once: true });
 
-  console.info('[Freesia Messenger] 通讯侠 v0.3.37 已启动。');
+  console.info('[Freesia Messenger] 通讯侠 v0.3.38 已启动。');
 })();
