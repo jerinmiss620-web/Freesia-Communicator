@@ -65,6 +65,6 @@ import 'https://testingcf.jsdelivr.net/gh/jerinmiss620-web/Freesia-Communicator@
 
 ## 验证边界
 
-- Bootstrap 1.0.8 的 TT 实机更新链已验证：成功启动，实际运行 Core v0.3.38，加载速度正常。
+- Bootstrap 1.0.8 的 TT 实机迁移与启动已验证：可正常启动，加载速度正常；正式清单已指向 Core v0.3.38。不同 Android 设备、ST 与 iPhone Safari 仍建议按实际环境回归。
 - 代码完整性、SHA-256、UTF-8 字节长度及语法由发布工作流检查。
 - 不同 Android 设备、ST 与 iPhone Safari 的表现仍建议按实际环境回归；自动化检查不替代实机验证。
