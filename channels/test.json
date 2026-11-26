@@ -2,19 +2,22 @@
   "schema_version": 1,
   "project": "Freesia Messenger",
   "channel": "test",
-  "latest_version": "0.3.29",
-  "minimum_loader_version": "0.1.6",
+  "latest_version": "0.3.38",
+  "minimum_loader_version": "0.1.9",
   "release": {
-    "version": "0.3.29",
-    "source_path": "core/v0.3.29/Freesia-Messenger.js",
-    "source_commit": "d83b47781969c1aeda835d7c6fabae1848104fa5",
-    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/d83b47781969c1aeda835d7c6fabae1848104fa5/core/v0.3.29/Freesia-Messenger.js",
-    "changelog_path": "core/v0.3.29/CHANGELOG.md",
-    "sha256": "df812a1e3154d0a22a3a76c6203e55f5910bb4caef855112915eb569d4ab2112",
-    "size_bytes": 379503
+    "schema_version": 1,
+    "project": "Freesia Messenger",
+    "channel": "test",
+    "version": "0.3.38",
+    "source_path": "core/v0.3.38/Freesia-Messenger.js",
+    "source_commit": "e7401cb09cb717c3991598f7a521fa7e00315681",
+    "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/e7401cb09cb717c3991598f7a521fa7e00315681/core/v0.3.38/Freesia-Messenger.js",
+    "changelog_path": "core/v0.3.38/CHANGELOG.md",
+    "sha256": "5baf91681107b2a1f189345e9b7b647dcaaae26f8ccb2728caa2970b17690071",
+    "size_bytes": 374286
   },
-  "status": "Internal Test only. v0.3.29 adds the missing-Last-Known-Good adoption UI fix. Requires Remote Loader v0.1.6 and Permanent Bootstrap v1.0.5. Repository validation is not device validation; test in ST, TT and iPhone Safari before Stable promotion.",
-  "notes": "Test Core v0.3.29 fixes the adoption entry state when automatic restore authorization exists but the verified Last Known Good cache is missing. Requires Remote Loader 0.1.6 and Permanent Bootstrap 1.0.5. Existing Core releases v0.3.22–v0.3.28 remain listed for safe adoption.",
+  "status": "The test channel currently mirrors Stable Core v0.3.38. The next independent test release will be published separately.",
+  "notes": "Core v0.3.38 adds a persistent mobile-only window size preference (100% full screen by default, optional centered 90% viewport). It preserves the existing extension drawer and does not change PC window geometry.",
   "adoptable_releases": [
     {
       "version": "0.3.22",
@@ -71,6 +74,30 @@
       "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/32fa1cdd9bd2735ace3dfe121436aab943ffd276/core/v0.3.28/Freesia-Messenger.js",
       "sha256": "67a395edcfc1dfe958257e541a56dbb066e2d053205f79776fa43e7cca8d951e",
       "size_bytes": 379468
+    },
+    {
+      "version": "0.3.29",
+      "source_path": "core/v0.3.29/Freesia-Messenger.js",
+      "source_commit": "d83b47781969c1aeda835d7c6fabae1848104fa5",
+      "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/d83b47781969c1aeda835d7c6fabae1848104fa5/core/v0.3.29/Freesia-Messenger.js",
+      "sha256": "df812a1e3154d0a22a3a76c6203e55f5910bb4caef855112915eb569d4ab2112",
+      "size_bytes": 379503
+    },
+    {
+      "version": "0.3.36",
+      "source_path": "core/v0.3.36/Freesia-Messenger.js",
+      "source_commit": "4b1fa89a5e14dc926d7b0e1d6cb16a97663d2498",
+      "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/4b1fa89a5e14dc926d7b0e1d6cb16a97663d2498/core/v0.3.36/Freesia-Messenger.js",
+      "sha256": "557fa079b326d8720bc7831faaa16d765ed9e02d422dc4e147606a260a087f92",
+      "size_bytes": 371989
+    },
+    {
+      "version": "0.3.37",
+      "source_path": "core/v0.3.37/Freesia-Messenger.js",
+      "source_commit": "0f318507aee98489c3e4a621fed1636841727cd0",
+      "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/0f318507aee98489c3e4a621fed1636841727cd0/core/v0.3.37/Freesia-Messenger.js",
+      "sha256": "15274a9985c701c069c4dd38ccdde17cc501828e85ec49a04331817689ad6b7d",
+      "size_bytes": 372230
     }
   ]
 }
