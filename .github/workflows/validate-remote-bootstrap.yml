@@ -89,7 +89,8 @@ jobs:
           const testBootstrap = JSON.parse(fs.readFileSync(testBootstrapPath, 'utf8'));
           const testLoaderManifest = JSON.parse(fs.readFileSync('loader/test-latest.json', 'utf8'));
           const testCoreManifest = JSON.parse(fs.readFileSync('channels/test.json', 'utf8'));
-          assert.equal(testBootstrap.id, pkg.id, 'TEST Bootstrap must preserve the existing script ID');
+          const previousTestBootstrap = JSON.parse(fs.readFileSync('install/Freesia-Messenger-Permanent-Bootstrap-1.0.7-TEST.json', 'utf8'));
+          assert.equal(testBootstrap.id, previousTestBootstrap.id, 'TEST Bootstrap must preserve the existing TEST script ID');
           assert.equal(testBootstrap.enabled, true, 'TEST Bootstrap package must import enabled');
           assert.match(testBootstrap.content, /const VERSION = '1\.0\.8'/, 'TEST Bootstrap runtime version mismatch');
           assert.match(testBootstrap.content, /freesia_messenger_update_channel_v1/, 'TEST Bootstrap must select the Core test channel');
