@@ -1,0 +1,119 @@
+name: Validate Freesia Messenger Stable Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.8.js'
+      - 'bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.8.json'
+      - 'bootstrap/CHANGELOG-1.0.8.md'
+      - 'install/Freesia-Messenger-Permanent-Bootstrap-1.0.8.json'
+      - 'loader/runtime/v0.1.9/**'
+      - 'loader/latest.json'
+      - 'core/v0.3.38/**'
+      - 'core/current/Freesia-Messenger-ESM.js'
+      - 'latest.json'
+      - 'channels/test.json'
+      - 'install/Freesia-Messenger-GitHub-ESM-Import-v0.3.38.json'
+      - 'README.md'
+      - 'bootstrap/README.md'
+      - '.github/workflows/validate-messenger-stable-release.yml'
+  pull_request:
+    paths:
+      - 'bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.8.js'
+      - 'bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.8.json'
+      - 'bootstrap/CHANGELOG-1.0.8.md'
+      - 'install/Freesia-Messenger-Permanent-Bootstrap-1.0.8.json'
+      - 'loader/runtime/v0.1.9/**'
+      - 'loader/latest.json'
+      - 'core/v0.3.38/**'
+      - 'core/current/Freesia-Messenger-ESM.js'
+      - 'latest.json'
+      - 'channels/test.json'
+      - 'install/Freesia-Messenger-GitHub-ESM-Import-v0.3.38.json'
+      - 'README.md'
+      - 'bootstrap/README.md'
+      - '.github/workflows/validate-messenger-stable-release.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: JavaScript syntax
+        run: |
+          node --check bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.8.js
+          node --check loader/runtime/v0.1.9/Freesia-Messenger-Remote-Loader.js
+          node --check core/v0.3.38/Freesia-Messenger.js
+          node --check core/current/Freesia-Messenger-ESM.js
+      - name: Stable release integrity and migration contracts
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const crypto = require('node:crypto');
+          const assert = require('node:assert/strict');
+          const { Script } = require('node:vm');
+          const repo = 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/';
+          const bootPath = 'bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.8.js';
+          const boot = fs.readFileSync(bootPath, 'utf8');
+          const bootPkg = JSON.parse(fs.readFileSync('bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.8.json', 'utf8'));
+          const installPkg = JSON.parse(fs.readFileSync('install/Freesia-Messenger-Permanent-Bootstrap-1.0.8.json', 'utf8'));
+          const oldBoot = JSON.parse(fs.readFileSync('bootstrap/Freesia-Communicator-Permanent-Bootstrap-1.0.5.json', 'utf8'));
+          const loaderPath = 'loader/runtime/v0.1.9/Freesia-Messenger-Remote-Loader.js';
+          const loader = fs.readFileSync(loaderPath, 'utf8');
+          const loaderManifest = JSON.parse(fs.readFileSync('loader/latest.json', 'utf8'));
+          const corePath = 'core/v0.3.38/Freesia-Messenger.js';
+          const core = fs.readFileSync(corePath, 'utf8');
+          const coreManifest = JSON.parse(fs.readFileSync('latest.json', 'utf8'));
+          const coreRelease = JSON.parse(fs.readFileSync('core/v0.3.38/release.json', 'utf8'));
+          const testManifest = JSON.parse(fs.readFileSync('channels/test.json', 'utf8'));
+          const current = fs.readFileSync('core/current/Freesia-Messenger-ESM.js', 'utf8');
+          const esmPkg = JSON.parse(fs.readFileSync('install/Freesia-Messenger-GitHub-ESM-Import-v0.3.38.json', 'utf8'));
+          const oldEsm = JSON.parse(fs.readFileSync('install/Freesia-Messenger-GitHub-ESM-Import-v0.3.37.json', 'utf8'));
+          const sha = value => crypto.createHash('sha256').update(value, 'utf8').digest('hex');
+          const bytes = value => Buffer.byteLength(value, 'utf8');
+          for (const source of [boot, loader, core, current]) new Script(source);
+          assert.equal(bootPkg.content, boot);
+          assert.equal(installPkg.content, boot);
+          assert.equal(bootPkg.id, oldBoot.id, 'Stable Bootstrap ID must be preserved');
+          assert.equal(bootPkg.enabled, false, 'Stable installer remains disabled until the user enables it');
+          assert.equal(bootPkg.name, 'Freesia Messenger Permanent Bootstrap 1.0.8');
+          assert.match(boot, /const VERSION = '1\.0\.8'/);
+          assert.match(boot, /main\/loader\/latest\.json/);
+          assert.doesNotMatch(boot, /test-bootstrap-toast-cleanup|beginTestChannelSession|CORE_CHANNEL_KEY/);
+          assert.match(boot, /async function waitForLoaderIdle/);
+          assert.match(boot, /await waitForLoaderIdle\(running\)/);
+          assert.match(boot, /compareVersions\(record\.version, cached\.version\) < 0/);
+          const startup = boot.slice(boot.indexOf('async function startup()'), boot.indexOf('function destroy()', boot.indexOf('async function startup()')));
+          assert.ok(startup.indexOf('await refreshAutomatic()') < startup.indexOf('await installRecord(cached)'));
+          assert.match(startup, /if \(!closed && !currentRuntime\(\) && cached\)/);
+          assert.equal(loaderManifest.latest_version, '0.1.9');
+          assert.equal(loaderManifest.minimum_bootstrap_version, '1.0.8');
+          assert.equal(loaderManifest.release.source_path, loaderPath);
+          assert.equal(loaderManifest.release.source_url, repo + loaderManifest.release.source_commit + '/' + loaderPath);
+          assert.equal(loaderManifest.release.sha256, sha(loader));
+          assert.equal(loaderManifest.release.size_bytes, bytes(loader));
+          assert.match(loader, /main\/latest\.json/);
+          assert.match(loader, /main\/channels\/test\.json/);
+          assert.doesNotMatch(loader, /test-bootstrap-toast-cleanup/);
+          assert.equal(coreManifest.latest_version, '0.3.38');
+          assert.equal(coreManifest.minimum_loader_version, '0.1.9');
+          assert.equal(coreManifest.release.source_path, corePath);
+          assert.equal(coreManifest.release.source_url, repo + coreManifest.release.source_commit + '/' + corePath);
+          assert.equal(coreManifest.release.sha256, sha(core));
+          assert.equal(coreManifest.release.size_bytes, bytes(core));
+          assert.equal(coreRelease.version, '0.3.38');
+          assert.equal(coreRelease.source_commit, coreManifest.release.source_commit);
+          assert.equal(coreRelease.sha256, coreManifest.release.sha256);
+          assert.equal(coreRelease.size_bytes, coreManifest.release.size_bytes);
+          assert.equal(current, core, 'Current ESM source must match the immutable Core snapshot');
+          assert.equal(testManifest.latest_version, '0.3.38');
+          assert.equal(testManifest.release.source_commit, coreManifest.release.source_commit);
+          assert.equal(esmPkg.id, oldEsm.id, 'ESM import script ID must be preserved');
+          assert.match(esmPkg.content, /core\/current\/Freesia-Messenger-ESM\.js/);
+          assert.match(fs.readFileSync('README.md', 'utf8'), /Permanent Bootstrap 1\.0\.8 Stable/);
+          console.log('Stable Bootstrap 1.0.8 / Loader 0.1.9 / Core 0.3.38 integrity checks passed.');
+          NODE
