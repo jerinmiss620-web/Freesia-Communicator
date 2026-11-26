@@ -38,8 +38,8 @@ assert(manifest.version === EXPECTED_VERSION, 'Release manifest version must mat
 assert(manifest.channel === 'stable-esm-import', 'Release manifest must identify the Stable ESM-import channel');
 assert(manifest.source_path === sourcePath, 'Release manifest source path must match');
 assert(manifest.current_path === currentPath, 'Release manifest current alias path must match');
-assert(manifest.source_commit === 'e7401cb09cb717c3991598f7a521fa7e00315681', 'Release manifest must pin the immutable source commit');
-assert(manifest.source_url === 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/e7401cb09cb717c3991598f7a521fa7e00315681/core/v0.3.38/Freesia-Messenger.js', 'Release manifest must use the immutable raw source URL');
+assert(manifest.source_commit === '876440158c79ecc8fb2d77e0bfd66f4872af8d7c', 'Release manifest must pin the immutable source commit');
+assert(manifest.source_url === 'https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/876440158c79ecc8fb2d77e0bfd66f4872af8d7c/core/v0.3.38/Freesia-Messenger.js', 'Release manifest must use the immutable raw source URL');
 assert(manifest.sha256 === EXPECTED_SHA256, 'Release manifest SHA-256 must match');
 assert(manifest.size_bytes === EXPECTED_SIZE_BYTES, 'Release manifest byte length must match');
 assert(manifest.import_package_path === packagePath, 'Release manifest must point to the ESM import package');
