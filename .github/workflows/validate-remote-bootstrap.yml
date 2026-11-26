@@ -9,7 +9,8 @@ on:
       - 'loader/latest.json'
       - 'latest.json'
       - 'channels/test.json'
-      - 'install/Freesia-Messenger-Permanent-Bootstrap-1.0.7-TEST.json'
+      - 'install/Freesia-Messenger-Permanent-Bootstrap-1.0.8-TEST.json'
+      - 'install/Freesia-Messenger-Permanent-Bootstrap-1.0.8-TEST.json'
       - 'loader/test-latest.json'
       - 'loader/runtime/v0.1.8/**'
       - 'core/v0.3.38/**'
@@ -22,7 +23,8 @@ on:
       - 'loader/latest.json'
       - 'latest.json'
       - 'channels/test.json'
-      - 'install/Freesia-Messenger-Permanent-Bootstrap-1.0.7-TEST.json'
+      - 'install/Freesia-Messenger-Permanent-Bootstrap-1.0.8-TEST.json'
+      - 'install/Freesia-Messenger-Permanent-Bootstrap-1.0.8-TEST.json'
       - 'loader/test-latest.json'
       - 'loader/runtime/v0.1.8/**'
       - 'core/v0.3.38/**'
@@ -83,7 +85,7 @@ jobs:
           assert.doesNotMatch(evaluate, /await currentRuntime\(\)\.ready/);
           const testLoaderPath = 'loader/runtime/v0.1.8/Freesia-Messenger-Remote-Loader.js';
           const testCorePath = 'core/v0.3.38/Freesia-Messenger.js';
-          const testBootstrapPath = 'install/Freesia-Messenger-Permanent-Bootstrap-1.0.7-TEST.json';
+          const testBootstrapPath = 'install/Freesia-Messenger-Permanent-Bootstrap-1.0.8-TEST.json';
           const testLoader = fs.readFileSync(testLoaderPath, 'utf8');
           const testCore = fs.readFileSync(testCorePath, 'utf8');
           const testBootstrap = JSON.parse(fs.readFileSync(testBootstrapPath, 'utf8'));
@@ -92,11 +94,17 @@ jobs:
           const testCoreRelease = JSON.parse(fs.readFileSync('core/v0.3.38/release.json', 'utf8'));
           assert.equal(testBootstrap.id, pkg.id, 'TEST Bootstrap must preserve the existing script ID');
           assert.equal(testBootstrap.enabled, true, 'TEST Bootstrap package must import enabled');
-          assert.match(testBootstrap.content, /const VERSION = '1\.0\.7'/, 'TEST Bootstrap runtime version mismatch');
+          assert.match(testBootstrap.content, /const VERSION = '1\.0\.8'/, 'TEST Bootstrap runtime version mismatch');
           assert.match(testBootstrap.content, /freesia_messenger_update_channel_v1/, 'TEST Bootstrap must select the Core test channel');
           assert.match(testBootstrap.content, /storage\.setItem\(CORE_CHANNEL_KEY, 'test'\)/, 'TEST Bootstrap must set the test channel before Loader startup');
           assert.match(testBootstrap.content, /restoreTestChannel\?\.\(\)/, 'TEST Bootstrap must restore the prior persistent channel preference');
           assert.match(testBootstrap.content, /freesia-messenger-loader-auto-update-preference/, 'TEST Bootstrap must retry Core update after safe adoption');
+          assert.match(testBootstrap.content, /async function waitForLoaderIdle/, 'TEST Bootstrap must wait for a busy legacy Loader before migration');
+          assert.match(testBootstrap.content, /await waitForLoaderIdle\(running\)/, 'Loader migration must wait for the active runtime to become idle');
+          assert.match(testBootstrap.content, /远程版本 v\[\\d\.\]\+ 低于当前运行版本/, 'Legacy stale Core downgrade toast must be filtered during migration');
+          const startupBlock = testBootstrap.content.slice(testBootstrap.content.indexOf('async function startup()'), testBootstrap.content.indexOf('function destroy()', testBootstrap.content.indexOf('async function startup()')));
+          assert.ok(startupBlock.indexOf('await refreshAutomatic()') < startupBlock.indexOf('await installRecord(cached)'), 'Remote Loader must be attempted before offline cached Loader fallback');
+          assert.match(startupBlock, /if \(!closed && !currentRuntime\(\) && cached\)/, 'Cached Loader must be used only as offline fallback');
           assert.equal(testLoaderManifest.latest_version, '0.1.8');
           assert.equal(testLoaderManifest.minimum_bootstrap_version, '1.0.6');
           assert.equal(testLoaderManifest.release.source_path, testLoaderPath);
