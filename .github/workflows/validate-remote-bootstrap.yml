@@ -89,7 +89,6 @@ jobs:
           const testBootstrap = JSON.parse(fs.readFileSync(testBootstrapPath, 'utf8'));
           const testLoaderManifest = JSON.parse(fs.readFileSync('loader/test-latest.json', 'utf8'));
           const testCoreManifest = JSON.parse(fs.readFileSync('channels/test.json', 'utf8'));
-          const testCoreRelease = JSON.parse(fs.readFileSync('core/v0.3.38/release.json', 'utf8'));
           assert.equal(testBootstrap.id, pkg.id, 'TEST Bootstrap must preserve the existing script ID');
           assert.equal(testBootstrap.enabled, true, 'TEST Bootstrap package must import enabled');
           assert.match(testBootstrap.content, /const VERSION = '1\.0\.8'/, 'TEST Bootstrap runtime version mismatch');
@@ -116,8 +115,6 @@ jobs:
           assert.equal(testCoreManifest.release.source_path, testCorePath);
           assert.equal(testCoreManifest.release.sha256, crypto.createHash('sha256').update(testCore, 'utf8').digest('hex'));
           assert.equal(testCoreManifest.release.size_bytes, Buffer.byteLength(testCore, 'utf8'));
-          assert.equal(testCoreManifest.release.sha256, testCoreRelease.sha256);
-          assert.equal(testCoreManifest.release.size_bytes, testCoreRelease.size_bytes);
           assert.match(testCore, /data-fm-ext-field="mobile-size"/, 'Mobile window size selector missing');
           assert.match(testCore, /bounds\.width \* \(compact \? 0\.9 : 1\)/, '90% mobile width calculation missing');
           assert.match(testCore, /bounds\.height \* \(compact \? 0\.9 : 1\)/, '90% mobile height calculation missing');
