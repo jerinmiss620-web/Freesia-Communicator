@@ -8,5 +8,8 @@
     "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/11fc4ddfa5b61375405f6c60ae2be6583f3eefc3/loader/runtime/v0.1.9/Freesia-Messenger-Remote-Loader.js",
     "sha256": "95de3d9e965fc7854aa6879f05597c3ca6e7122f2ddaf2262de2e5de8bf38d4c",
     "size_bytes": 65852
-  }
+  },
+  "schema_version": 1,
+  "project": "Freesia Messenger",
+  "channel": "stable-loader"
 }
