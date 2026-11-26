@@ -8,5 +8,8 @@
     "source_url": "https://raw.githubusercontent.com/jerinmiss620-web/Freesia-Communicator/e7401cb09cb717c3991598f7a521fa7e00315681/core/v0.3.38/Freesia-Messenger.js",
     "sha256": "5baf91681107b2a1f189345e9b7b647dcaaae26f8ccb2728caa2970b17690071",
     "size_bytes": 374286
-  }
+  },
+  "schema_version": 1,
+  "project": "Freesia Messenger",
+  "channel": "stable"
 }
