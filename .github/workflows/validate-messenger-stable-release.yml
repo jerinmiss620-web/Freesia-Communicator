@@ -65,6 +65,7 @@ jobs:
           const loaderPath = 'loader/runtime/v0.1.9/Freesia-Messenger-Remote-Loader.js';
           const loader = fs.readFileSync(loaderPath, 'utf8');
           const loaderManifest = JSON.parse(fs.readFileSync('loader/latest.json', 'utf8'));
+          const loaderRelease = JSON.parse(fs.readFileSync('loader/runtime/v0.1.9/release.json', 'utf8'));
           const corePath = 'core/v0.3.38/Freesia-Messenger.js';
           const core = fs.readFileSync(corePath, 'utf8');
           const coreManifest = JSON.parse(fs.readFileSync('latest.json', 'utf8'));
@@ -91,6 +92,13 @@ jobs:
           assert.ok(startup.indexOf('await refreshAutomatic()') < startup.indexOf('await installRecord(cached)'));
           assert.match(startup, /if \(!closed && !currentRuntime\(\) && cached\)/);
           assert.equal(loaderManifest.latest_version, '0.1.9');
+          assert.equal(loaderManifest.schema_version, 1);
+          assert.equal(loaderManifest.project, 'Freesia Messenger');
+          assert.equal(loaderManifest.channel, 'stable-loader');
+          assert.equal(loaderRelease.version, loaderManifest.latest_version);
+          assert.equal(loaderRelease.source_commit, loaderManifest.release.source_commit);
+          assert.equal(loaderRelease.sha256, loaderManifest.release.sha256);
+          assert.equal(loaderRelease.size_bytes, loaderManifest.release.size_bytes);
           assert.equal(loaderManifest.minimum_bootstrap_version, '1.0.8');
           assert.equal(loaderManifest.release.source_path, loaderPath);
           assert.equal(loaderManifest.release.source_url, repo + loaderManifest.release.source_commit + '/' + loaderPath);
@@ -100,6 +108,10 @@ jobs:
           assert.match(loader, /main\/channels\/test\.json/);
           assert.doesNotMatch(loader, /test-bootstrap-toast-cleanup/);
           assert.equal(coreManifest.latest_version, '0.3.38');
+          assert.equal(coreManifest.schema_version, 1);
+          assert.equal(coreManifest.project, 'Freesia Messenger');
+          assert.equal(coreManifest.channel, 'stable');
+          assert.equal(coreManifest.release.version, coreManifest.latest_version);
           assert.equal(coreManifest.minimum_loader_version, '0.1.9');
           assert.equal(coreManifest.release.source_path, corePath);
           assert.equal(coreManifest.release.source_url, repo + coreManifest.release.source_commit + '/' + corePath);
